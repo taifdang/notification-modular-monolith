@@ -1,0 +1,6 @@
+@API.Topup_HostAddress = http://localhost:5093
+
+GET {{API.Topup_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
