@@ -9,7 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Topup", "API.Topup\API.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Producer.Topup", "Producer.Topup\Producer.Topup.csproj", "{775A2F92-A31A-448A-90F3-15E3FE3C7545}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InboxHandler", "InboxHandler\InboxHandler.csproj", "{9CD3F6D3-3B58-4925-8F18-E380FF76B5A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consumer.Topup", "InboxHandler\Consumer.Topup.csproj", "{9CD3F6D3-3B58-4925-8F18-E380FF76B5A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Notification", "API.Notification\API.Notification.csproj", "{341035EA-FE33-457F-A52C-97536CDE952A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consumer.Notification", "Consumer.Notification\Consumer.Notification.csproj", "{949B1614-0725-45A6-964A-D59A25B768E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{9CD3F6D3-3B58-4925-8F18-E380FF76B5A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CD3F6D3-3B58-4925-8F18-E380FF76B5A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CD3F6D3-3B58-4925-8F18-E380FF76B5A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{341035EA-FE33-457F-A52C-97536CDE952A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{341035EA-FE33-457F-A52C-97536CDE952A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{341035EA-FE33-457F-A52C-97536CDE952A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{341035EA-FE33-457F-A52C-97536CDE952A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{949B1614-0725-45A6-964A-D59A25B768E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{949B1614-0725-45A6-964A-D59A25B768E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{949B1614-0725-45A6-964A-D59A25B768E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{949B1614-0725-45A6-964A-D59A25B768E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

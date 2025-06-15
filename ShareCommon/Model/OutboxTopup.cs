@@ -11,7 +11,7 @@ namespace ShareCommon.Model
     {
         [Key]
         public int id { get; set; }
-        public string message_type { get; set; } = default!;//create
+        public string event_type { get; set; } = default!;//create
         public string? source { get; set; }
         public string? payload { get; set; }  //format  
         public DateTime created_at { get; set; }

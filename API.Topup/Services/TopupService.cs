@@ -18,8 +18,13 @@ namespace API.Topup.Services
             this._context = context;
             this._hookRepository = hookRepository;
         }
-        public string GetWebHookType(string url)
+        public string GetTypeWebHook(string url)
         {
+            //[#note]:
+            //- mapping du lieu khi nhan,
+            //- phan biet bang <domain> 
+            //- xac thuc token
+            //- return format object
             switch (url)
             {              
                 //case:...
@@ -30,8 +35,8 @@ namespace API.Topup.Services
         public async Task HandleWebhookListen(string url,string body)
         {
            
-            var type = GetWebHookType(url);
-            await _hookRepository.AddToInBox(url,type,body);      
+            var type = GetTypeWebHook(url);//strategy,factory pattern .... >> mapping options
+            await _hookRepository.AddToInBox(url,type,body);//*method chung      
             Console.WriteLine(body);
         }
     }

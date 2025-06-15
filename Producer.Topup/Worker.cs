@@ -30,8 +30,8 @@ namespace Producer.Topup
                 var _topup_msg = await connection.QueryAsync<OutboxTopup>(@"
                     SELECT TOP 10 id,payload 
                     FROM outbox_topup
-                    WHERE processed_at IS NULL
-                ", transaction: transaction);
+                    WHERE status LIKE CONCAT('%',@status,'%')
+                ", new {status = "pending"}, transaction: transaction);
                 if(_topup_msg is not null) 
                 {
                     foreach (var item in _topup_msg)
@@ -44,10 +44,10 @@ namespace Producer.Topup
                             await connection.ExecuteAsync(
                                @"
                                     UPDATE outbox_topup
-                                    SET processed_at = @processCurrent
+                                    SET processed_at = @processCurrent, status = @status
                                     WHERE id = @Id        
                                 ",
-                               new { processCurrent = DateTime.Now, Id = item.id },
+                               new { processCurrent = DateTime.Now,status="sent", Id = item.id },
                                transaction: transaction);
                             //Log
                             _logger.LogInformation("[topup_producer]: changed topup item");
@@ -57,10 +57,10 @@ namespace Producer.Topup
                             await connection.ExecuteAsync(
                                 @"
                                     UPDATE outbox_topup
-                                    SET processed_at = @processCurrent, error = @Error
+                                    SET processed_at = @processCurrent, error = @Error,status = @status
                                     WHERE id = @Id
                                 ",
-                                new { processCurrent = DateTime.Now, Error = ex.ToString(), Id = item.id },
+                                new { processCurrent = DateTime.Now, status = "error", Error = ex.ToString(), Id = item.id },
                                 transaction: transaction);
                             _logger.LogInformation("[topup_producer]: send message occur error");
                         }

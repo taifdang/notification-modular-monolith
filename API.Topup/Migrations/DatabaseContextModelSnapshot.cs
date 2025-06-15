@@ -22,18 +22,60 @@ namespace API.Topup.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ShareCommon.Model.InboxTopup", b =>
+            modelBuilder.Entity("ShareCommon.Model.InboxNotification", b =>
                 {
-                    b.Property<int>("topup_id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("topup_id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("event_type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("message_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("payload")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("processed_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("retry")
+                        .HasColumnType("int");
+
+                    b.Property<string>("source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("inbox_notification");
+                });
+
+            modelBuilder.Entity("ShareCommon.Model.InboxTopup", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<DateTime>("create_at")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("error")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("event_type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("payload")
@@ -45,13 +87,38 @@ namespace API.Topup.Migrations
                     b.Property<string>("source")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("topup_type")
+                    b.HasKey("id");
+
+                    b.ToTable("inbox_topup");
+                });
+
+            modelBuilder.Entity("ShareCommon.Model.Messages", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("event_type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("topup_id");
+                    b.Property<string>("message_id")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("inbox_topup");
+                    b.Property<string>("payload")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("messages");
                 });
 
             modelBuilder.Entity("ShareCommon.Model.OutboxTopup", b =>
@@ -65,7 +132,7 @@ namespace API.Topup.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("message_type")
+                    b.Property<string>("event_type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -122,7 +189,7 @@ namespace API.Topup.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<decimal>("amount_coint")
+                    b.Property<decimal>("balance")
                         .HasColumnType("decimal(20,2)");
 
                     b.Property<string>("email")

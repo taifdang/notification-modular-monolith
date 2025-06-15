@@ -13,6 +13,7 @@ namespace ShareCommon.DTO
         public string status { get; set; } = default!;
         public int user_id { get; set; }
         public T detail { get; set; } = default!;//json tuy bien
+        public string? priority { get; set; }// high|medium|low
 
     }
 }

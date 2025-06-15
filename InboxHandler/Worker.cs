@@ -35,9 +35,10 @@ namespace InboxHandler
                     {
                         try
                         {
+                            //[#command]: transaction_tbl nen luu cung inbox_tbl
                             #region COMMAND
-                            ////service mapping data theo topup_type
-                            //var inbox_data = MappingData.MapData(inbox.topup_type, inbox.payload!);
+                            ////service mapping data theo event_type
+                            //var inbox_data = MappingData.MapData(inbox.event_type, inbox.payload!);
                             ////unitofwork
                             //await unitOfWork.BeginTransactionAsync();
                             ////topup_tbl
@@ -46,7 +47,7 @@ namespace InboxHandler
                             //await unitOfWork.user_repository.UpdateUserCoin(inbox_data);
                             #endregion
                             //mapping data                      
-                            var inbox_data = MappingData.MapData(inbox.topup_type, inbox.payload!);
+                            var inbox_data = MappingData.MapData(inbox.event_type, inbox.payload!);
                             //find user_id or find cache redis(bit or key_value_field)=> getid 
                             var user = await db.users.FirstOrDefaultAsync(x => x.username == inbox_data.username!.ToLower());
                             //process user null ?
@@ -55,38 +56,41 @@ namespace InboxHandler
                             db.transactions.Add(topup_tbl);
                             await db.SaveChangesAsync();//get id
                             //#UPDATE COIN (not null)
-                            user!.amount_coint += inbox_data.tranfer_amount;
+                            user!.balance += inbox_data.tranfer_amount;
                             //#OUTBOX
                             #region OUTBOX
                             var _dateTime = DateTime.Now;
                             //PAYLOAD
                             var payload = new EventMessage<Topup_Details>
                             {
-                                message_id = inbox_data.id,
+                                //message_id = inbox_data.id,//id de service khac nhan
+                                message_id = Guid.NewGuid(),
                                 message_type = "topup.created",
                                 timestamp = _dateTime,
                                 source = "topup_service",
                                 data = new DataPayload<Topup_Details>
                                 {
-                                    entity_id = topup_tbl.id,//entity
-                                    action = "success",
+                                    entity_id = topup_tbl.id,//topup_tbl
+                                    status = "waiting",    
+                                    action = "inapp",//push_type
                                     user_id = user!.id,
-                                    detail = new Topup_Details
-                                    {
+                                    detail = new Topup_Details//dynamic field
+                                    {                                     
                                         username = inbox_data.username!,
                                         transfer_amount = inbox_data.tranfer_amount
-                                    }
-                                }
+                                    },
+                                    priority = "high"                
+                                },             
+                                status = "pending"
                             };
 
                             var outbox_tbl = new OutboxTopup
-                            {
-                                //id = inbox_data.id,
+                            {                            
                                 source = "topup_service",
-                                message_type = "created",
+                                event_type = "created",
                                 payload = JsonSerializer.Serialize(payload),
                                 created_at = _dateTime,
-                                status = "WAITING"
+                                status = "pending",
                             };
                             db.outbox_topup.Add(outbox_tbl);
                             #endregion
@@ -100,12 +104,12 @@ namespace InboxHandler
                         {
                             //await unitOfWork.RollbackAsync();
                             await transaction.RollbackAsync();
-                            _logger.LogError(ex, $"Error {inbox.topup_id}");
+                            _logger.LogError(ex, $"Error {inbox.id}");
                             //ADD ERROR RECORD
                             var _scopeError = _provider.CreateScope();
                             var dbError = _scopeError.ServiceProvider.GetRequiredService<DatabaseContext>();
                             //log error
-                            var inbox_err = await db.inbox_topup.FindAsync(inbox.topup_id);
+                            var inbox_err = await db.inbox_topup.FindAsync(inbox.id);
                             inbox_err!.error = ex.ToString();
                             inbox.process_at = DateTime.Now;
                             await dbError.SaveChangesAsync(stoppingToken);

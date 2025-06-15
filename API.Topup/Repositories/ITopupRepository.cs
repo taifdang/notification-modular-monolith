@@ -1,6 +1,7 @@
 ﻿namespace API.Topup.Repositories
 {
-    public interface ITopupRepository
+    public interface ITopupRepository:IDisposable
     {
+        Task AddToInBox();
     }
 }

@@ -4,7 +4,7 @@
     {
         //Convert payload format (type[thesieure/momo],payload[data])
         Task HandleWebhookListen(string url,string body);
-        string GetWebHookType(string url);
+        string GetTypeWebHook(string url);
      
     }
 }

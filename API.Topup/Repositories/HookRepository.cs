@@ -14,12 +14,12 @@ namespace API.Topup.Repositories
         }
         public async Task AddToInBox(string url,string type, string body)
         {
-            using var transaction = _db.Database.BeginTransaction();
+            await using var transaction = _db.Database.BeginTransaction();
             try
             {
                 var inbox_topup_tbl = new InboxTopup
                 {
-                    topup_type = type,
+                    event_type = type,
                     source = url,
                     payload = body,
                     create_at = DateTime.Now,
