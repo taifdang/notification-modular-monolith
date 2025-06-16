@@ -12,6 +12,7 @@ namespace ShareCommon.Model
         //{1,"sepay","sepay_url","data...","Datetime.Now"}
         [Key]
         public int id { get; set; }
+        public int? transaction_id { get; set; }
         public string event_type { get; set; } = default!;//[thesieure,sepay]
         public string? source { get; set; } //url
         public string? payload { get; set; } //json chua tat ca thong tin message tu webhook

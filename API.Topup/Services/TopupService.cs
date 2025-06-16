@@ -18,26 +18,30 @@ namespace API.Topup.Services
             this._context = context;
             this._hookRepository = hookRepository;
         }
+
         public string GetTypeWebHook(string url)
         {
-            //[#note]:
-            //- mapping du lieu khi nhan,
-            //- phan biet bang <domain> 
-            //- xac thuc token
-            //- return format object
-            switch (url)
-            {              
-                //case:...
-                default:
-                    return "sepay";
-            }         
+            throw new NotImplementedException();
         }
-        public async Task HandleWebhookListen(string url,string body)
-        {
-           
-            var type = GetTypeWebHook(url);//strategy,factory pattern .... >> mapping options
-            await _hookRepository.AddToInBox(url,type,body);//*method chung      
-            Console.WriteLine(body);
+
+        //public string GetTypeWebHook(string url)
+        //{
+        //    //[#note]:
+        //    //- mapping du lieu khi nhan,
+        //    //- phan biet bang <domain> 
+        //    //- xac thuc token
+        //    //- return format object
+        //    switch (url)
+        //    {              
+        //        //case:...
+        //        default:
+        //            return "sepay";
+        //    }         
+        //}
+        public async Task WebhookListener(string type,string body)
+        {           
+            //var type = GetTypeWebHook(url);//strategy,factory pattern .... >> mapping options
+            await _hookRepository.AddToInBox(type,body);//*method chung      
         }
     }
 }

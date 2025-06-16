@@ -3,7 +3,7 @@
     public interface ITopupService
     {
         //Convert payload format (type[thesieure/momo],payload[data])
-        Task HandleWebhookListen(string url,string body);
+        Task WebhookListener(string type,string body);
         string GetTypeWebHook(string url);
      
     }
