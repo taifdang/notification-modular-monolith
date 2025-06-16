@@ -20,7 +20,7 @@ namespace InboxHandler.Services
                 {
                     //case:...
                     case "sepay":
-                        var data = JsonSerializer.Deserialize<Topup_Sepay>(body);
+                        var data = JsonSerializer.Deserialize<SepayPayload>(body);
                         var _user = data?.description!.Split("NAPTIEN ")[1].ToLower();
                         var transaction_tbl = new Transactions//>>> DTO chua co id <<< ???
                         {
@@ -35,8 +35,8 @@ namespace InboxHandler.Services
                         return default!;
                 }
             }
-            catch(Exception ex)
-            {              
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.ToString());
                 return default!;
             }

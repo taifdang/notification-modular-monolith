@@ -10,6 +10,7 @@ namespace API.Topup.Models
         string? code, 
         string? content, 
         string transferType, 
+        string description,
         int transferAmount,
         string? referenceCode, 
         decimal accumulated, 

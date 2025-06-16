@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShareCommon.DTO
 {
-    public class Topup_Sepay
+    public class SepayPayload
     {
         public string gateway { get; set; } = default!;
         public string transactionDate { get; set; } = default!;

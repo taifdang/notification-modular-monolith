@@ -1,5 +1,7 @@
 ﻿
 using API.Topup.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using ShareCommon.Data;
 using ShareCommon.Model;
 using System;
@@ -20,7 +22,7 @@ namespace API.Topup.Repositories
         {
             await using var transaction = _db.Database.BeginTransaction();
             try
-            {
+            {              
                 var inbox_topup_tbl = new InboxTopup
                 {
                     event_type = type,
@@ -44,7 +46,13 @@ namespace API.Topup.Repositories
             await using var transaction = _db.Database.BeginTransaction();
             try{
                 //destructure
-                var trans_id = Destructure(type,body);                         
+                var trans_id = Destructure(type,body);
+                //check trans_id
+                //if(await _db.inbox_topup.AnyAsync(x => x.transaction_id == trans_id))
+                //{
+                //    _logger.LogWarning($"[topup_api]:error >>{trans_id} is exist");
+                //    return;
+                //}
                 //inbox_tbl
                 var inbox_tbl = new InboxTopup
                 {

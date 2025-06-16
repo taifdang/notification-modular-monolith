@@ -13,7 +13,7 @@ namespace API.Notification.Services
         public Task HandleAsync(InboxNotification message)
         {
             //detect objet
-            var data = JsonSerializer.Deserialize<DataPayload<Topup_Details>>(message.payload);
+            var data = JsonSerializer.Deserialize<DataPayload<TopupDetail>>(message.payload);
             //send
             Console.WriteLine($"#ID{data.entity_id} BAN DA NAP THANH CONG {data.detail.transfer_amount} ");
             return Task.CompletedTask;
