@@ -18,7 +18,7 @@ namespace Consumer.Topup.Repositories
         public async Task<List<InboxTopup>> GetListInbox()
         {
             var data = await _db.inbox_topup
-                .Where(x => x.process_at == null)
+                .Where(x => x.itopup_updated_at == null)
                 .Take(10).ToListAsync();
             return data;
         }

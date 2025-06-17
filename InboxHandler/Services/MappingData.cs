@@ -12,7 +12,7 @@ namespace InboxHandler.Services
     public static class MappingData
     {
         //next version:>>stategy pattern
-        public static Transactions MapData(string topup_type,string body)
+        public static Topup MapData(string topup_type,string body)
         {
             try
             {
@@ -22,13 +22,13 @@ namespace InboxHandler.Services
                     case "sepay":
                         var data = JsonSerializer.Deserialize<SepayPayload>(body);
                         var _user = data?.description!.Split("NAPTIEN ")[1].ToLower();
-                        var transaction_tbl = new Transactions//>>> DTO chua co id <<< ???
+                        var transaction_tbl = new Topup//>>> DTO chua co user_id <<< ???
                         {
-                            transaction_id = data!.id,
-                            username = _user,
-                            source = topup_type,
-                            tranfer_amount = data.transferAmount,
-                            create_at = DateTime.Now,
+                            topup_trans_id = data!.id,
+                            topup_creator = _user,
+                            topup_source = topup_type,
+                            topup_tranfer_amount = data.transferAmount,
+                            topup_created_at = DateTime.Now,
                         };
                         return transaction_tbl;
                     default:

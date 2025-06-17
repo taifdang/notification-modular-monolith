@@ -30,8 +30,8 @@ namespace Producer.Topup
                 var _topup_msg = await connection.QueryAsync<OutboxTopup>(@"
                     SELECT TOP 10 id,payload 
                     FROM outbox_topup
-                    WHERE status LIKE CONCAT('%',@status,'%')
-                ", new {status = "pending"}, transaction: transaction);
+                    WHERE otopup_status LIKE CONCAT('%',@status,'%')
+                ", new {status = 0}, transaction: transaction);
                 if(_topup_msg is not null) 
                 {
                     foreach (var item in _topup_msg)
@@ -39,15 +39,15 @@ namespace Producer.Topup
                         try
                         {
                             //push message in queue
-                            await rabbitMq.SendMessageAsync(item.payload);
+                            await rabbitMq.SendMessageAsync(item.otopup_payload);
                             //
                             await connection.ExecuteAsync(
                                @"
                                     UPDATE outbox_topup
-                                    SET processed_at = @processCurrent, status = @status
-                                    WHERE id = @Id        
+                                    SET otopup_updated_at = @processCurrent
+                                    WHERE otopup_id = @Id        
                                 ",
-                               new { processCurrent = DateTime.Now,status="sent", Id = item.id },
+                               new { processCurrent = DateTime.Now, Id = item.otopup_id },
                                transaction: transaction);
                             //Log
                             _logger.LogInformation("[topup_producer]: changed topup item");
@@ -57,10 +57,10 @@ namespace Producer.Topup
                             await connection.ExecuteAsync(
                                 @"
                                     UPDATE outbox_topup
-                                    SET processed_at = @processCurrent, error = @Error,status = @status
-                                    WHERE id = @Id
+                                    SET otopup_updated_at = @processCurrent
+                                    WHERE otopup_id = @Id
                                 ",
-                                new { processCurrent = DateTime.Now, status = "error", Error = ex.ToString(), Id = item.id },
+                                new { processCurrent = DateTime.Now, Id = item.otopup_id },
                                 transaction: transaction);
                             _logger.LogInformation("[topup_producer]: send message occur error");
                         }

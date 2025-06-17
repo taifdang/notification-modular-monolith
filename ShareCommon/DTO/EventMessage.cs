@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShareCommon.DTO
 {
-    public class EventMessage<T>//payload
+    public class EventMessage<T>//otopup_payload
     {
         public Guid message_id { get; set; }
         public string? message_type { get; set; } //topupCreated

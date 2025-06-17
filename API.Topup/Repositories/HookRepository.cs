@@ -25,10 +25,10 @@ namespace API.Topup.Repositories
             {              
                 var inbox_topup_tbl = new InboxTopup
                 {
-                    event_type = type,
-                    source = url,
-                    payload = body,
-                    create_at = DateTime.Now,
+                    itopup_event_type = type,
+                    itopup_source = url,
+                    itopup_payload = body,
+                    itopup_created_at = DateTime.Now,
                 };
                 _db.inbox_topup.Add(inbox_topup_tbl);
                 await _db.SaveChangesAsync();
@@ -47,20 +47,20 @@ namespace API.Topup.Repositories
             try{
                 //destructure
                 var trans_id = Destructure(type,body);
-                //check trans_id
-                //if(await _db.inbox_topup.AnyAsync(x => x.transaction_id == trans_id))
+                //check topup_id
+                //if(await _db.inbox_topup.AnyAsync(x => x.topup_trans_id == topup_id))
                 //{
-                //    _logger.LogWarning($"[topup_api]:error >>{trans_id} is exist");
+                //    _logger.LogWarning($"[topup_api]:itopup_error >>{topup_id} is exist");
                 //    return;
                 //}
                 //inbox_tbl
                 var inbox_tbl = new InboxTopup
                 {
-                    transaction_id = trans_id,
-                    event_type = type,
-                    source = "",
-                    payload = body,
-                    create_at = DateTime.Now,
+                    itopup_trans_id = trans_id,
+                    itopup_event_type = type,
+                    itopup_source = "",
+                    itopup_payload = body,
+                    itopup_created_at = DateTime.Now,
                 };
                 _db.inbox_topup.Add(inbox_tbl);
                 await _db.SaveChangesAsync();

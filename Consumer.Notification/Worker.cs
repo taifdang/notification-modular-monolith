@@ -63,25 +63,25 @@ namespace Consumer.Notification
                             //add inbox tbl
                             //var inbox_notification_tbl = new InboxNotification
                             //{
-                            //    event_type = data.message_type,
-                            //    source = data.source,
-                            //    payload = data.data,
-                            //    created_at = DateTime.Now,
+                            //    otopup_event_type = data.message_type,
+                            //    topup_source = data.topup_source,
+                            //    otopup_payload = data.data,
+                            //    otopup_created_at = DateTime.Now,
                             //};
                             ////THIEU TRANSACTION
                             //using var connection2 = new SqlConnection(database);
                             //connection2.Open();
                             ////message_tbl
                             //await connection2.ExecuteAsync(@"
-                            //INSERT INTO messages (event_type,source,payload,created_at) 
-                            //VALUES(@event_type,@source,@payload,@created_at)", inbox_notification_tbl);
+                            //INSERT INTO messages (otopup_event_type,topup_source,otopup_payload,otopup_created_at) 
+                            //VALUES(@otopup_event_type,@topup_source,@otopup_payload,@otopup_created_at)", inbox_notification_tbl);
 
                             ////inbox_tbl
                             //await connection2.ExecuteAsync(@"
-                            //INSERT INTO inbox_notification (event_type,source,payload,created_at) 
-                            //VALUES(@event_type,@source,@payload,@created_at)",inbox_notification_tbl);
+                            //INSERT INTO inbox_notification (otopup_event_type,topup_source,otopup_payload,otopup_created_at) 
+                            //VALUES(@otopup_event_type,@topup_source,@otopup_payload,@otopup_created_at)",inbox_notification_tbl);
 
-                            //_logger.LogInformation($"[notification_service]: receive message in {data.source}");
+                            //_logger.LogInformation($"[notification_service]: receive message in {data.topup_source}");
                             //await Task.Delay(200, stoppingToken);
                             #endregion
                             //#database connection
@@ -90,7 +90,7 @@ namespace Consumer.Notification
                             await using var transaction = await database.Database.BeginTransactionAsync();
                             try
                             {
-                                if (await database.inbox_notification.AnyAsync(x => x.message_id == Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString())))
+                                if (await database.inbox_notification.AnyAsync(x => x.inotify_event_id == Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString())))
                                 {
                                     _logger.LogWarning($"[receive_message]:message_id: {eventArgs.BasicProperties.MessageId!} is existed");
                                     return;
@@ -98,12 +98,12 @@ namespace Consumer.Notification
                                 //#insert inbox_tbl
                                 var inbox_tbl = new InboxNotification
                                 {
-                                    message_id = Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString()),
-                                    event_type = data.message_type,
-                                    source = data.source,
-                                    payload = data.data,
-                                    created_at = DateTime.Now,
-                                    status = "pending"
+                                    inotify_event_id = Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString()),
+                                    inotify_event_type = data.message_type!,
+                                    inotify_source = data.source,
+                                    inotify_payload = data.data,
+                                    inotify_created_at = DateTime.Now,
+                                    //status = "pending"
                                 };
                                 // 
                                 database.inbox_notification.Add(inbox_tbl);
@@ -112,16 +112,16 @@ namespace Consumer.Notification
                                 var _currentTime = DateTime.Now; 
                                 var messages_tbl = new Messages
                                 {
-                                    event_type = inbox_tbl.event_type,
-                                    source = inbox_tbl.source,
-                                    payload = inbox_tbl.payload,
-                                    created_at = _currentTime,
-                                    message_id = eventArgs.BasicProperties?.MessageId,
+                                    mess_event_type = inbox_tbl.inotify_event_type!,
+                                    mess_source = inbox_tbl.inotify_source,
+                                    mess_payload = inbox_tbl.inotify_payload,
+                                    mess_created_at = _currentTime,
+                                    mess_event_id = Guid.Parse(eventArgs.BasicProperties?.MessageId!),
 
                                 };
                                 database.messages.Add(messages_tbl);
-                                //#change status inbox_tbl
-                                inbox_tbl.processed_at = _currentTime;   
+                                //#change otopup_status inbox_tbl
+                                inbox_tbl.inotify_updated_at = _currentTime;   
                                 //#commit transaction 
                                 await database.SaveChangesAsync();
                                 await transaction.CommitAsync();

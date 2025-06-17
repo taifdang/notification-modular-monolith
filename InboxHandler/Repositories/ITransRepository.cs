@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Consumer.Topup.Repositories
 {
-    public interface ITransRepository:IRepository<Transactions>
+    public interface ITransRepository:IRepository<ShareCommon.Model.Topup>
     {
-        Task AddTransaction(Transactions transaction);
+        Task AddTransaction(ShareCommon.Model.Topup transaction);
     }
 }

@@ -15,7 +15,7 @@ namespace API.Notification.Helper
         public async Task Dispatch(InboxNotification message)
         {
             //dictionary key-value
-            if(_handlers.TryGetValue(message.event_type,out var handler))
+            if(_handlers.TryGetValue(message.inotify_event_type,out var handler))
             {
                 await handler.HandleAsync(message);        
             }

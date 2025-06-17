@@ -13,7 +13,7 @@ namespace ShareCommon.Data
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
         public DbSet<InboxNotification> inbox_notification { get; set; }
         public DbSet<InboxTopup> inbox_topup { get; set; }
-        public DbSet<Transactions> transactions { get; set; }
+        public DbSet<Topup> transactions { get; set; }
         public DbSet<OutboxTopup> outbox_topup { get; set; }
         public DbSet<Users> users { get; set; }
         public DbSet<Messages> messages { get; set; }
