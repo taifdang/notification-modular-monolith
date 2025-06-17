@@ -1,12 +1,9 @@
 using Consumer.Topup.Repositories;
 using InboxHandler.Services;
-using Microsoft.EntityFrameworkCore;
-using ShareCommon.Data;
 using ShareCommon.DTO;
 using ShareCommon.Generic;
 using ShareCommon.Model;
 using System.Text.Json;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace InboxHandler
 {
@@ -24,11 +21,15 @@ namespace InboxHandler
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var scope = _provider.CreateScope();
+                using var scope = _provider.CreateScope();
                 var unitofwork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();               
                 //get list
                 var listInbox = await unitofwork.inbox.GetListInbox();              
-                if (listInbox is null) await Task.Delay(1000,stoppingToken);
+                if (listInbox is null || listInbox.Count == 0)
+                {
+                    _logger.LogWarning($"[topup]:error >> not found <<");
+                    await Task.Delay(200, stoppingToken);
+                }
                 else
                 {
                     foreach (var inbox in listInbox)
@@ -80,6 +81,8 @@ namespace InboxHandler
                                 //otopup_status = "pending",
                             };
                             await unitofwork.outbox.AddToOutBox(outbox_data);
+                            //update inbox_topup updated_at
+                            await unitofwork.inbox.UpdateStatus(inbox);
                             await unitofwork.SaveChangeAsync();
                             await unitofwork.CommitAsync();
                         }

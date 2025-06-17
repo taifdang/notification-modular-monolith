@@ -1,10 +1,7 @@
 ﻿
 using API.Topup.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 using ShareCommon.Data;
 using ShareCommon.Model;
-using System;
 using System.Text.Json;
 
 namespace API.Topup.Repositories

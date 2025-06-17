@@ -17,7 +17,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<DatabaseContext>(x =>
 x.UseSqlServer(builder.Configuration.GetConnectionString("database"),b=>b.MigrationsAssembly("API.Topup")));
 builder.Services.AddScoped<ITopupService, TopupService>();
-builder.Services.AddScoped<ITopupRepository, TopupRepository>();
 builder.Services.AddScoped<IHookRepository, HookRepository>();
 var app = builder.Build();
 

@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShareCommon.Data;
 using ShareCommon.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Consumer.Topup.Repositories
 {
@@ -21,6 +16,13 @@ namespace Consumer.Topup.Repositories
                 .Where(x => x.itopup_updated_at == null)
                 .Take(10).ToListAsync();
             return data;
+        }
+
+        public  Task UpdateStatus(InboxTopup data)
+        {
+            //_db.Entry<InboxTopup>(data).CurrentValues.SetValues(data.itopup_updated_at=DateTime.Now);
+            _db.Entry(data).Property(u => u.itopup_updated_at).CurrentValue = DateTime.Now; 
+            return Task.CompletedTask;
         }
     }
 }
