@@ -33,9 +33,7 @@ namespace Consumer.Notification
                     //using var scope = _provider.CreateScope();
                     //var database = scope.ServiceProvider.GetRequiredService<IConfiguration>().GetConnectionString("database");
                     //
-                    #endregion
-                    
-
+                    #endregion                    
                     //#rabitmq connection
                     var factory = new ConnectionFactory
                     {
@@ -44,7 +42,7 @@ namespace Consumer.Notification
                     var queueName = "notification_queue";
                     var connection = await factory.CreateConnectionAsync();
                     var channel = await connection.CreateChannelAsync();
-                    //bind queue
+                    //create queue if queue not exist
                     await channel.QueueDeclareAsync(queueName, true, false, false, null);
                     //limit message
                     await channel.BasicQosAsync(0, 2, false);
@@ -90,7 +88,7 @@ namespace Consumer.Notification
                             await using var transaction = await database.Database.BeginTransactionAsync();
                             try
                             {
-                                if (await database.inbox_notification.AnyAsync(x => x.inotify_event_id == Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString())))
+                                if (await database.inbox_notification.AnyAsync(x => x.inotify_id == Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString())))
                                 {
                                     _logger.LogWarning($"[receive_message]:message_id: {eventArgs.BasicProperties.MessageId!} is existed");
                                     return;
@@ -98,11 +96,11 @@ namespace Consumer.Notification
                                 //#insert inbox_tbl
                                 var inbox_tbl = new InboxNotification
                                 {
-                                    inotify_event_id = Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString()),
-                                    inotify_event_type = data.message_type!,
+                                    inotify_id = Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString()),
+                                    inotify_event_type = data!.message_type!,
                                     inotify_source = data.source,
                                     inotify_payload = data.data,
-                                    inotify_created_at = DateTime.Now,
+                                    inotify_created_at = DateTime.Now,                                    
                                     //status = "pending"
                                 };
                                 // 
@@ -117,11 +115,11 @@ namespace Consumer.Notification
                                     mess_payload = inbox_tbl.inotify_payload,
                                     mess_created_at = _currentTime,
                                     mess_event_id = Guid.Parse(eventArgs.BasicProperties?.MessageId!),
-
                                 };
                                 database.messages.Add(messages_tbl);
                                 //#change otopup_status inbox_tbl
-                                inbox_tbl.inotify_updated_at = _currentTime;   
+                                inbox_tbl.inotify_updated_at = _currentTime;
+                                inbox_tbl.itopup_status = ShareCommon.Enum.MessageStatus.Pending;
                                 //#commit transaction 
                                 await database.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -130,6 +128,7 @@ namespace Consumer.Notification
                             catch(Exception ex)
                             {
                                 await transaction.RollbackAsync();
+                                _logger.LogWarning(ex.ToString());  
                             }
                             //
                           

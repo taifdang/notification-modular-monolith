@@ -6,24 +6,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Topup.Migrations
 {
     /// <inheritdoc />
-    public partial class refactore_table_with_prefix : Migration
+    public partial class set_initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "hub_connection",
+                columns: table => new
+                {
+                    hub_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    hub_connection_id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    hub_user_name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hub_connection", x => x.hub_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "inbox_notification",
                 columns: table => new
                 {
-                    inotify_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    inotify_event_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    inotify_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     inotify_event_type = table.Column<string>(type: "varchar(20)", nullable: false),
                     inotify_source = table.Column<string>(type: "varchar(50)", nullable: true),
                     inotify_payload = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     inotify_created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     inotify_updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    error = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    error = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    itopup_status = table.Column<string>(type: "varchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,15 +47,14 @@ namespace API.Topup.Migrations
                 name: "inbox_topup",
                 columns: table => new
                 {
-                    itopup_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    itopup_trans_id = table.Column<int>(type: "int", nullable: true),
+                    itopup_id = table.Column<int>(type: "int", nullable: false),
                     itopup_event_type = table.Column<string>(type: "varchar(20)", nullable: false),
                     itopup_source = table.Column<string>(type: "varchar(50)", nullable: true),
                     itopup_payload = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     itopup_created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     itopup_updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    itopup_error = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    itopup_error = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    itopup_status = table.Column<string>(type: "varchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,7 +97,7 @@ namespace API.Topup.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "transactions",
+                name: "topup",
                 columns: table => new
                 {
                     topup_id = table.Column<int>(type: "int", nullable: false)
@@ -98,7 +110,7 @@ namespace API.Topup.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_transactions", x => x.topup_id);
+                    table.PrimaryKey("PK_topup", x => x.topup_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,6 +135,9 @@ namespace API.Topup.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "hub_connection");
+
+            migrationBuilder.DropTable(
                 name: "inbox_notification");
 
             migrationBuilder.DropTable(
@@ -135,7 +150,7 @@ namespace API.Topup.Migrations
                 name: "outbox_topup");
 
             migrationBuilder.DropTable(
-                name: "transactions");
+                name: "topup");
 
             migrationBuilder.DropTable(
                 name: "users");

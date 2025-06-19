@@ -12,8 +12,8 @@ using ShareCommon.Data;
 namespace API.Topup.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250617085809_refactore_table_with_prefix")]
-    partial class refactore_table_with_prefix
+    [Migration("20250619131536_add_field-is_block-tbl_users")]
+    partial class add_fieldis_blocktbl_users
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,22 +25,35 @@ namespace API.Topup.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ShareCommon.Model.InboxNotification", b =>
+            modelBuilder.Entity("ShareCommon.Model.HubConnection", b =>
                 {
-                    b.Property<int>("inotify_id")
+                    b.Property<int>("hub_id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("inotify_id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("hub_id"));
+
+                    b.Property<string>("hub_connection_id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("hub_user_name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("hub_id");
+
+                    b.ToTable("hub_connection");
+                });
+
+            modelBuilder.Entity("ShareCommon.Model.InboxNotification", b =>
+                {
+                    b.Property<Guid>("inotify_id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("error")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("inotify_created_at")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("inotify_event_id")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("inotify_event_type")
                         .IsRequired()
@@ -55,6 +68,9 @@ namespace API.Topup.Migrations
                     b.Property<DateTime?>("inotify_updated_at")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte>("itopup_status")
+                        .HasColumnType("tinyint");
+
                     b.HasKey("inotify_id");
 
                     b.ToTable("inbox_notification");
@@ -63,10 +79,7 @@ namespace API.Topup.Migrations
             modelBuilder.Entity("ShareCommon.Model.InboxTopup", b =>
                 {
                     b.Property<int>("itopup_id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("itopup_id"));
 
                     b.Property<DateTime>("itopup_created_at")
                         .HasColumnType("datetime2");
@@ -84,8 +97,8 @@ namespace API.Topup.Migrations
                     b.Property<string>("itopup_source")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int?>("itopup_trans_id")
-                        .HasColumnType("int");
+                    b.Property<byte>("itopup_status")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("itopup_updated_at")
                         .HasColumnType("datetime2");
@@ -181,7 +194,7 @@ namespace API.Topup.Migrations
 
                     b.HasKey("topup_id");
 
-                    b.ToTable("transactions");
+                    b.ToTable("topup");
                 });
 
             modelBuilder.Entity("ShareCommon.Model.Users", b =>
@@ -191,6 +204,9 @@ namespace API.Topup.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("user_id"));
+
+                    b.Property<bool>("is_block")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("user_balance")
                         .HasColumnType("decimal(18,2)");

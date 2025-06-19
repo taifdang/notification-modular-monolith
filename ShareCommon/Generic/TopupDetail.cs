@@ -8,7 +8,8 @@ namespace ShareCommon.Generic
 {
     public class TopupDetail
     {       
-        public string username { get; set; } = default!;
+        public int user_id { get; set; } = default!;
+        public string? username { get; set; } 
         public decimal transfer_amount { get; set; }
     }
 }

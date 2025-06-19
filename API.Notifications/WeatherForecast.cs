@@ -1,4 +1,4 @@
-namespace API.Notification
+namespace API.Notifications
 {
     public class WeatherForecast
     {

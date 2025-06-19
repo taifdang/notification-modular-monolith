@@ -21,6 +21,6 @@ namespace ShareCommon.Model
         public DateTime otopup_created_at { get; set; }
         public DateTime? otopup_updated_at { get; set; }
         [Column(TypeName = "tinyint")] //1byte >> 0-255
-        public StatusDispatch otopup_status { get; set; } = default!;    
+        public MessageStatus otopup_status { get; set; } = default!;    
     }
 }

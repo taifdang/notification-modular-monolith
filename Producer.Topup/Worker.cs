@@ -1,6 +1,7 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Producer.Topup.Sevices;
+using ShareCommon.Enum;
 using ShareCommon.Model;
 
 namespace Producer.Topup
@@ -28,10 +29,10 @@ namespace Producer.Topup
                 await using var transaction = await connection.BeginTransactionAsync();
                 //
                 var _topup_msg = await connection.QueryAsync<OutboxTopup>(@"
-                    SELECT TOP 10 id,payload 
+                    SELECT TOP 10 otopup_id,otopup_payload 
                     FROM outbox_topup
                     WHERE otopup_status LIKE CONCAT('%',@status,'%')
-                ", new {status = 0}, transaction: transaction);
+                ", new {status = MessageStatus.Pending}, transaction: transaction);
                 if(_topup_msg is not null) 
                 {
                     foreach (var item in _topup_msg)
@@ -44,10 +45,10 @@ namespace Producer.Topup
                             await connection.ExecuteAsync(
                                @"
                                     UPDATE outbox_topup
-                                    SET otopup_updated_at = @processCurrent
+                                    SET otopup_updated_at = @processCurrent,otopup_status = @Status
                                     WHERE otopup_id = @Id        
                                 ",
-                               new { processCurrent = DateTime.Now, Id = item.otopup_id },
+                               new { processCurrent = DateTime.Now, Status = MessageStatus.Processed, Id = item.otopup_id },
                                transaction: transaction);
                             //Log
                             _logger.LogInformation("[topup_producer]: changed topup item");
@@ -57,10 +58,10 @@ namespace Producer.Topup
                             await connection.ExecuteAsync(
                                 @"
                                     UPDATE outbox_topup
-                                    SET otopup_updated_at = @processCurrent
+                                    SET otopup_updated_at = @processCurrent,otopup_status = @Status
                                     WHERE otopup_id = @Id
                                 ",
-                                new { processCurrent = DateTime.Now, Id = item.otopup_id },
+                                new { processCurrent = DateTime.Now,Status = MessageStatus.Failed , Id = item.otopup_id },
                                 transaction: transaction);
                             _logger.LogInformation("[topup_producer]: send message occur error");
                         }

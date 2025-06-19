@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShareCommon.Data;
 
@@ -11,9 +12,11 @@ using ShareCommon.Data;
 namespace API.Topup.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250619064005_update_field_to_tinyint")]
+    partial class update_field_to_tinyint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,12 +132,7 @@ namespace API.Topup.Migrations
                     b.Property<string>("mess_source")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int?>("mess_user_id")
-                        .HasColumnType("int");
-
                     b.HasKey("mess_id");
-
-                    b.HasIndex("mess_user_id");
 
                     b.ToTable("messages");
                 });
@@ -169,28 +167,6 @@ namespace API.Topup.Migrations
                     b.HasKey("otopup_id");
 
                     b.ToTable("outbox_topup");
-                });
-
-            modelBuilder.Entity("ShareCommon.Model.Settings", b =>
-                {
-                    b.Property<int>("set_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("set_id"));
-
-                    b.Property<bool>("disable_notification")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("set_user_id")
-                        .HasColumnType("int");
-
-                    b.HasKey("set_id");
-
-                    b.HasIndex("set_user_id")
-                        .IsUnique();
-
-                    b.ToTable("settings");
                 });
 
             modelBuilder.Entity("ShareCommon.Model.Topup", b =>
@@ -229,9 +205,6 @@ namespace API.Topup.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("user_id"));
 
-                    b.Property<bool>("is_block")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("user_balance")
                         .HasColumnType("decimal(18,2)");
 
@@ -252,33 +225,6 @@ namespace API.Topup.Migrations
                     b.HasKey("user_id");
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("ShareCommon.Model.Messages", b =>
-                {
-                    b.HasOne("ShareCommon.Model.Users", "users")
-                        .WithMany("messages")
-                        .HasForeignKey("mess_user_id");
-
-                    b.Navigation("users");
-                });
-
-            modelBuilder.Entity("ShareCommon.Model.Settings", b =>
-                {
-                    b.HasOne("ShareCommon.Model.Users", "users")
-                        .WithOne("settings")
-                        .HasForeignKey("ShareCommon.Model.Settings", "set_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("users");
-                });
-
-            modelBuilder.Entity("ShareCommon.Model.Users", b =>
-                {
-                    b.Navigation("messages");
-
-                    b.Navigation("settings");
                 });
 #pragma warning restore 612, 618
         }

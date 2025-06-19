@@ -53,7 +53,7 @@ namespace API.Topup.Repositories
                 //inbox_tbl
                 var inbox_tbl = new InboxTopup
                 {
-                    itopup_trans_id = trans_id,
+                    itopup_id = trans_id,
                     itopup_event_type = type,
                     itopup_source = "",
                     itopup_payload = body,

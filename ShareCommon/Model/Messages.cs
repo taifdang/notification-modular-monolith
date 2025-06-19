@@ -18,6 +18,8 @@ namespace ShareCommon.Model
         [Column(TypeName = "varchar(50)")]
         public string? mess_source { get; set; }//topup_service
         public string? mess_payload { get; set; }
-        public DateTime mess_created_at { get; set; }        
+        public DateTime mess_created_at { get; set; } 
+        public int? mess_user_id { get; set; }
+        public Users? users { get; set; }
     }
 }

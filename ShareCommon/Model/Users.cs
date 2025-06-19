@@ -22,6 +22,9 @@ namespace ShareCommon.Model
         public string? user_email { get; set; }
         [Column(TypeName = "varchar(12)")]
         public string? user_phone { get; set; }
+        public bool is_block { get; set; } = false;
+        public ICollection<Messages>? messages { get; set; }
+        public Settings? settings { get; set; } 
         
     }
 }

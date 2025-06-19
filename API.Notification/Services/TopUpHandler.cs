@@ -1,4 +1,5 @@
-﻿using API.Notification.Models;
+﻿using API.Notification.Hubs;
+using API.Notification.Models;
 using Microsoft.AspNetCore.Components;
 using ShareCommon.DTO;
 using ShareCommon.Generic;
@@ -9,14 +10,24 @@ namespace API.Notification.Services
 {
     public class TopUpHandler : IEventHandler
     {
-        public string event_type => "topup.created";    
+        
+        public string event_type => "topup.created";
+
         public Task HandleAsync(InboxNotification message)
         {
-            //detect objet
-            var data = JsonSerializer.Deserialize<DataPayload<TopupDetail>>(message.inotify_payload);
-            //send
-            Console.WriteLine($"#ID{data.entity_id} BAN DA NAP THANH CONG {data.detail.transfer_amount} ");
+            try
+            {
+                //detect objet
+
+                var data = JsonSerializer.Deserialize<DataPayload<TopupDetail>>(message.inotify_payload!);
+               
+                Console.WriteLine($"#ID{data!.entity_id} BAN DA NAP THANH CONG {data.detail.transfer_amount}");                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());               
+            }
             return Task.CompletedTask;
-        }
+        }      
     }
 }

@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace ShareCommon.Enum
 {
-    public enum StatusDispatch
+    public enum MessageStatus
     {
-        Pending = 0,
-        Waiting = 1,
-        Successed = 2,
-        Failure = 3,    
+        Pending = 0,//prepare send message
+        Processed = 1,//sucecss
+        Failed = 2,//fail      
     }
 }
