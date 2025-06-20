@@ -60,7 +60,7 @@ namespace InboxHandler
                                 data = new DataPayload<TopupDetail>
                                 {
                                     entity_id = trans_data.topup_id,//topup_tbl
-                                    status = "waiting",
+                                    event_type = "topup.created",
                                     action = "inapp",//push_type
                                     user_id = user.user_id,
                                     detail = new TopupDetail//dynamic field

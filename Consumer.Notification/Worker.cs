@@ -56,7 +56,10 @@ namespace Consumer.Notification
                             byte[] body = eventArgs.Body.ToArray();
                             var string_data = Encoding.UTF8.GetString(body);
                             var json = JsonSerializer.Deserialize<string>(string_data);
-                            var data = JsonSerializer.Deserialize<EventMessageDTO>(json!);
+                            //var data = JsonSerializer.Deserialize<EventMessageDTO>(json!);
+                            //###
+                            var data = JsonSerializer.Deserialize<EventMess>(json);
+                            //
                             #region COMMAND
                             //add inbox tbl
                             //var inbox_notification_tbl = new InboxNotification
@@ -99,7 +102,7 @@ namespace Consumer.Notification
                                     inotify_id = Guid.Parse(eventArgs.BasicProperties.MessageId!.ToString()),
                                     inotify_event_type = data!.message_type!,
                                     inotify_source = data.source,
-                                    inotify_payload = data.data,
+                                    inotify_payload = JsonSerializer.Serialize(data.data),
                                     inotify_created_at = DateTime.Now,                                    
                                     //status = "pending"
                                 };
@@ -115,6 +118,7 @@ namespace Consumer.Notification
                                     mess_payload = inbox_tbl.inotify_payload,
                                     mess_created_at = _currentTime,
                                     mess_event_id = Guid.Parse(eventArgs.BasicProperties?.MessageId!),
+                                    mess_user_id = data.data.user_id,
                                 };
                                 database.messages.Add(messages_tbl);
                                 //#change otopup_status inbox_tbl
