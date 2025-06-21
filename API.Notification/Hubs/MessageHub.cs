@@ -18,7 +18,15 @@ namespace API.Notification.Hubs
         }
         public async Task SendMessage(string message)
         {
-            await Clients.All.SendAsync($"{message}_{Context.ConnectionId}");
+            try
+            {
+                await Clients.All.SendAsync($"{message}_{Context.ConnectionId}");
+                _logger.LogInformation($"[message_hub]:sent >> success");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"[message_hub]:sent >> failure");
+            }
         }
         public override Task OnConnectedAsync()
         {

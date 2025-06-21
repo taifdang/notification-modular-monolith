@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace ShareCommon.Enum
 {
-    public enum MessagePriority//seconds
+    public enum PriorityMessage
     {    
-        High = 0,//imediate
-        Medium = 5,//deplay 5 second
-        Low = 10,//deplay 10 second
+        Low = 0,//imediate
+        Medium = 1,//delay
+        High = 2,//await
     }
 }

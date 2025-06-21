@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Producer.Notification.Services
+namespace Producer.Notification.StrategySender
 {
-    public class FilterMessage
+    public interface INotificationPayload
     {
     }
 }

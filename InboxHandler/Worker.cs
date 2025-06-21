@@ -1,6 +1,7 @@
 using Consumer.Topup.Repositories;
 using InboxHandler.Services;
 using ShareCommon.DTO;
+using ShareCommon.Enum;
 using ShareCommon.Generic;
 using ShareCommon.Model;
 using System.Text.Json;
@@ -61,14 +62,14 @@ namespace InboxHandler
                                 {
                                     entity_id = trans_data.topup_id,//topup_tbl
                                     event_type = "topup.created",
-                                    action = "inapp",//push_type
+                                    action = PushType.InWeb,//push_type
                                     user_id = user.user_id,
                                     detail = new TopupDetail//dynamic field
                                     {
                                         username = trans_data.topup_creator!,
                                         transfer_amount = trans_data.topup_tranfer_amount
                                     },
-                                    priority = "high"
+                                    priority = PriorityMessage.High
                                 },
                                 status = "pending"
                             };

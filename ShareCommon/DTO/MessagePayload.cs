@@ -1,4 +1,5 @@
-﻿using ShareCommon.Model;
+﻿using ShareCommon.Enum;
+using ShareCommon.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,16 @@ namespace ShareCommon.DTO
     public class MessagePayload
     {
         public int entity_id { get; set; }
-        public string action { get; set; } = default!;
+        public PushType? action { get; set; }
         public string event_type { get; set; } = default!;
         public int user_id { get; set; }
         public Dictionary<string,object> detail { get; set; } = default!;//json tuy bien
-        public string? priority { get; set; }// high|medium|low
-        //public Users users { get; set; }
+        public PriorityMessage? priority { get; set; }// high|medium|low
+        //business rule
+        public static int getWorkAt(PriorityMessage? priority)
+        {
+            return priority switch { PriorityMessage.High => 0, PriorityMessage.Medium => 5, PriorityMessage.Low => 10, _ => 0 };
+        }
 
     }
 }

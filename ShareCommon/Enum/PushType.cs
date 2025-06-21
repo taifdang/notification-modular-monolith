@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Producer.Notification.Services
+namespace ShareCommon.Enum
 {
-    public interface IFilterMessage
+    public enum PushType
     {
+        InWeb = 0,
+        Email = 1,
+        Sms = 2,
     }
 }

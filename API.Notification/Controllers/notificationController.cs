@@ -32,7 +32,8 @@ namespace API.Notification.Controllers
             Console.WriteLine(detail.user_id);  
             try
             {
-                await _hub.SendPersonalNotification(detail.user_id, detail.transfer_amount.ToString());
+                //await _hub.SendPersonalNotification(detail.user_id, detail.transfer_amount.ToString());
+                await _hub.SendMessage(detail.transfer_amount.ToString());
                 return Ok("Sent");
             }
             catch
