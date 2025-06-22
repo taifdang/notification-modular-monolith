@@ -1,32 +1,22 @@
-using Dapper;
+
 using Hangfire;
-using Hangfire.Common;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using NetTopologySuite.Index.HPRtree;
 using Producer.Notification.Services;
+
 using ShareCommon.Data;
 using ShareCommon.DTO;
-using ShareCommon.Enum;
-using ShareCommon.Generic;
-using ShareCommon.Model;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 namespace Producer.Notification
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IHttpClientFactory _httpClient;
+     
         private readonly IServiceScopeFactory _provider;
         private readonly IBackgroundJobClient _jobClient;       
-        public Worker(ILogger<Worker> logger,IHttpClientFactory httpClient,IServiceScopeFactory provider,IBackgroundJobClient jobClient)
+        public Worker(ILogger<Worker> logger,IServiceScopeFactory provider,IBackgroundJobClient jobClient)
         {
             _logger = logger;
-            _httpClient = httpClient;
+           
             _provider = provider;
             _jobClient = jobClient;
                
@@ -54,7 +44,7 @@ namespace Producer.Notification
                     var database = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
                     //get list >>>> CDC message_tbl
                     var list_data = database.messages.ToList();//[???]
-                                                               //>> filter user_is_block and !enable_notification            
+                    //>> filter user_is_block and !enable_notification            
                     var filter_query = list_data
                         .Join(database.users,
                             message => message.mess_user_id,
@@ -83,7 +73,8 @@ namespace Producer.Notification
                     //    //_logger.LogCritical("[end-sending]");
                     //}
                     #endregion
-                    await JobScheduleHandler(filter_query!);
+                     await JobScheduleHandler(filter_query!,scope);
+                  
                 }
                 catch(Exception ex)
                 {
@@ -93,30 +84,28 @@ namespace Producer.Notification
             }
         }
         //Scheduler via priority + hangfire
-        public Task JobScheduleHandler(IEnumerable<string> list_job)
+        public async Task JobScheduleHandler(IEnumerable<string> list_job,IServiceScope scope)
         {
+            var process = scope.ServiceProvider.GetRequiredService<JobHandler>();
             foreach(var item in list_job)
             {
                 var data = JsonSerializer.Deserialize<MessagePayload>(item);                  
-                var work_at = MessagePayload.getWorkAt(data!.priority);             
-                _jobClient.Schedule<JobScheduler>(x => x.HandleAsync(data), TimeSpan.FromSeconds(work_at));
+                var work_at = MessagePayload.getWorkAt(data!.priority);
+                await Task.Delay(200);
+                await ExcuteJobAsync(data);
+                //_jobClient.Schedule(()=>ExcuteJobAsync(data),TimeSpan.FromSeconds(work_at));
             }
-            return Task.CompletedTask;
+
         }
-        public async Task PostSender()
+        public async Task ExcuteJobAsync(MessagePayload? payload)
         {
-            var message = new TopupDetail { user_id = 1, transfer_amount = 10000 };
-            var _client = _httpClient.CreateClient();
-            //scan handle table cdc of outbox_table 
-            try
+            using(var scope = _provider.CreateScope())
             {
-                await _client.PostAsJsonAsync("https://localhost:7143/api/notification/push", message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning($"[error] >> {ex.ToString()}");
+                var _job = scope.ServiceProvider.GetRequiredService<JobHandler>();
+                await _job.JobSender(payload);   
             }
         }
-       
+    
+
     }
 }

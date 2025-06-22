@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Producer.Notification.StrategySender
 {
     public interface INotificationSender<TPayload> where TPayload : INotificationPayload
-    {
+    {        
         Task SendAsync(TPayload payload);
     }
 }

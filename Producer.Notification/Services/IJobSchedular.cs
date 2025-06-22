@@ -1,4 +1,5 @@
-﻿using ShareCommon.DTO;
+﻿using Producer.Notification.Strategy;
+using ShareCommon.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Producer.Notification.Services
     {
         //Task MachineSender();
         Task HandleAsync(MessagePayload? payload);
+        INotifyHandler JobSenderAysnc(MessagePayload? payload);
     }
 }

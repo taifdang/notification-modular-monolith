@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Producer.Notification.StrategySender
 {
-    public class EmailSender : INotificationSender<EmailPayload>
-    {
+    public class EmailPushSender : INotificationSender<EmailPayload>
+    {  
         public Task SendAsync(EmailPayload payload)
         {
             throw new NotImplementedException();

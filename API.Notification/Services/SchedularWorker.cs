@@ -16,13 +16,13 @@ namespace API.Notification.Services
     public class SchedularWorker:BackgroundService
     {    
         private readonly IServiceScopeFactory _provider;
-        //private readonly EventTypeDispatch _dispatch;
+        private readonly EventTypeDispatch _dispatch;
         private readonly ILogger<SchedularWorker> _logger;
        // private readonly MessageHub _messageHub;
         public SchedularWorker
             (
             IServiceScopeFactory provider, 
-            //EventTypeDispatch dispatch,
+            EventTypeDispatch dispatch,
             ILogger<SchedularWorker> logger
             //MessageHub messageHub
             )
@@ -52,7 +52,7 @@ namespace API.Notification.Services
                     foreach (var item in list_inbox)
                     {
                         //destructure
-                        //await _dispatch.Dispatch(item);
+                        await _dispatch.Dispatch(item);
                         var data = JsonSerializer.Deserialize<DataPayload<TopupDetail>>(item.inotify_payload!);
                         //payload:{push_type:inweb,content_message}
                         await signalr.SendPersonalNotification(data.user_id, $"#ID{data!.entity_id} BAN DA NAP THANH CONG {data.detail.transfer_amount}");

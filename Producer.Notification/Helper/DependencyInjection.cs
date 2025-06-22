@@ -1,13 +1,9 @@
 ﻿using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Producer.Notification.Services;
+using Producer.Notification.Strategy;
 using Producer.Notification.StrategySender;
 using ShareCommon.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Producer.Notification.Helper
 {
@@ -18,7 +14,9 @@ namespace Producer.Notification.Helper
             AddSqlServerDb(services, configuration);
             AddHangfireService(services, configuration);
             AddOtherService(services, configuration);
-            AddStrategySender(services, configuration); 
+            AddStrategySender(services, configuration);
+            AddJobHandler(services, configuration);
+           
             return services;
         }
         public static IServiceCollection AddHangfireService(IServiceCollection services, IConfiguration configuration)
@@ -37,15 +35,28 @@ namespace Producer.Notification.Helper
         }
         public static IServiceCollection AddOtherService(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHttpClient();
-            services.AddTransient<IJobSchedular, JobScheduler>();
+            //services.AddHttpClient();
+            //services.AddTransient<IJobSchedular, JobScheduler>();
             return services;
         }
         public static IServiceCollection AddStrategySender(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<INotificationSender<EmailPayload>,EmailSender>(); 
+            services.AddTransient<INotificationSender<EmailPayload>,EmailPushSender>(); 
             services.AddTransient<INotificationSender<SignalRPayload>,SignalRSender>();
+            //services.AddTransient<INotifyHandler, InWebSender>();
+            //services.AddTransient<INotifyHandler, EmailSender>();
             return services;
         }
+        public static IServiceCollection AddJobHandler(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHttpClient();
+            services.AddScoped<IJobSchedular, JobScheduler>();
+            services.AddScoped<JobHandler>();
+            services.AddScoped<INotifyHandler,EmailSender>();
+            services.AddScoped<INotifyHandler,InWebSender>();
+            //
+            return services;
+        }
+        
     }
 }
