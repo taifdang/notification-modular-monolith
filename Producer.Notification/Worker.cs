@@ -1,10 +1,11 @@
 
 using Hangfire;
 using Producer.Notification.Services;
-
 using ShareCommon.Data;
 using ShareCommon.DTO;
 using System.Text.Json;
+
+
 namespace Producer.Notification
 {
     public class Worker : BackgroundService
@@ -73,39 +74,31 @@ namespace Producer.Notification
                     //    //_logger.LogCritical("[end-sending]");
                     //}
                     #endregion
-                     await JobScheduleHandler(filter_query!,scope);
-                  
+                   
+                    await ScheduleHandler(filter_query);                   
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError($"[worker.notification]:error >> {ex.ToString()}");
                 }
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
-        }
-        //Scheduler via priority + hangfire
-        public async Task JobScheduleHandler(IEnumerable<string> list_job,IServiceScope scope)
+        }      
+        public async Task ScheduleHandler(IEnumerable<string> jobs)
         {
-            var process = scope.ServiceProvider.GetRequiredService<JobHandler>();
-            foreach(var item in list_job)
+            foreach (var item in jobs)
             {
-                var data = JsonSerializer.Deserialize<MessagePayload>(item);                  
-                var work_at = MessagePayload.getWorkAt(data!.priority);
-                await Task.Delay(200);
-                await ExcuteJobAsync(data);
-                //_jobClient.Schedule(()=>ExcuteJobAsync(data),TimeSpan.FromSeconds(work_at));
-            }
-
-        }
-        public async Task ExcuteJobAsync(MessagePayload? payload)
-        {
-            using(var scope = _provider.CreateScope())
-            {
-                var _job = scope.ServiceProvider.GetRequiredService<JobHandler>();
-                await _job.JobSender(payload);   
+                var data = JsonSerializer.Deserialize<MessagePayload>(item);
+                var work_at = MessagePayload.getWorkAt(data.priority);
+                //await ExcuteAsync(data); //test
+                _jobClient.Schedule(() => ExcuteAsync(data),TimeSpan.FromSeconds(work_at));
             }
         }
-    
-
+        public async Task ExcuteAsync(MessagePayload payload)
+        {
+            using var scope = _provider.CreateScope();
+            var excute = scope.ServiceProvider.GetService<NotificationSender>();
+            await excute.HandleAsync(payload);
+        }
     }
 }

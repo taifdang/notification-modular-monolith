@@ -27,11 +27,11 @@ namespace API.Notification.Helper
         }
         public static IServiceCollection AddHangfire(IServiceCollection services,IConfiguration configuration)
         {
-            services.AddHangfire(x =>
-                x.UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
+            services.AddHangfire(x =>x
+                //.UseSimpleAssemblyNameTypeSerializer()
+                //.UseRecommendedSerializerSettings()
                 .UseSqlServerStorage(configuration.GetConnectionString("database")));
-            services.AddHangfireServer();
+            //services.AddHangfireServer();
             return services;    
         }
         public static IServiceCollection AddSignalRService(IServiceCollection services)

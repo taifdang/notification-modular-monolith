@@ -46,7 +46,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 //hangfires
-app.UseHangfireDashboard();
+app.MapHangfireDashboard("/hangfire");
 app.MapControllers();
 //signalr
 app.MapHub<MessageHub>("/notification");
