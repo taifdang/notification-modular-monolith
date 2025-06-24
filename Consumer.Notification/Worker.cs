@@ -53,6 +53,7 @@ namespace Consumer.Notification
                         //convert data
                         try
                         {
+                            
                             byte[] body = eventArgs.Body.ToArray();
                             var string_data = Encoding.UTF8.GetString(body);
                             var json = JsonSerializer.Deserialize<string>(string_data);

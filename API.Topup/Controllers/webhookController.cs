@@ -1,8 +1,10 @@
 ﻿using API.Topup.Models;
 using API.Topup.Services;
+using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShareCommon.Helper;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -20,7 +22,7 @@ namespace API.Topup.Controllers
             this._config = config;
         }
         [HttpPost("sepay")]
-        public async Task<IActionResult> GetResult()
+        public async Task<StatusResponse<string>> GetResult()
         {
             //tao endpoint cho tung service goi toi 
             //xac thuc bang authorization
@@ -28,12 +30,12 @@ namespace API.Topup.Controllers
             //check authorization
             if (!Request.Headers.ContainsKey("Authorization"))
             {
-                return BadRequest(StatusCodes.Status401Unauthorized);
+                return StatusResponse<string>.Failure("unauthorized");
             }
             var apiKey = Request.Headers["Authorization"];
             if (apiKey != _config["ExternalService:Sepay:token"])
             {
-                return BadRequest(StatusCodes.Status401Unauthorized);
+                return StatusResponse<string>.Failure("unauthorized");
             }           
             try
             {
@@ -47,12 +49,13 @@ namespace API.Topup.Controllers
                 //read body when know format json request 
                 var requestBody = await HttpContext.Request.ReadFromJsonAsync<SepayPayload>();
                 var data = JsonSerializer.Serialize(requestBody);
-                await topupService.WebhookListener("sepay",data);//type + data
-                return Ok(data);          
+                var response = await topupService.WebhookListener("sepay",data);//type + data
+                if(response.success is true) return StatusResponse<string>.Success(response.data);
+                return StatusResponse<string>.Failure(response.Message);
             }
             catch(Exception ex) 
             {
-                return BadRequest(ex.ToString());
+                return StatusResponse<string>.Failure(ex.ToString());
             }         
         }
     }

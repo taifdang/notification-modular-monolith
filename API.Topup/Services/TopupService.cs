@@ -1,4 +1,5 @@
 ﻿using API.Topup.Repositories;
+using ShareCommon.Helper;
 
 namespace API.Topup.Services
 {
@@ -19,10 +20,12 @@ namespace API.Topup.Services
         {
             throw new NotImplementedException();
         }    
-        public async Task WebhookListener(string type,string body)
+        public async Task<StatusResponse<string>> WebhookListener(string type,string body)
         {           
             //var type = GetTypeWebHook(url);//strategy,factory pattern .... >> mapping options
-            await _hookRepository.AddToInBox(type,body);//*method chung      
+            var data = await _hookRepository.AddToInBox(type,body);//*method chung
+            if (data.success is true) return StatusResponse<string>.Success(data.data);
+            return StatusResponse<string>.Failure(data.Message);
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿
 using API.Topup.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using ShareCommon.Data;
+using ShareCommon.Helper;
 using ShareCommon.Model;
 using System.Text.Json;
 
@@ -38,19 +41,12 @@ namespace API.Topup.Repositories
             }
         }
 
-        public async Task AddToInBox(string type, string body)
+        public async Task<StatusResponse<string>> AddToInBox(string type, string body)
         {
             await using var transaction = _db.Database.BeginTransaction();
             try{
                 //destructure
-                var trans_id = Destructure(type,body);
-                //check topup_id
-                //if(await _db.inbox_topup.AnyAsync(x => x.topup_trans_id == topup_id))
-                //{
-                //    _logger.LogWarning($"[topup_api]:itopup_error >>{topup_id} is exist");
-                //    return;
-                //}
-                //inbox_tbl
+                var trans_id = Destructure(type,body);            
                 var inbox_tbl = new InboxTopup
                 {
                     itopup_id = trans_id,
@@ -62,11 +58,17 @@ namespace API.Topup.Repositories
                 _db.inbox_topup.Add(inbox_tbl);
                 await _db.SaveChangesAsync();
                 transaction.Commit();
+                return StatusResponse<string>.Success(body);
             }
-            catch(Exception ex)
+            catch(DbUpdateException db_err)
+            {
+                return StatusResponse<string>.Failure("violet db");
+            }
+            catch (Exception ex)
             {
                 transaction.Rollback();
                 _logger.LogWarning($"[topup_api]:error >>{ex.ToString()}");
+                return StatusResponse<string>.Failure(ex.ToString());
             }
         }
 
@@ -81,5 +83,7 @@ namespace API.Topup.Repositories
             }
 
         }
+
+        
     }
 }
