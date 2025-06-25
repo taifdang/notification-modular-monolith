@@ -1,5 +1,5 @@
 using Producer.Notification;
-using Producer.Notification.Helper;
+using Producer.Notification.Middlewares;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddServices(builder.Configuration);

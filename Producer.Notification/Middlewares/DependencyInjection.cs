@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Producer.Notification.Services;
 using ShareCommon.Data;
 
-namespace Producer.Notification.Helper
+namespace Producer.Notification.Middlewares
 {
     public static class DependencyInjection
     {
