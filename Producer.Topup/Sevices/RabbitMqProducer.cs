@@ -23,9 +23,7 @@ namespace Producer.Topup.Sevices
                 using var _channel = await _connection.Connection.CreateChannelAsync();
                 var routingKey = "notification_queue";
                 var props = new BasicProperties();
-                props.MessageId = Guid.NewGuid().ToString();
-
-               
+                props.MessageId = Guid.NewGuid().ToString();              
                 //confirm queue
                 await _channel.QueueDeclareAsync(routingKey, true, false, false, null);
                 //convert

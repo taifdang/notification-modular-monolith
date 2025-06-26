@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-Module.Schedule-7fd93b44-0080-4862-9d10-f56264b40c6e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0-preview1.25120.4" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.16" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.6" />
+	<PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShareCommon\ShareCommon.csproj" />
+  </ItemGroup>
+</Project>
