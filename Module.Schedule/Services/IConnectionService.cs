@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Module.Schedule.Services
 {
-    public interface IRabbitMQConnection:IDisposable
-    {       
-        IConnection GetConnection { get; }     
+    public interface IConnectionService
+    {
+        Task<IChannel> GetChannelAsync();   
     }
 }

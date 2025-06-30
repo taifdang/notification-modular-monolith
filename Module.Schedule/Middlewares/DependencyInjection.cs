@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Module.Schedule.Services;
 using ShareCommon.Data;
 using System;
@@ -11,11 +12,12 @@ namespace Module.Schedule.Middlewares
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddListService(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddServiceCollection(this IServiceCollection services,IConfiguration configuration)
         {
             AddMSSQLDB(services, configuration);
             AddScheduleHandle(services);
             AddRabbitMQConnection(services);
+            AddRabbitMQAdapter(services);
             return services;
         }
         public static IServiceCollection AddMSSQLDB(IServiceCollection services,IConfiguration configuration)
@@ -30,8 +32,13 @@ namespace Module.Schedule.Middlewares
         }
         public static IServiceCollection AddRabbitMQConnection(IServiceCollection services)
         {
-            services.AddSingleton<IRabbitMQConnection>(new RabbitMQConnection());
+            //services.AddSingleton<IRabbitMQConnection>(new RabbitMQConnection());
             services.AddScoped<IRabbitMQHandle, RabbitMQHandle>();
+            return services;
+        }
+        public static IServiceCollection AddRabbitMQAdapter(IServiceCollection services)
+        {
+            services.TryAddSingleton<IConnectionService>(new ConnectionService());
             return services;
         }
     }
