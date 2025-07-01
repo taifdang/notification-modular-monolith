@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Producer.Topup.Sevices
+namespace Hangfire.Topup.Sevices
 {
     public class RabbitMqProducer : IRabbitMqProducer
     {

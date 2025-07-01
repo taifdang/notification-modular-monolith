@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Producer.Notification\Producer.Notification.csproj" />
     <ProjectReference Include="..\ShareCommon\ShareCommon.csproj" />
   </ItemGroup>
 

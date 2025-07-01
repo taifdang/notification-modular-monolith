@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Producer.Topup.Sevices
+namespace Hangfire.Topup.Sevices
 {
     public class RabbitMqConnection : IRabbitMqConnection,IDisposable
     {

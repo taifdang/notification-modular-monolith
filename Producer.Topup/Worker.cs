@@ -1,10 +1,10 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Producer.Topup.Sevices;
+using Hangfire.Topup.Sevices;
 using ShareCommon.Enum;
 using ShareCommon.Model;
 
-namespace Producer.Topup
+namespace Hangfire.Topup
 {
     public class Worker : BackgroundService
     {
