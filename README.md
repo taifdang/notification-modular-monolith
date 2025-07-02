@@ -1,7 +1,7 @@
 # TARGET
 - [x] Topup: data synchronization from webhook
 - [x] Topup: handle consumer/producer
-- [x] Notification: schedule message and filter with condition
+- [x] Notification: schedule and filter message with condition
 - [x] Notification: fill message content and send message with push strategy
 - [ ] Mockups
 - [ ] Development
