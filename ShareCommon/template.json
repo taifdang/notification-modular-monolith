@@ -1,0 +1,3 @@
+﻿{
+  "topup.created": "Đơn hàng #{user_id},{username} thanh toán thành công {transfer_amount} vnd."
+}

@@ -1,6 +1,7 @@
 ﻿using API.Notification.Hubs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ShareCommon.DTO;
 using ShareCommon.Generic;
 
 namespace API.Notification.Controllers
@@ -27,13 +28,13 @@ namespace API.Notification.Controllers
             }
         }
         [HttpPost("push")]
-        public async Task<IActionResult> Post([FromBody] TopupDetail detail)
+        public async Task<IActionResult> Post([FromBody] NotifyPayload detail)
         {
-            Console.WriteLine(detail.user_id);  
+            //Console.WriteLine(detail.user_id);  
             try
             {
                 //await _hub.SendPersonalNotification(detail.user_id, detail.transfer_amount.ToString());
-                await _hub.SendMessage(detail.transfer_amount.ToString());
+                await _hub.SendMessage(detail.body);
                 return Ok("Sent");
             }
             catch

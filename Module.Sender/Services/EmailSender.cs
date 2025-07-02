@@ -12,7 +12,7 @@ namespace Module.Sender.Services
     {
         public PushType GetPushType => PushType.Email;
 
-        public Task SendAsync(MessagePayload payload)
+        public Task SendAsync(NotifyPayload payload)
         {
             throw new NotImplementedException();
         }

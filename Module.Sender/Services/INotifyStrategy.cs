@@ -11,6 +11,6 @@ namespace Module.Sender.Services
     public interface INotifyStrategy
     {
         PushType GetPushType { get; }
-        Task SendAsync(MessagePayload payload);
+        Task SendAsync(NotifyPayload payload);
     }
 }

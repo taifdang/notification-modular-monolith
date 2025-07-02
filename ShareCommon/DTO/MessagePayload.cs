@@ -14,8 +14,7 @@ namespace ShareCommon.DTO
         public int entity_id { get; set; }
         public PushType action { get; set; } = default;
         public string event_type { get; set; } = default!;
-        public int user_id { get; set; }
-        
+        public int user_id { get; set; }        
         public Dictionary<string,object> detail { get; set; } = default!;//json tuy bien
         public PriorityMessage priority { get; set; } = default;// high|medium|low
         //business rule

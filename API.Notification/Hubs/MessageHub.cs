@@ -20,7 +20,7 @@ namespace API.Notification.Hubs
         {
             try
             {
-                await Clients.All.SendAsync($"{message}_{Context.ConnectionId}");
+                await Clients.All.SendAsync($"[{Context.ConnectionId}]:{message}_");
                 _logger.LogInformation($"[message_hub]:sent >> success");
             }
             catch (Exception ex)

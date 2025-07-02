@@ -1,13 +1,11 @@
 ﻿
+using Azure.Messaging;
+using Microsoft.Identity.Client;
 using Module.Sender.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using ShareCommon.DTO;
-using System;
-using System.Diagnostics.Tracing;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Channels;
 
 namespace Module.Sender
 {
@@ -16,10 +14,12 @@ namespace Module.Sender
         private readonly ILogger<Worker> _logger;
         private readonly IServiceScopeFactory _provider;
         private IChannel _channel;
-        public Worker(ILogger<Worker> logger, IServiceScopeFactory provider)
+        private readonly MessageFill _messageFill;
+        public Worker(ILogger<Worker> logger, IServiceScopeFactory provider,MessageFill messageFill)
         {
             _logger = logger;
-            _provider = provider;         
+            _provider = provider;                
+            _messageFill = messageFill;
         }    
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -44,9 +44,9 @@ namespace Module.Sender
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
-                {             
+                {
                     var scope = _provider.CreateScope();
-                    var _sender = scope.ServiceProvider.GetRequiredService<NotificationSender>();             
+                    var _sender = scope.ServiceProvider.GetRequiredService<NotificationSender>();
                     var consumer = new AsyncEventingBasicConsumer(_channel);
                     consumer.ReceivedAsync += async (queue, message) =>
                     {
@@ -54,26 +54,49 @@ namespace Module.Sender
                         {
                             var msg = message.Body.ToArray();
                             var body = Encoding.UTF8.GetString(msg);
-                            //send message
-                            var data = JsonSerializer.Deserialize<MessagePayload>(body);
-                            await _sender.HandleAsync(data);
-                            _logger.LogInformation($"[received]::{body}");
+                            //convert message
+                            var data = System.Text.Json.JsonSerializer.Deserialize<MessagePayload>(body);
+                            var payload = await GetMessageContent(data!);
+                          
+                            await _sender.HandleAsync(payload);
+                            _logger.LogInformation($"[received]::{payload}");
                             //
                             await Task.Delay(200);
                             await _channel.BasicAckAsync(message.DeliveryTag, false);
-                           
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             _logger.LogError(ex, "Xử lý message lỗi");
                         }
                     };
                     await _channel.BasicConsumeAsync("push_notification_queue", false, consumer);
+                
                 }
                 catch(Exception ex)
                 {
+                    //[retry]
                     _logger.LogInformation($"[error]::{ex.ToString()}");
                 }              
+            }
+        }
+        public  Task<NotifyPayload> GetMessageContent(MessagePayload data)
+        {
+            try
+            {
+                var content = _messageFill.MessageRender(data.event_type, data.detail);
+                var payload = new NotifyPayload
+                {
+                    push_type = data.action,
+                    send_to = data.user_id.ToString(), //user_id or email 
+                    subject = data.event_type,
+                    body = content,
+                };
+                return Task.FromResult(payload);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{data.event_type}: {ex}");
+                return null!;
             }
         }
     }

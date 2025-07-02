@@ -1,4 +1,5 @@
-﻿using Module.Sender.Services;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using Module.Sender.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Module.Sender.Middlewares
         public static IServiceCollection AddServiceCollection(this IServiceCollection services,IConfiguration configuration)
         {
             AddPushMessageStrategy(services);
+            AddMessageFill(services);
             return services;
         }
         public static IServiceCollection AddPushMessageStrategy(IServiceCollection services)
@@ -22,6 +24,11 @@ namespace Module.Sender.Middlewares
             services.AddScoped<INotifyStrategy,InWebSender>();
             services.AddScoped<INotifyFactory,NotifyFactory>();
             services.AddScoped<NotificationSender>();   
+            return services;
+        }
+        public static IServiceCollection AddMessageFill(IServiceCollection services)
+        {
+            services.TryAddSingleton<MessageFill>();
             return services;
         }
     }

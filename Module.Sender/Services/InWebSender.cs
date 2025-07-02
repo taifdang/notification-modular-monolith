@@ -21,18 +21,17 @@ namespace Module.Sender.Services
             _httpClient = httpClient;
             _logger = logger;
         }
-
-        public async Task SendAsync(MessagePayload payload)
+        public async Task SendAsync(NotifyPayload payload)
         {
             try
             {
                 //convert detail value
-                var detailValue = JsonSerializer.Serialize(payload);
-                var data = JsonSerializer.Deserialize<TopupDetail>(detailValue);
+                //var detailValue = JsonSerializer.Serialize(payload.detail);
+                //var data = JsonSerializer.Deserialize<TopupDetail>(detailValue);
                 //send
                 var _client = _httpClient.CreateClient();
                 _client.BaseAddress = new Uri("https://localhost:7143/api/notification/push");
-                await _client.PostAsJsonAsync(_client.BaseAddress, data);
+                await _client.PostAsJsonAsync(_client.BaseAddress, payload);
             }
             catch (Exception ex)
             {

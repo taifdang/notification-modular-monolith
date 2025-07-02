@@ -16,17 +16,17 @@ namespace Module.Sender.Services
             _factory = factory;
             _logger = logger;
         }
-        public async Task HandleAsync(MessagePayload? payload)
+        public async Task HandleAsync(NotifyPayload? payload)
         {
             if (payload is null)
             {
                 _logger.LogWarning("[NotificationSender]:error>>action type is null");
                 return;
             }
-            var strategy = _factory.GetStrategy(payload.action);
+            var strategy = _factory.GetStrategy(payload.push_type);
             if (strategy is null)
             {
-                _logger.LogWarning("[NotificationSender]:error>>No strategy found for action: {Action}", payload.action);
+                _logger.LogWarning("[NotificationSender]:error>>No strategy found for action: {Action}", payload.push_type);
                 return;
             }
             await strategy.SendAsync(payload);
