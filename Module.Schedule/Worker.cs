@@ -9,18 +9,15 @@ namespace Module.Schedule
     {
         private readonly ILogger<Worker> _logger;
         private readonly IServiceScopeFactory _prodvider;
-        private readonly IConnectionService _connection;
-        private Task _task = null!;
+        private readonly IConnectionService _connection;     
         public IChannel _channel;
         public Worker(ILogger<Worker> logger, IServiceScopeFactory prodvider,IConnectionService connection)
         {
             _logger = logger;
             _prodvider = prodvider;
-            _connection = connection;
-            _task = GetChannelHandle();
-        }
-
-        private async Task GetChannelHandle()
+            _connection = connection;         
+        }       
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -34,13 +31,14 @@ namespace Module.Schedule
                 await _channel.ExchangeDeclareAsync("notification_exchange", ExchangeType.Fanout);
                 await _channel.QueueDeclareAsync("push_notification_queue", true, false, false);
                 await _channel.QueueBindAsync("push_notification_queue", "notification_exchange", "notification_routing_key");
+                await base.StartAsync(cancellationToken);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"[Woker.Module.Schedule]::error::::{ex.ToString()}");
             }
+            
         }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
