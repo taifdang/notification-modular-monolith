@@ -1,0 +1,8 @@
+﻿{
+  "topups": {
+    "module": {
+      "name": "Topups",
+      "enabled": true
+    }
+  }
+}
