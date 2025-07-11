@@ -1,5 +1,9 @@
 ﻿using Hookpay.Shared.Api;
+using Hookpay.Shared.Caching;
+using Hookpay.Shared.Domain.Models;
+using Hookpay.Shared.EventBus;
 using Hookpay.Shared.Modules;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +39,11 @@ namespace Hookpay.Shared
             }
             
            // services.AddEndpointsApiExplorer();
+           
             services.AddSwaggerGen();
+            services.AddMemoryCache();
+            services.AddSingleton<IRequestCache, RequestCache>();
+            //services.AddMassTransitCustom();
 
             services.AddControllers()
             .ConfigureApplicationPartManager(manager =>

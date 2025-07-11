@@ -1,6 +1,7 @@
 ﻿using Hookpay.Modules.Topups.Core.Data;
 using Hookpay.Modules.Topups.Core.Topups.Dao;
 using Hookpay.Shared.EFCore;
+using Hookpay.Shared.EventBus;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Hookpay.Modules.Topups.Core
             services.AddMSSQL<TopupDbContext>();
             services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(TopupRoot).Assembly));
             services.AddScoped<ITopupRepository, TopupRepository>();
+            services.AddScoped<IBusPublisher,BusPublisher>();
             return services;
         }
     }

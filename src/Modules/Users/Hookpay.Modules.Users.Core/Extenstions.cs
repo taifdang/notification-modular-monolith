@@ -1,6 +1,8 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Modules.Users.Core.Users.Dao;
+using Hookpay.Modules.Users.Core.Users.Events.External;
 using Hookpay.Shared.EFCore;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,12 @@ namespace Hookpay.Modules.Users.Core
             services.AddMSSQL<UserDbContext>();
             services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UserRoot).Assembly));
             services.AddScoped<IUserRepository,UsersRepository>();
+            //         
+            services.AddMassTransit(x =>
+                x.AddConsumers(typeof(UserRoot).Assembly)
+            );
             return services;
         }
+       
     }
 }

@@ -16,7 +16,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Topups\Dtos\" />
-	  <Folder Include="Topups\Events\" />
 	  <Folder Include="Topups\Exceptions\" />
 	</ItemGroup>
 </Project>

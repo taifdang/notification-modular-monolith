@@ -1,6 +1,11 @@
 ﻿using Hookpay.Modules.Topups.Core.Data;
 using Hookpay.Modules.Topups.Core.Topups.Dao;
+using Hookpay.Modules.Topups.Core.Topups.Events;
 using Hookpay.Modules.Topups.Core.Topups.Models;
+using Hookpay.Shared.Contracts;
+using Hookpay.Shared.EventBus;
+using MassTransit;
+using MassTransit.SqlTransport.Topology;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,9 +18,11 @@ namespace Hookpay.Modules.Topups.Core.Topups.Features;
 public class CreateTopupCommandHandler : IRequestHandler<CreateTopupCommand, object>
 {
     private readonly ITopupRepository _repository;
-    public CreateTopupCommandHandler(ITopupRepository repository)
+    private readonly IBusPublisher _publisher;
+    public CreateTopupCommandHandler(ITopupRepository repository, IBusPublisher publisher)
     {
         _repository = repository;
+        _publisher = publisher;
     }
 
     public async Task<object> Handle(CreateTopupCommand request, CancellationToken cancellationToken)
@@ -23,15 +30,10 @@ public class CreateTopupCommandHandler : IRequestHandler<CreateTopupCommand, obj
         //convert
         try
         {
-            var _user = request?.description!.Split("NAPTIEN ")[1].ToLower();
-            var data = new Topup
-            {
-                topup_trans_id = request.id,
-                topup_creator = _user,
-                topup_tranfer_amount = request.transferAmount,
-                topup_created_at = DateTime.UtcNow,
-            };
-            await _repository.AddAsync(data);
+            var _user = request?.description!.Split("NAPTIEN ")[1].ToLower();     
+            var data = Topup.Create(request.id,_user,request.transferAmount);
+            await _repository.AddAsync(data);         
+            await _publisher.SendAsync<TopupContracts>(new TopupContracts(data.topup_creator,data.topup_tranfer_amount), cancellationToken);
             return request;
         }
         catch

@@ -4,6 +4,11 @@ using Hookpay.Modules.Topups.Api;
 using Hookpay.Modules.Topups.Core;
 using Hookpay.Shared;
 using Hookpay.Shared.Modules;
+using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 
 
@@ -19,17 +24,62 @@ foreach (var module in _modules)
 {
     module.Register(builder.Services);     
 }
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingInMemory((context, cfg) =>
+    {
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 //builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(TopupRoot).Assembly));
 //builder.Services.AddControllers();
 //builder.Services.AddControllers().AddApplicationPart(typeof(UserRoot).Assembly);
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApi", Version = "v1" });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        options.Authority = "https://hookpay.com";
-        options.Audience = "hookpay.api";
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+
     });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
+
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(x =>
+    {
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "https://hookpay.com",
+            ValidAudience = "https://hookpay.com",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this-is-key-jwt-security"))
+        };
+    });
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

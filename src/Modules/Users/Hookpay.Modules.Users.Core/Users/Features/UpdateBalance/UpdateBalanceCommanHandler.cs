@@ -27,6 +27,7 @@ public class UpdateBalanceCommanHandler : IRequestHandler<UpdateBalanceCommand, 
             if (user is null) return null!;
             user.user_balance += request.tranferAmount;
             await _context.SaveChangesAsync();
+            //publish intergation event -> user
             return new UserDto { username = user.user_name,email = user.user_email,balance=user.user_balance,phone=user.user_phone};
         }
         catch
