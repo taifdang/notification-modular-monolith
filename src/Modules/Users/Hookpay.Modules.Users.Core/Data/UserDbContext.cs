@@ -10,7 +10,7 @@ namespace Hookpay.Modules.Users.Core.Data
     public class UserDbContext:DbContext
     {
         public UserDbContext(DbContextOptions<UserDbContext> options):base(options) { }
-        public DbSet<Users.Models.UserSetting> user_setting { get; set; }
+        public DbSet<Users.Models.UserSetting> settings { get; set; }
         public DbSet<Users.Models.User> users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {           

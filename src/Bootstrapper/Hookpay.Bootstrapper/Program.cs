@@ -15,7 +15,6 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args).ConfigureModules();
 var configuration = builder.Configuration;
 
-
 var _assemblies = ModuleLoader.LoadAssemblies(configuration, "Hookpay.Modules.");
 var _modules = ModuleLoader.LoadModules(_assemblies);
 

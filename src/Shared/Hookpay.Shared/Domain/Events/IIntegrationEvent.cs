@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Shared.Domain.Events;
 
-public interface IInteragationEvent:IEvent
+public interface IIntegrationEvent:IEvent
 {
 }

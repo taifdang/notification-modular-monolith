@@ -15,5 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Hookpay.Shared\Hookpay.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Settings\" />
+  </ItemGroup>
 
 </Project>

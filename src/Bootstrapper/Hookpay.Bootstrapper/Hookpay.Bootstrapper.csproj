@@ -14,6 +14,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Notifications\Hookpay.Modules.Notifications.Api\Hookpay.Modules.Notifications.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Topups\Hookpay.Modules.Topups.Api\Hookpay.Modules.Topups.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Users\Hookpay.Modules.Users.Api\Hookpay.Modules.Users.Api.csproj" />
     <ProjectReference Include="..\..\Shared\Hookpay.Shared\Hookpay.Shared.csproj" />

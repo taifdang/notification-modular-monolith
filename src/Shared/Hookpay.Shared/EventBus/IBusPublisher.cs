@@ -10,5 +10,5 @@ namespace Hookpay.Shared.EventBus;
 
 public interface IBusPublisher
 {  
-    Task SendAsync<T>(T interagationEvent, CancellationToken cancellationToken = default);
+    Task SendAsync<T>(T IntegrationEvent, CancellationToken cancellationToken = default);
 }

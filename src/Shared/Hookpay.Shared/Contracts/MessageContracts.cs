@@ -7,5 +7,4 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Shared.Contracts;
 
-public record TopupContracts(string username,decimal tranferAmount):IIntegrationEvent;
-
+public record MessageContracts(Guid correlationId,string eventType,string payload):IIntegrationEvent;

@@ -1,4 +1,5 @@
 ﻿using Hookpay.Shared.Domain.Events;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,5 +8,4 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Shared.Contracts;
 
-public record TopupContracts(string username,decimal tranferAmount):IIntegrationEvent;
-
+public record UserFlilterContracts(List<int> Ids):IRequest<List<int>>;

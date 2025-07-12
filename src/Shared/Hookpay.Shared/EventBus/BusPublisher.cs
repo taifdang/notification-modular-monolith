@@ -17,8 +17,8 @@ public class BusPublisher : IBusPublisher
         _publisher = publisher;
     }
    
-    public async Task SendAsync<T>(T interagationEvent, CancellationToken cancellationToken = default)
+    public async Task SendAsync<T>(T IntegrationEvent, CancellationToken cancellationToken = default)
     {
-        await _publisher.Publish(interagationEvent, cancellationToken);
+        await _publisher.Publish(IntegrationEvent, cancellationToken);
     }
 }
