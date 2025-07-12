@@ -16,7 +16,7 @@ public static class Extensions
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
         services.AddMSSQL<MessageDbContext>();
-        services.AddHostedService<FilterMessageWorker>();
+        //services.AddHostedService<FilterMessageWorker>();
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(NotificationRoot).Assembly));
         services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
         return services;

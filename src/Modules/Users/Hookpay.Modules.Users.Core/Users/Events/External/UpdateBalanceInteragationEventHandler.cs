@@ -1,11 +1,14 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Shared.Contracts;
+using Hookpay.Shared.Domain.Models;
+using Hookpay.Shared.EventBus;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Core.Users.Events.External;
@@ -13,7 +16,8 @@ namespace Hookpay.Modules.Users.Core.Users.Events.External;
 public class UpdateBalanceInteragationEventHandler : IConsumer<TopupContracts>
 {
     private readonly UserDbContext _context;
-    public UpdateBalanceInteragationEventHandler(UserDbContext context) { _context = context; }
+    private readonly IBusPublisher _publisher;
+    public UpdateBalanceInteragationEventHandler(UserDbContext context, IBusPublisher publisher) { _context = context; _publisher = publisher; }
     public async Task Consume(ConsumeContext<TopupContracts> request)
     {
         //
@@ -23,7 +27,25 @@ public class UpdateBalanceInteragationEventHandler : IConsumer<TopupContracts>
             if (user is null) throw new JobNotFoundException();
             user.user_balance += request.Message.tranferAmount;
             await _context.SaveChangesAsync();
-            //push in message_tbl
+            
+
+            var payload = new MessagePayload
+            {
+                entity_id = request.Message.transId,
+                event_type = "topup.created",
+                action = PushType.InWeb,
+                user_id = user.user_id,
+                detail = new Dictionary<string, object> {
+                   {"user_id",user.user_id},
+                   {"transfer_amount",request.Message.tranferAmount }
+                },
+                priority = PriorityMessage.High
+            };
+
+            var messageContracts = new MessageContracts(Guid.NewGuid(),"topup.created", JsonSerializer.Serialize(payload));
+
+            await _publisher.SendAsync<MessageContracts>(messageContracts);
+
             Console.WriteLine("[consumer]" + request.Message.username + "_" + request.Message.tranferAmount);
         }
         catch(DbUpdateConcurrencyException ex)

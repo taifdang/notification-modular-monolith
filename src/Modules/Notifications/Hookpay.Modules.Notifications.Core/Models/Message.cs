@@ -16,9 +16,18 @@ public class Message
     public string mess_body { get; set; }
     public DateTime mess_createdAt { get; set; } 
     public bool mess_processed { get; set; }
-    public Message Create()
+    public static Message Create(Guid correlationId, int userId ,string title, string body,DateTime createdAt)
     {
-        return new Message();
+        var message = new Message()
+        {
+            mess_correlationId = correlationId,
+            mess_userId = userId,
+            mess_title = title,
+            mess_body = body,
+            mess_createdAt = createdAt,
+            mess_processed = true
+        };
+        return message;
     }
 
 }

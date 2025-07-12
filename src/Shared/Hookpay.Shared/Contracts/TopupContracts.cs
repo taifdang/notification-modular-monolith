@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Shared.Contracts;
 
-public record TopupContracts(string username,decimal tranferAmount):IIntegrationEvent;
+public record TopupContracts(int transId,string username,decimal tranferAmount):IIntegrationEvent;
 

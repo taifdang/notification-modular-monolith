@@ -3,6 +3,7 @@ using Hookpay.Modules.Topups.Core.Topups.Dao;
 using Hookpay.Modules.Topups.Core.Topups.Events;
 using Hookpay.Modules.Topups.Core.Topups.Models;
 using Hookpay.Shared.Contracts;
+using Hookpay.Shared.Domain.Models;
 using Hookpay.Shared.EventBus;
 using MassTransit;
 using MassTransit.SqlTransport.Topology;
@@ -33,7 +34,7 @@ public class CreateTopupCommandHandler : IRequestHandler<CreateTopupCommand, obj
             var _user = request?.description!.Split("NAPTIEN ")[1].ToLower();     
             var data = Topup.Create(request.id,_user,request.transferAmount);
             await _repository.AddAsync(data);         
-            await _publisher.SendAsync<TopupContracts>(new TopupContracts(data.topup_creator,data.topup_tranfer_amount), cancellationToken);
+            await _publisher.SendAsync<TopupContracts>(new TopupContracts(data.topup_trans_id,data.topup_creator,data.topup_tranfer_amount), cancellationToken);         
             return request;
         }
         catch

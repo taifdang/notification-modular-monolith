@@ -24,7 +24,7 @@ public class InboxMessage:Entity
             eventType = eventType,
             payload = payload,
             createdAt = DateTime.UtcNow,
-            processed = false
+            processed = true
         };
         //inboxMessage.AddDomainEvent();
         return inboxMessage;

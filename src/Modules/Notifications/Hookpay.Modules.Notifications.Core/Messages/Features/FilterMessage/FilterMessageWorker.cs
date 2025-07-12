@@ -38,16 +38,16 @@ public class FilterMessageWorker : BackgroundService
                 var _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
                 _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                //var messages = _context.messages.Where(x=>x.mess_processed == false).Take(2).ToList();
-                var messages = _context.message.ToList();
+                var messages = _context.message.Where(x=>x.mess_processed == false).OrderBy(x=>x.mess_id).Take(2).ToList();
                 if (messages is null) return;
-                var reMessages = await FilterMessage(messages);
+                var reMessages = await FilterUser(messages);
                 var listFilter = messages.Where(x => reMessages.Contains(x.mess_userId)).ToList();
                 
                
                 foreach(var filter in listFilter)
                 {
-                    Console.WriteLine(filter.mess_body);  
+                    Console.WriteLine(filter.mess_body);
+                    _logger.LogInformation($"[worker.pushMessage]::{filter.mess_body}");
                 }
                 //foreach(var message in messages)
                 //{
@@ -58,15 +58,15 @@ public class FilterMessageWorker : BackgroundService
             }          
             catch(Exception ex)
             {
-                _logger.LogInformation($"[woker]::error>> {ex.ToString()}");
+                _logger.LogError($"[woker.filter]::error>> {ex.ToString()}");
             }
-            _logger.LogInformation("[send.message]>>>MyWorker running at: {time}", DateTimeOffset.Now);
+            _logger.LogCritical("[woker.filter]>>> running at: {time}", DateTimeOffset.Now);
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }       
     }
-    public async Task<List<int>> FilterMessage(List<Message> messages)
+    public async Task<List<int>> FilterUser(List<Message> messages)
     {
-        var userIds = messages.Select(x=>x.mess_userId).Distinct().ToList();
+        var userIds = messages.Select(x => x.mess_userId).Distinct().ToList();
         var listUserFilter = await _mediator.Send(new UserFlilterContracts(userIds));
         return listUserFilter;
        
