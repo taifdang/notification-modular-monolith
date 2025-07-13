@@ -38,6 +38,7 @@ public class ReceivedMessageHandler : IConsumer<MessageContracts>
             _context.inboxMessage.Add(inbox);
             _context.message.Add(message);
             await _context.SaveChangesAsync();
+            _logger.LogCritical($"[consumer.notification.receive]::___+++___+++___");
         }
         catch (Exception ex)
         {

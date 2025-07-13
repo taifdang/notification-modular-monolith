@@ -14,10 +14,10 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
     public void Configure(EntityTypeBuilder<Message> builder)
     {
         builder.HasKey(x=>x.mess_id);
-        builder.Property(x => x.mess_id).ValueGeneratedOnAdd();
+        builder.Property(x => x.mess_id).IsRequired().ValueGeneratedOnAdd();
 
         builder.HasIndex(x => x.mess_correlationId).IsUnique();
 
-        builder.Property(x => x.mess_processed).HasDefaultValue(false);
+        builder.Property(x => x.mess_processed).IsRequired().HasDefaultValue(false);
     }
 }

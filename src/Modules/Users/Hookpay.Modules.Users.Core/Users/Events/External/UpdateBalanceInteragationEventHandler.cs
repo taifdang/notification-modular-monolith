@@ -36,6 +36,7 @@ public class UpdateBalanceInteragationEventHandler : IConsumer<TopupContracts>
                 action = PushType.InWeb,
                 user_id = user.user_id,
                 detail = new Dictionary<string, object> {
+                   {"entity_id",request.Message.transId },
                    {"user_id",user.user_id},
                    {"transfer_amount",request.Message.tranferAmount }
                 },

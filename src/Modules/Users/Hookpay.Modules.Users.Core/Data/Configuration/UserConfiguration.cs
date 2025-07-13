@@ -22,12 +22,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.user_email)
             .IsRequired()
             .HasMaxLength(108)
-            .HasDefaultValue(default);
+            .HasDefaultValue("");
 
         builder.Property(x => x.user_name)
             .IsRequired()
             .HasMaxLength(25)
-            .HasDefaultValue(default);
+            .HasDefaultValue("");
             
 
         builder.Property(x => x.user_password)
@@ -38,8 +38,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(13);
 
         builder.Property(x => x.user_balance)
-            .HasColumnType("decimail(18,2")
-            .HasDefaultValue(default);
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(0.0);
 
         builder.Property(x => x.is_block)
             .IsRequired()
@@ -47,6 +47,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasOne(x => x.settings)
             .WithOne(x => x.users)
-            .HasForeignKey<UserSetting>(x => x.set_user_id);
+            .HasForeignKey<UserSetting>(x => x.set_user_id)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

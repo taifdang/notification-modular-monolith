@@ -43,8 +43,7 @@ namespace Hookpay.Modules.Topups.Core.Data
                 domainEvent.ClearDomainEvents();
                 foreach(var entityDomainEvent in events)
                 {
-                    await _mediator.Publish(entityDomainEvent);
-                    Console.WriteLine("push domain event");
+                    await _mediator.Publish(entityDomainEvent);                 
                 }
             }
             

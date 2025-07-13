@@ -15,7 +15,7 @@ public class InboxMessageConfiguration : IEntityTypeConfiguration<InboxMessage>
     {
         builder.HasKey(x=>x.correlationId);
 
-        builder.Property(x => x.processed).HasDefaultValue(false);
+        builder.Property(x => x.processed).IsRequired().HasDefaultValue(false);
 
     }
 }

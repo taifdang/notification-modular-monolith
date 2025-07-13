@@ -22,18 +22,16 @@ public class GetUserByIdsCommandHandler : IRequestHandler<UserFlilterContracts, 
     public async Task<List<int>> Handle(UserFlilterContracts request, CancellationToken cancellationToken)
     {
         var list_userId = await _context.users
-            .Where(x=>request.Ids.Contains(x.user_id))
-            .Join(_context.settings,
-                user=>user.user_id,
-                userSetting=>userSetting.set_user_id,
-                (
-                    user, userSetting) => new {user,userSetting}
-                )
-            .Where(
-                x=>x.userSetting.disable_notification == false &&
-                x.user.is_block == false
-                )
-            .Select(x=>x.user.user_id)
+            .Where(x => request.Ids.Contains(x.user_id))
+            .Join(
+                _context.settings,
+                user => user.user_id,
+                userSetting => userSetting.set_user_id,
+                (user, userSetting) => new { user, userSetting })
+            .Where(x =>
+                x.userSetting.disable_notification == false &&
+                x.user.is_block == false)
+            .Select(x => x.user.user_id)
             .ToListAsync();
         return list_userId;
     }

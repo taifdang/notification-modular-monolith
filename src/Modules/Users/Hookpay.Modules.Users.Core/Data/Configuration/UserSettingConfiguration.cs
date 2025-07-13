@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Core.Data.Configuration;
 
-internal class UserSettingConfiguration : IEntityTypeConfiguration<UserSetting>
+public class UserSettingConfiguration : IEntityTypeConfiguration<UserSetting>
 {
     public void Configure(EntityTypeBuilder<UserSetting> builder)
     {

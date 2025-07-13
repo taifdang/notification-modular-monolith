@@ -1,6 +1,8 @@
 ﻿using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Models;
 using Hookpay.Shared.Contracts;
+using Hookpay.Shared.EventBus;
+using MassTransit.Util;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
@@ -37,24 +39,36 @@ public class FilterMessageWorker : BackgroundService
                 var scope = _prodvider.CreateScope();
                 var _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
                 _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                var _publisher   = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
 
-                var messages = _context.message.Where(x=>x.mess_processed == false).OrderBy(x=>x.mess_id).Take(2).ToList();
+                var messages = _context.message.Where(x=>x.mess_processed == false).OrderBy(x=>x.mess_id).Take(1).ToList();             
                 if (messages is null) return;
+                var listMessageId = messages.Select(x => x.mess_id).ToList();
                 var reMessages = await FilterUser(messages);
                 var listFilter = messages.Where(x => reMessages.Contains(x.mess_userId)).ToList();
-                
-               
+                             
                 foreach(var filter in listFilter)
                 {
+                    Console.OutputEncoding = Encoding.UTF8;                  
                     Console.WriteLine(filter.mess_body);
-                    _logger.LogInformation($"[worker.pushMessage]::{filter.mess_body}");
+                    //send message
+                    //OUTBOX
+                    await _publisher.SendAsync<MessageEventContracts>(
+                        new MessageEventContracts(
+                            filter.mess_correlationId,
+                            filter.mess_id,
+                            filter.mess_title,
+                            filter.mess_body)
+                        );
                 }
-                //foreach(var message in messages)
-                //{
-                //    message.mess_processed = true;
-                //}
-                //await _context.SaveChangesAsync();
-
+                //await _context.message.Where(x=> listMessageId.Contains(x.mess_id))
+                //.ExecuteUpdateAsync(x => x.SetProperty(y => y.mess_processed, y => y.mess_processed == true));
+                foreach(var message in messages)
+                {
+                    message.mess_processed = true;
+                }
+                await _context.SaveChangesAsync();
+               
             }          
             catch(Exception ex)
             {

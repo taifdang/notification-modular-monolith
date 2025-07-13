@@ -14,8 +14,8 @@ public class OutboxMessageConfiguartion : IEntityTypeConfiguration<OutboxMessage
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
         builder.HasKey(x => x.id);
-        builder.Property(x => x.id).ValueGeneratedOnAdd();
+        builder.Property(x => x.id).IsRequired().ValueGeneratedOnAdd();
 
-        builder.Property(x => x.status).HasDefaultValue(default);
+        builder.Property(x => x.status).IsRequired().HasDefaultValue(MessageStatus.Pending);
     }
 }

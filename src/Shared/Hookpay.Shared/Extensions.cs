@@ -3,6 +3,7 @@ using Hookpay.Shared.Caching;
 using Hookpay.Shared.Domain.Models;
 using Hookpay.Shared.EventBus;
 using Hookpay.Shared.Modules;
+using Hookpay.Shared.SignalR;
 using Hookpay.Shared.Utils;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -45,6 +46,8 @@ namespace Hookpay.Shared
             services.AddMemoryCache();
             services.AddSingleton<IRequestCache, RequestCache>();
             services.AddSingleton<IMessageConvert,MessageConvert>();
+            //
+            services.AddSingleton<INotificationHubService, NotificationHub>();
             //services.AddMassTransitCustom();
 
             services.AddControllers()

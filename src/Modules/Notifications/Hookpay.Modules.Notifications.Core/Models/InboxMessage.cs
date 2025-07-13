@@ -10,7 +10,7 @@ namespace Hookpay.Modules.Notifications.Core.Models;
 
 public class InboxMessage:Entity
 {
-    public InboxMessage() { }
+   
     public Guid correlationId { get; set; } 
     public string eventType {  get; set; }
     public string payload { get; set; }

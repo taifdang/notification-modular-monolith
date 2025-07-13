@@ -4,6 +4,7 @@ using Hookpay.Modules.Topups.Api;
 using Hookpay.Modules.Topups.Core;
 using Hookpay.Shared;
 using Hookpay.Shared.Modules;
+using Hookpay.Shared.SignalR;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -34,6 +35,9 @@ builder.Services.AddMassTransit(x =>
 //builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(TopupRoot).Assembly));
 //builder.Services.AddControllers();
 //builder.Services.AddControllers().AddApplicationPart(typeof(UserRoot).Assembly);
+
+builder.Services.AddSignalR();
+//
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApi", Version = "v1" });
@@ -101,6 +105,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+app.MapHub<NotificationHub>("/notification");
 _assemblies.Clear();
 _modules.Clear();
 app.Run();

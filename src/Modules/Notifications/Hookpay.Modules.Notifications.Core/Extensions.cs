@@ -1,6 +1,7 @@
 ﻿using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Features.FilterMessage;
 using Hookpay.Shared.EFCore;
+using Hookpay.Shared.SignalR;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,8 +16,8 @@ public static class Extensions
 {
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
-        services.AddMSSQL<MessageDbContext>();
-        //services.AddHostedService<FilterMessageWorker>();
+        services.AddMSSQL<MessageDbContext>();      
+        services.AddHostedService<FilterMessageWorker>();      
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(NotificationRoot).Assembly));
         services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
         return services;

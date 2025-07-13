@@ -14,8 +14,8 @@ public class Message
     public int mess_userId { get; set; }  
     public string mess_title { get; set; }
     public string mess_body { get; set; }
-    public DateTime mess_createdAt { get; set; } 
-    public bool mess_processed { get; set; }
+    public DateTime mess_createdAt { get; set; }
+    public bool mess_processed { get; set; } = false;
     public static Message Create(Guid correlationId, int userId ,string title, string body,DateTime createdAt)
     {
         var message = new Message()
@@ -25,7 +25,7 @@ public class Message
             mess_title = title,
             mess_body = body,
             mess_createdAt = createdAt,
-            mess_processed = true
+            mess_processed = false
         };
         return message;
     }

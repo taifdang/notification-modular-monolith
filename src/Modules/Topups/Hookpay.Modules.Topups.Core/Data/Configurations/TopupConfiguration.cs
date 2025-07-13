@@ -17,6 +17,7 @@ public class TopupConfiguration : IEntityTypeConfiguration<Topup>
         builder.Property(x => x.topup_id).ValueGeneratedOnAdd();
 
         builder.Property(x => x.topup_trans_id).IsRequired();
+        builder.HasIndex(x => x.topup_trans_id).IsUnique();
 
         builder.Property(x => x.topup_source).HasColumnType("varchar(50)");
 
