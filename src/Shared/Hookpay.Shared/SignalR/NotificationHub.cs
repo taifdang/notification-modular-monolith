@@ -11,15 +11,20 @@ namespace Hookpay.Shared.SignalR;
 public class NotificationHub:Hub, INotificationHubService
 {
     private readonly ILogger<NotificationHub> _logger;
-    public NotificationHub(ILogger<NotificationHub> logger)
+    private readonly IHubContext<NotificationHub> _hub;
+    public NotificationHub(
+       ILogger<NotificationHub> logger,
+       IHubContext<NotificationHub> hub
+        )
     {
         _logger = logger;
+        _hub = hub;
     }
     public async Task SendAllAsync(string message)
     {
         try
         {
-            await Clients.All.SendAsync(message);
+            await _hub.Clients.All.SendAsync(message);
             _logger.LogError("[message_hub.send]::send success");
         }
         catch

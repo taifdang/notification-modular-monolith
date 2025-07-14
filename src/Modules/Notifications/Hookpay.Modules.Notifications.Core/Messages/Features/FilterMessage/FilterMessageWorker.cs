@@ -41,7 +41,7 @@ public class FilterMessageWorker : BackgroundService
                 _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                 var _publisher   = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
 
-                var messages = _context.message.Where(x=>x.mess_processed == false).OrderBy(x=>x.mess_id).Take(1).ToList();             
+                var messages = _context.message.Where(x=>x.mess_processed == false).OrderBy(x=>x.mess_id).Take(3).ToList();             
                 if (messages is null) return;
                 var listMessageId = messages.Select(x => x.mess_id).ToList();
                 var reMessages = await FilterUser(messages);
@@ -61,14 +61,13 @@ public class FilterMessageWorker : BackgroundService
                             filter.mess_body)
                         );
                 }
-                //await _context.message.Where(x=> listMessageId.Contains(x.mess_id))
-                //.ExecuteUpdateAsync(x => x.SetProperty(y => y.mess_processed, y => y.mess_processed == true));
-                foreach(var message in messages)
+
+                foreach (var message in messages)
                 {
                     message.mess_processed = true;
                 }
                 await _context.SaveChangesAsync();
-               
+
             }          
             catch(Exception ex)
             {
