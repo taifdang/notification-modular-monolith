@@ -30,8 +30,20 @@ namespace Hookpay.Modules.Topups.Core.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("topup_id"));
 
-                    b.Property<DateTime>("topup_created_at")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("topup_creator")
                         .HasColumnType("varchar(20)");
@@ -50,7 +62,7 @@ namespace Hookpay.Modules.Topups.Core.Data.Migrations
                     b.HasIndex("topup_trans_id")
                         .IsUnique();
 
-                    b.ToTable("topup");
+                    b.ToTable("Topup", "dbo");
                 });
 #pragma warning restore 612, 618
         }

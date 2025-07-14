@@ -1,17 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Hookpay.Modules.Users.Core.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class add_tbl_user_groups : Migration
+    public partial class update_init_tbl : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
+
             migrationBuilder.CreateTable(
-                name: "users",
+                name: "Users",
+                schema: "dbo",
                 columns: table => new
                 {
                     user_id = table.Column<int>(type: "int", nullable: false)
@@ -21,15 +26,21 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
                     user_balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
                     user_email = table.Column<string>(type: "nvarchar(108)", maxLength: 108, nullable: false, defaultValue: ""),
                     user_phone = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: true),
-                    is_block = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    is_block = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_users", x => x.user_id);
+                    table.PrimaryKey("PK_Users", x => x.user_id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "settings",
+                name: "UserSetting",
+                schema: "dbo",
                 columns: table => new
                 {
                     set_id = table.Column<int>(type: "int", nullable: false)
@@ -39,25 +50,28 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_settings", x => x.set_id);
+                    table.PrimaryKey("PK_UserSetting", x => x.set_id);
                     table.ForeignKey(
-                        name: "FK_settings_users_set_user_id",
+                        name: "FK_UserSetting_Users_set_user_id",
                         column: x => x.set_user_id,
-                        principalTable: "users",
+                        principalSchema: "dbo",
+                        principalTable: "Users",
                         principalColumn: "user_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_settings_set_user_id",
-                table: "settings",
-                column: "set_user_id",
+                name: "IX_Users_user_email",
+                schema: "dbo",
+                table: "Users",
+                column: "user_email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_users_user_email",
-                table: "users",
-                column: "user_email",
+                name: "IX_UserSetting_set_user_id",
+                schema: "dbo",
+                table: "UserSetting",
+                column: "set_user_id",
                 unique: true);
         }
 
@@ -65,10 +79,12 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "settings");
+                name: "UserSetting",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "Users",
+                schema: "dbo");
         }
     }
 }

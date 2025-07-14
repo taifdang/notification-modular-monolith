@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Models;
 
-public class InboxMessage:Entity
-{
-   
+public class InboxMessage:Aggregate
+{ 
     public Guid correlationId { get; set; } 
     public string eventType {  get; set; }
     public string payload { get; set; }
-    public DateTime createdAt { get; set; }
+    //public DateTime createdAt { get; set; }
     public bool processed { get; set; }
     public static InboxMessage Create(Guid correlationId, string eventType, string payload)
     {
@@ -23,7 +22,7 @@ public class InboxMessage:Entity
             correlationId = correlationId,
             eventType = eventType,
             payload = payload,
-            createdAt = DateTime.UtcNow,
+            //createdAt = DateTime.UtcNow,
             processed = true
         };
         //inboxMessage.AddDomainEvent();

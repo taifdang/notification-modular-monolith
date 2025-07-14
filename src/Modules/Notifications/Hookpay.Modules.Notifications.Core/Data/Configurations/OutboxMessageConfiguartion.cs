@@ -13,6 +13,8 @@ public class OutboxMessageConfiguartion : IEntityTypeConfiguration<OutboxMessage
 {
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
+        builder.ToTable("OutboxMessage", "dbo");
+
         builder.HasKey(x => x.id);
         builder.Property(x => x.id).IsRequired().ValueGeneratedOnAdd();
 

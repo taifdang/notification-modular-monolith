@@ -21,10 +21,10 @@ public class GetUserByIdsCommandHandler : IRequestHandler<UserFlilterContracts, 
 
     public async Task<List<int>> Handle(UserFlilterContracts request, CancellationToken cancellationToken)
     {
-        var list_userId = await _context.users
+        var list_userId = await _context.Users
             .Where(x => request.Ids.Contains(x.user_id))
             .Join(
-                _context.settings,
+                _context.UserSetting,
                 user => user.user_id,
                 userSetting => userSetting.set_user_id,
                 (user, userSetting) => new { user, userSetting })

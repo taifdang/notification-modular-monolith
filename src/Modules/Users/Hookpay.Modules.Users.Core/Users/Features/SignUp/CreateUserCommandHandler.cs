@@ -16,7 +16,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserD
     public CreateUserCommandHandler(IUserRepository repository) {  _repository = repository; }
     public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = new User 
+        var user = new Models.Users 
         { 
             user_name = request.username,
             user_password = request.password,

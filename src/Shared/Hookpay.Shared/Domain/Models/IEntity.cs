@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 namespace Hookpay.Shared.Domain.Models;
 
 public interface IEntity
-{
-    IReadOnlyList<IDomainEvent> DomainEvents { get; }
-    void AddDomainEvent(IDomainEvent domainEvent);
-    IEvent[] ClearDomainEvents();
+{    
+    public DateTime? CreatedAt { get; set; }
+    public int? CreatedBy { get; set; } 
+    public DateTime? UpdatedAt { get; set; }
+    public int? UpdatedBy { get; set; }
+    public bool IsDeleted { get; set; }
 }

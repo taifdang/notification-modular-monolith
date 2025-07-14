@@ -13,6 +13,8 @@ public class TopupConfiguration : IEntityTypeConfiguration<Topup>
 {
     public void Configure(EntityTypeBuilder<Topup> builder)
     {
+        builder.ToTable("Topup", "dbo");
+
         builder.HasKey(x => x.topup_id);
         builder.Property(x => x.topup_id).ValueGeneratedOnAdd();
 

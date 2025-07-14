@@ -13,6 +13,8 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
 {
     public void Configure(EntityTypeBuilder<Message> builder)
     {
+        builder.ToTable("Message", "dbo");
+
         builder.HasKey(x=>x.mess_id);
         builder.Property(x => x.mess_id).IsRequired().ValueGeneratedOnAdd();
 

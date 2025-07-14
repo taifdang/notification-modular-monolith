@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Topups.Core.Topups.Models
 {
-    public class Topup:Entity
+    public class Topup:Aggregate
     {
         public Topup() { }
 
@@ -19,7 +19,7 @@ namespace Hookpay.Modules.Topups.Core.Topups.Models
         public string? topup_source { get; set; }
         public string? topup_creator { get; set; }
         public decimal topup_tranfer_amount { get; set; }
-        public DateTime topup_created_at { get; set; }
+        //public DateTime topup_created_at { get; set; }
 
         public static Topup Create(int transId,string creator,decimal tranfer_amount)
         {
@@ -28,7 +28,7 @@ namespace Hookpay.Modules.Topups.Core.Topups.Models
                 topup_trans_id = transId,
                 topup_creator = creator,
                 topup_tranfer_amount = tranfer_amount,
-                topup_created_at = DateTime.UtcNow,
+                //topup_created_at = DateTime.UtcNow,
             };
             var @event = new CreateTopupDomainEvent(topup.topup_creator, topup.topup_tranfer_amount);
             topup.AddDomainEvent(@event);

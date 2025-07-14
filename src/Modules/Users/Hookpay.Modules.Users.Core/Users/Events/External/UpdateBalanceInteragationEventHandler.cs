@@ -23,12 +23,11 @@ public class UpdateBalanceInteragationEventHandler : IConsumer<TopupContracts>
         //
         try
         {
-            var user = await _context.users.SingleOrDefaultAsync(x => x.user_name == request.Message.username.ToLowerInvariant());
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.user_name == request.Message.username.ToLowerInvariant());
             if (user is null) throw new JobNotFoundException();
             user.user_balance += request.Message.tranferAmount;
             await _context.SaveChangesAsync();
-            
-
+                       
             var payload = new MessagePayload
             {
                 entity_id = request.Message.transId,

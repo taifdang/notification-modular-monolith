@@ -20,7 +20,7 @@ public enum PushType
 {
     InWeb = 0,
     Email = 1,
-    Sms = 2,
+    Sms = 2
 }
 public enum PriorityMessage 
 {

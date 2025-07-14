@@ -23,7 +23,7 @@ public class UpdateBalanceCommanHandler : IRequestHandler<UpdateBalanceCommand, 
     {
         try
         {
-            var user = await _context.users.SingleOrDefaultAsync(x => x.user_id == request.userId);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.user_id == request.userId);
             if (user is null) return null!;
             user.user_balance += request.tranferAmount;
             await _context.SaveChangesAsync();

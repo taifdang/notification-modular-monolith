@@ -10,6 +10,6 @@ namespace Hookpay.Modules.Users.Core.Users.Dao;
 
 public interface IUserRepository
 {
-    Task<User> GetAsync(int userId);
-    Task AddAsync(User command);
+    Task<Models.Users> GetAsync(int userId);
+    Task AddAsync(Models.Users command);
 }

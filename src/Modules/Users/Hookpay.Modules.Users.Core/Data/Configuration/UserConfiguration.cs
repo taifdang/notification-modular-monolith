@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Core.Data.Configuration;
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class UserConfiguration : IEntityTypeConfiguration<Users.Models.Users>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<Users.Models.Users> builder)
     {
+        builder.ToTable("Users", "dbo");
+
         builder.HasKey(x => x.user_id);
         builder.Property(u => u.user_id)
             .ValueGeneratedOnAdd();

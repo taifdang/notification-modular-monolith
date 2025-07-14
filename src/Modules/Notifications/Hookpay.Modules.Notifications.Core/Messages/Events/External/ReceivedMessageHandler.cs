@@ -33,10 +33,10 @@ public class ReceivedMessageHandler : IConsumer<MessageContracts>
             var data = JsonSerializer.Deserialize<MessagePayload>(request.Message.payload);
             var body = _convert.MessageRender(data.event_type, data.detail);
 
-            var message = Message.Create(request.Message.correlationId, data.user_id, request.Message.eventType, body, inbox.createdAt);
+            var message = Message.Create(request.Message.correlationId, data.user_id, request.Message.eventType, body);
 
-            _context.inboxMessage.Add(inbox);
-            _context.message.Add(message);
+            _context.InboxMessage.Add(inbox);
+            _context.Message.Add(message);
             await _context.SaveChangesAsync();
             _logger.LogCritical($"[consumer.notification.receive]::___+++___+++___");
         }

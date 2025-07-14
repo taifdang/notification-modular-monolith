@@ -16,7 +16,7 @@ namespace Hookpay.Modules.Topups.Core.Topups.Dao
         public TopupRepository(TopupDbContext db)
         {
             _db = db;
-            _topup = _db.topup;       
+            _topup = _db.Topup;       
         }
 
         public async Task AddAsync(Topup topup)

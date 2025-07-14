@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 {
     [DbContext(typeof(MessageDbContext))]
-    [Migration("20250713133318_add_tbl_message_group")]
-    partial class add_tbl_message_group
+    [Migration("20250714152457_update_init_tbl")]
+    partial class update_init_tbl
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,8 +31,20 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("createdAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("eventType")
                         .IsRequired()
@@ -49,7 +61,7 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 
                     b.HasKey("correlationId");
 
-                    b.ToTable("inboxMessage");
+                    b.ToTable("InboxMessage", "dbo");
                 });
 
             modelBuilder.Entity("Hookpay.Modules.Notifications.Core.Models.Message", b =>
@@ -60,15 +72,27 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("mess_id"));
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
                     b.Property<string>("mess_body")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("mess_correlationId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("mess_createdAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<bool>("mess_processed")
                         .ValueGeneratedOnAdd()
@@ -87,7 +111,7 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                     b.HasIndex("mess_correlationId")
                         .IsUnique();
 
-                    b.ToTable("message");
+                    b.ToTable("Message", "dbo");
                 });
 
             modelBuilder.Entity("Hookpay.Modules.Notifications.Core.Models.OutboxMessage", b =>
@@ -98,11 +122,23 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("correlationId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("createdAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("status")
                         .ValueGeneratedOnAdd()
@@ -119,7 +155,7 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("outboxMessage");
+                    b.ToTable("OutboxMessage", "dbo");
                 });
 #pragma warning restore 612, 618
         }

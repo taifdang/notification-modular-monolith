@@ -13,6 +13,8 @@ public class UserSettingConfiguration : IEntityTypeConfiguration<UserSetting>
 {
     public void Configure(EntityTypeBuilder<UserSetting> builder)
     {
+        builder.ToTable("UserSetting", "dbo");
+
         builder.HasKey(x => x.set_id);
         builder.Property(u => u.set_id)
             .ValueGeneratedOnAdd();

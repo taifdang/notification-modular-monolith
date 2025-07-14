@@ -13,19 +13,19 @@ namespace Hookpay.Modules.Users.Core.Users.Dao;
 public class UsersRepository : IUserRepository
 {
     private readonly UserDbContext _context;
-    private readonly DbSet<User> _users;
+    private readonly DbSet<Models.Users> _users;
     public UsersRepository(UserDbContext context)
     {
         _context = context;
-        _users = _context.users;
+        _users = _context.Users;
     }
 
-    public async Task AddAsync(User command)
+    public async Task AddAsync(Models.Users command)
     {      
         await _users.AddAsync(command);
         await _context.SaveChangesAsync();
     }
-    public async Task<User> GetAsync(int userId)
+    public async Task<Models.Users> GetAsync(int userId)
     {
         return await _users.SingleOrDefaultAsync(x => x.user_id == userId);
     }

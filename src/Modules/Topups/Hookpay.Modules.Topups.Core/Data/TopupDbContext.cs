@@ -1,5 +1,6 @@
 ﻿using Hookpay.Modules.Topups.Core.Topups.Models;
 using Hookpay.Shared.Domain.Models;
+using Hookpay.Shared.EFCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Topups.Core.Data
 {
-    public class TopupDbContext:DbContext
+    public class TopupDbContext:AppDbContextBase
     {
         private readonly IMediator _mediator;
         public TopupDbContext(DbContextOptions<TopupDbContext> options,IMediator mediator) : base(options) { _mediator = mediator; }
-        public DbSet<Topup> topup { get; set; }
+        public DbSet<Topup> Topup => Set<Topup>();  
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {          
             base.OnModelCreating(modelBuilder);
@@ -33,14 +34,14 @@ namespace Hookpay.Modules.Topups.Core.Data
         }
         private async Task _dispatchDomainEvent()
         {
-            var domainEntites = ChangeTracker.Entries<Entity>()
+            var domainEntites = ChangeTracker.Entries<IAggregate>()
                 .Select(x => x.Entity)
                 .Where(x=>x.DomainEvents.Any())
                 .ToArray();
             foreach(var domainEvent in domainEntites)
             {
                 var events = domainEvent.DomainEvents.ToArray();    
-                domainEvent.ClearDomainEvents();
+                domainEvent.ClearDomainEvent();
                 foreach(var entityDomainEvent in events)
                 {
                     await _mediator.Publish(entityDomainEvent);                 

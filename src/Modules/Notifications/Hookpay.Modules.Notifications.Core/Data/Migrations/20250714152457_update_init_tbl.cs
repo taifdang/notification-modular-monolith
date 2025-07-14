@@ -6,28 +6,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class add_tbl_message_group : Migration
+    public partial class update_init_tbl : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
+
             migrationBuilder.CreateTable(
-                name: "inboxMessage",
+                name: "InboxMessage",
+                schema: "dbo",
                 columns: table => new
                 {
                     correlationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     eventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     payload = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    processed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    processed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_inboxMessage", x => x.correlationId);
+                    table.PrimaryKey("PK_InboxMessage", x => x.correlationId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "message",
+                name: "Message",
+                schema: "dbo",
                 columns: table => new
                 {
                     mess_id = table.Column<int>(type: "int", nullable: false)
@@ -36,16 +45,21 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                     mess_userId = table.Column<int>(type: "int", nullable: false),
                     mess_title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     mess_body = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    mess_createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    mess_processed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    mess_processed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_message", x => x.mess_id);
+                    table.PrimaryKey("PK_Message", x => x.mess_id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "outboxMessage",
+                name: "OutboxMessage",
+                schema: "dbo",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -53,17 +67,22 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                     userId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     correlationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    status = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_outboxMessage", x => x.id);
+                    table.PrimaryKey("PK_OutboxMessage", x => x.id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_message_mess_correlationId",
-                table: "message",
+                name: "IX_Message_mess_correlationId",
+                schema: "dbo",
+                table: "Message",
                 column: "mess_correlationId",
                 unique: true);
         }
@@ -72,13 +91,16 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "inboxMessage");
+                name: "InboxMessage",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "message");
+                name: "Message",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "outboxMessage");
+                name: "OutboxMessage",
+                schema: "dbo");
         }
     }
 }

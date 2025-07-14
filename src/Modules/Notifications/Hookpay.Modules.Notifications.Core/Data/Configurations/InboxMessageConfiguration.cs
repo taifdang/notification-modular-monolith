@@ -13,9 +13,13 @@ public class InboxMessageConfiguration : IEntityTypeConfiguration<InboxMessage>
 {
     public void Configure(EntityTypeBuilder<InboxMessage> builder)
     {
-        builder.HasKey(x=>x.correlationId);
+        builder.ToTable("InboxMessage", "dbo");
 
+        builder.HasKey(x=>x.correlationId);
+  
         builder.Property(x => x.processed).IsRequired().HasDefaultValue(false);
+
+
 
     }
 }
