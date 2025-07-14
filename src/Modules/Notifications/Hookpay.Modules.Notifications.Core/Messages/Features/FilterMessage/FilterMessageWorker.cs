@@ -61,13 +61,9 @@ public class FilterMessageWorker : BackgroundService
                             filter.mess_body)
                         );
                 }
-
-                foreach (var message in messages)
-                {
-                    message.mess_processed = true;
-                }
-                await _context.SaveChangesAsync();
-
+                await _context.message
+                    .Where(x => listMessageId.Contains(x.mess_id))
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.mess_processed, true));             
             }          
             catch(Exception ex)
             {
