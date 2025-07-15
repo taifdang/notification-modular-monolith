@@ -4,6 +4,7 @@ using Hookpay.Modules.Topups.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hookpay.Modules.Topups.Core.Data.Migrations
 {
     [DbContext(typeof(TopupDbContext))]
-    partial class TopupDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250715141259_update-name_tbl")]
+    partial class updatename_tbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

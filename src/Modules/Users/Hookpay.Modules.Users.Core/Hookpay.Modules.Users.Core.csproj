@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Settings\" />
+    <Folder Include="Users\Features\GetStreamingUsers\" />
   </ItemGroup>
 
 </Project>

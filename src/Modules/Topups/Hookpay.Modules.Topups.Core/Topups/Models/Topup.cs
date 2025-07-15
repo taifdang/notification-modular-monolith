@@ -18,7 +18,7 @@ namespace Hookpay.Modules.Topups.Core.Topups.Models
         public int TransactionId { get; set; } = default!;
         public string? Source { get; set; }
         public string? Creator { get; set; }
-        public decimal TranferAmount { get; set; }
+        public decimal TransferAmount { get; set; }
         //public DateTime topup_created_at { get; set; }
 
         public static Topup Create(int transId,string creator,decimal tranfer_amount)
@@ -27,10 +27,10 @@ namespace Hookpay.Modules.Topups.Core.Topups.Models
             {
                 TransactionId = transId,
                 Creator = creator,
-                TranferAmount = tranfer_amount,
+                TransferAmount = tranfer_amount,
                 //topup_created_at = DateTime.UtcNow,
             };
-            var @event = new CreateTopupDomainEvent(topup.Creator, topup.TranferAmount);
+            var @event = new CreateTopupDomainEvent(topup.Creator, topup.TransferAmount);
             topup.AddDomainEvent(@event);
 
             return topup;

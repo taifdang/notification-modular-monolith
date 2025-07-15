@@ -34,7 +34,7 @@ public class CreateTopupCommandHandler : IRequestHandler<CreateTopupCommand, obj
             var _user = request?.description!.Split("NAPTIEN ")[1].ToLower();     
             var data = Topup.Create(request.id,_user,request.transferAmount);
             await _repository.AddAsync(data);         
-            await _publisher.SendAsync<TopupContracts>(new TopupContracts(data.TransactionId,data.Creator,data.TranferAmount), cancellationToken);         
+            await _publisher.SendAsync<TopupContracts>(new TopupContracts(data.TransactionId,data.Creator,data.TransferAmount), cancellationToken);         
             return request;
         }
         catch

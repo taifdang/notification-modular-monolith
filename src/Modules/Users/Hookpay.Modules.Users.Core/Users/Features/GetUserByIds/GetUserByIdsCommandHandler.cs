@@ -29,7 +29,7 @@ public class GetUserByIdsCommandHandler : IRequestHandler<UserFlilterContracts, 
                 userSetting => userSetting.UserId,
                 (user, userSetting) => new { user, userSetting })
             .Where(x =>
-                x.userSetting.AllowNotification == false &&
+                x.userSetting.AllowNotification == true &&
                 x.user.Status == UserStatus.Active)
             .Select(x => x.user.Id)
             .ToListAsync();

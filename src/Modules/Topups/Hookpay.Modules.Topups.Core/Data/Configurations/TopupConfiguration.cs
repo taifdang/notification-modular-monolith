@@ -25,7 +25,7 @@ public class TopupConfiguration : IEntityTypeConfiguration<Topup>
 
         builder.Property(x => x.Creator).HasColumnType("varchar(20)");
 
-        builder.Property(x => x.TranferAmount).IsRequired().HasColumnType("decimal(18,2)");
+        builder.Property(x => x.TransferAmount).IsRequired().HasColumnType("decimal(18,2)");
         builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
 
         //builder.Property(x => x.topup_created_at).HasDefaultValueSql("GETUTCDATE()");

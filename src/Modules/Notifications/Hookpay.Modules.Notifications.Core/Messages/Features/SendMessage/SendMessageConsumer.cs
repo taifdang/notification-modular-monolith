@@ -21,9 +21,7 @@ public class SendMessageConsumer : IConsumer<MessageEventContracts>
         ) 
     {  
         _logger = logger;
-        _hub = hub;
-      
-       
+        _hub = hub;       
     }
     public  async Task Consume(ConsumeContext<MessageEventContracts> context)
     {
