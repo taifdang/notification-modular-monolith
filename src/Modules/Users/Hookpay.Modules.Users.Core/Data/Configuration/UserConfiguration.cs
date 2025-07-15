@@ -15,41 +15,47 @@ public class UserConfiguration : IEntityTypeConfiguration<Users.Models.Users>
     {
         builder.ToTable("Users", "dbo");
 
-        builder.HasKey(x => x.user_id);
-        builder.Property(u => u.user_id)
+        builder.HasKey(x => x.Id);
+        builder.Property(u => u.Id)
             .ValueGeneratedOnAdd();
 
-        builder.HasIndex(x => x.user_email)
+        builder.HasIndex(x => x.Email)
             .IsUnique();
-        builder.Property(x => x.user_email)
+        builder.Property(x => x.Email)
             .IsRequired()
             .HasMaxLength(108)
             .HasDefaultValue("");
 
-        builder.Property(x => x.user_name)
+        builder.Property(x => x.Username)
             .IsRequired()
             .HasMaxLength(25)
             .HasDefaultValue("");
             
 
-        builder.Property(x => x.user_password)
+        builder.Property(x => x.Password)
             .IsRequired()
             .HasMaxLength(25);
 
-        builder.Property(x => x.user_phone)           
+        builder.Property(x => x.Phone)           
             .HasMaxLength(13);
 
-        builder.Property(x => x.user_balance)
+        builder.Property(x => x.Balance)
             .HasColumnType("decimal(18,2)")
             .HasDefaultValue(0.0);
 
-        builder.Property(x => x.is_block)
+        builder.Property(x => x.Status)
             .IsRequired()
-            .HasDefaultValue(false);
+            .HasDefaultValue(UserStatus.Active);
 
-        builder.HasOne(x => x.settings)
-            .WithOne(x => x.users)
-            .HasForeignKey<UserSetting>(x => x.set_user_id)
+        builder.Property(x => x.Status).IsRequired().HasDefaultValue(UserStatus.Active);
+
+        builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
+
+        builder.HasOne(x => x.UserSetting)
+            .WithOne(x => x.Users)
+            .HasForeignKey<UserSetting>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        
     }
 }

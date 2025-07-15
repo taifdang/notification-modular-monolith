@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hookpay.Modules.Users.Core.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class update_init_tbl : Migration
+    public partial class addinitial_tbl : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,23 +19,24 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    user_id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    user_name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false, defaultValue: ""),
-                    user_password = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    user_balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
-                    user_email = table.Column<string>(type: "nvarchar(108)", maxLength: 108, nullable: false, defaultValue: ""),
-                    user_phone = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: true),
-                    is_block = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Username = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false, defaultValue: ""),
+                    Password = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
+                    Email = table.Column<string>(type: "nvarchar(108)", maxLength: 108, nullable: false, defaultValue: ""),
+                    Phone = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Version = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.user_id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,35 +44,35 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    set_id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    set_user_id = table.Column<int>(type: "int", nullable: false),
-                    disable_notification = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    AllowNotification = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserSetting", x => x.set_id);
+                    table.PrimaryKey("PK_UserSetting", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserSetting_Users_set_user_id",
-                        column: x => x.set_user_id,
+                        name: "FK_UserSetting_Users_UserId",
+                        column: x => x.UserId,
                         principalSchema: "dbo",
                         principalTable: "Users",
-                        principalColumn: "user_id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_user_email",
+                name: "IX_Users_Email",
                 schema: "dbo",
                 table: "Users",
-                column: "user_email",
+                column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSetting_set_user_id",
+                name: "IX_UserSetting_UserId",
                 schema: "dbo",
                 table: "UserSetting",
-                column: "set_user_id",
+                column: "UserId",
                 unique: true);
         }
 

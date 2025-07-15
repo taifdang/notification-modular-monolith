@@ -10,13 +10,13 @@ namespace Hookpay.Modules.Users.Core.Users.Models
 {
     public class Users:Aggregate
     {      
-        public int user_id { get; set; }
-        public string user_name { get; set; } 
-        public string user_password { get; set; }
-        public decimal user_balance { get; set; }
-        public string? user_email { get; set; }
-        public string? user_phone { get; set; }
-        public bool is_block { get; set; } = false;     
-        public UserSetting? settings { get; set; }
+        public int Id { get; set; }
+        public string Username { get; set; } 
+        public string Password { get; set; }
+        public decimal Balance { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public UserStatus Status { get; set; }     
+        public UserSetting? UserSetting { get; set; }
     }
 }

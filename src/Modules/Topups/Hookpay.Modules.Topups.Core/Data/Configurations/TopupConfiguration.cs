@@ -15,17 +15,18 @@ public class TopupConfiguration : IEntityTypeConfiguration<Topup>
     {
         builder.ToTable("Topup", "dbo");
 
-        builder.HasKey(x => x.topup_id);
-        builder.Property(x => x.topup_id).ValueGeneratedOnAdd();
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-        builder.Property(x => x.topup_trans_id).IsRequired();
-        builder.HasIndex(x => x.topup_trans_id).IsUnique();
+        builder.Property(x => x.TransactionId).IsRequired();
+        builder.HasIndex(x => x.TransactionId).IsUnique();
 
-        builder.Property(x => x.topup_source).HasColumnType("varchar(50)");
+        builder.Property(x => x.Source).HasColumnType("varchar(50)");
 
-        builder.Property(x => x.topup_creator).HasColumnType("varchar(20)");
+        builder.Property(x => x.Creator).HasColumnType("varchar(20)");
 
-        builder.Property(x => x.topup_tranfer_amount).IsRequired().HasColumnType("decimal(18,2)");
+        builder.Property(x => x.TranferAmount).IsRequired().HasColumnType("decimal(18,2)");
+        builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
 
         //builder.Property(x => x.topup_created_at).HasDefaultValueSql("GETUTCDATE()");
     }

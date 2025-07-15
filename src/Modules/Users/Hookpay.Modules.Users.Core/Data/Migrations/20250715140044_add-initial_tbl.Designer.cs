@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hookpay.Modules.Users.Core.Data.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20250714152421_update_init_tbl")]
-    partial class update_init_tbl
+    [Migration("20250715140044_add-initial_tbl")]
+    partial class addinitial_tbl
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,23 +27,23 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
 
             modelBuilder.Entity("Hookpay.Modules.Users.Core.Users.Models.UserSetting", b =>
                 {
-                    b.Property<int>("set_id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("set_id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("disable_notification")
+                    b.Property<bool>("AllowNotification")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<int>("set_user_id")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("set_id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("set_user_id")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("UserSetting", "dbo");
@@ -51,11 +51,16 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
 
             modelBuilder.Entity("Hookpay.Modules.Users.Core.Users.Models.Users", b =>
                 {
-                    b.Property<int>("user_id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("user_id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -63,8 +68,31 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(108)
+                        .HasColumnType("nvarchar(108)")
+                        .HasDefaultValue("");
+
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -72,42 +100,19 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<bool>("is_block")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<decimal>("user_balance")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<string>("user_email")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(108)
-                        .HasColumnType("nvarchar(108)")
-                        .HasDefaultValue("");
-
-                    b.Property<string>("user_name")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)")
                         .HasDefaultValue("");
 
-                    b.Property<string>("user_password")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
 
-                    b.Property<string>("user_phone")
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                    b.HasKey("Id");
 
-                    b.HasKey("user_id");
-
-                    b.HasIndex("user_email")
+                    b.HasIndex("Email")
                         .IsUnique();
 
                     b.ToTable("Users", "dbo");
@@ -115,18 +120,18 @@ namespace Hookpay.Modules.Users.Core.Data.Migrations
 
             modelBuilder.Entity("Hookpay.Modules.Users.Core.Users.Models.UserSetting", b =>
                 {
-                    b.HasOne("Hookpay.Modules.Users.Core.Users.Models.Users", "users")
-                        .WithOne("settings")
-                        .HasForeignKey("Hookpay.Modules.Users.Core.Users.Models.UserSetting", "set_user_id")
+                    b.HasOne("Hookpay.Modules.Users.Core.Users.Models.Users", "Users")
+                        .WithOne("UserSetting")
+                        .HasForeignKey("Hookpay.Modules.Users.Core.Users.Models.UserSetting", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("users");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Hookpay.Modules.Users.Core.Users.Models.Users", b =>
                 {
-                    b.Navigation("settings");
+                    b.Navigation("UserSetting");
                 });
 #pragma warning restore 612, 618
         }

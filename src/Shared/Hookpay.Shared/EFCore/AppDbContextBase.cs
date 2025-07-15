@@ -84,6 +84,7 @@ public class AppDbContextBase : DbContext, IDbContext
     }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        OnBeforeSaving();
         try
         {
             return await base.SaveChangesAsync(cancellationToken);
@@ -119,5 +120,47 @@ public class AppDbContextBase : DbContext, IDbContext
         domainEntities.ForEach(entity => entity.ClearDomainEvent());
 
         return domainEvents.ToImmutableList();
+    }
+    public void OnBeforeSaving()
+    {
+        var userId = GetCurrentUser();
+        try
+        {
+            foreach (var entry in ChangeTracker.Entries<IAggregate>())
+            {
+                var isAuditable = entry.Entity.GetType().IsAssignableTo(typeof(IAggregate));
+
+                if (isAuditable)
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.Entity.CreatedBy = userId;
+                            entry.Entity.CreatedAt = DateTime.Now;
+                            break;
+
+                        case EntityState.Modified:
+                            entry.Entity.UpdatedBy = userId;
+                            entry.Entity.UpdatedAt = DateTime.Now;
+                            break;
+
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Modified;
+                            entry.Entity.UpdatedBy = userId;
+                            entry.Entity.UpdatedAt = DateTime.Now;
+                            entry.Entity.IsDeleted = true;
+                            break;
+                    }
+                }
+            }
+        }
+        catch(Exception ex) 
+        {
+            throw new Exception("try for find IAggregate", ex);
+        }
+    }
+    public int GetCurrentUser()
+    {
+        return 1;
     }
 }

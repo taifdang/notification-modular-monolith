@@ -10,6 +10,7 @@ public interface IAggregate:IEntity
 {
     IReadOnlyList<IDomainEvent> DomainEvents {  get; }
     IEvent[] ClearDomainEvent();
+    int Version { get; set; }
 }
 public interface IAggregate<out T> : IAggregate
 {

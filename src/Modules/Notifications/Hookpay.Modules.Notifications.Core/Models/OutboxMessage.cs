@@ -9,10 +9,11 @@ namespace Hookpay.Modules.Notifications.Core.Models;
 
 public class OutboxMessage:Aggregate
 {
-    public int id { get; set; }
-    public string userId {  get; set; } 
-    public Guid correlationId { get; set; }
-    public string title { get; set; }   
+    public int Id { get; set; }
+    public int? UserId {  get; set; } 
+    public Guid CorrelationId { get; set; }
+    public int MessageId { get; set; }    
+    public MessageType MessageType { get; set; }
     //public DateTime createdAt { get; set; }
-    public MessageStatus status { get; set; }
+    public MessageStatus Status { get; set; }
 }

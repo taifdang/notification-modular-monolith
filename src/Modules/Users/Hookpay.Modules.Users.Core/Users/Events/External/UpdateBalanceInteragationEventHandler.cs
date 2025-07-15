@@ -23,9 +23,9 @@ public class UpdateBalanceInteragationEventHandler : IConsumer<TopupContracts>
         //
         try
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.user_name == request.Message.username.ToLowerInvariant());
-            if (user is null) throw new JobNotFoundException();
-            user.user_balance += request.Message.tranferAmount;
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == request.Message.username.ToLowerInvariant());
+            if (user is null) throw new Exception("Not found userId");
+            user.Balance += request.Message.tranferAmount;
             await _context.SaveChangesAsync();
                        
             var payload = new MessagePayload
@@ -33,10 +33,10 @@ public class UpdateBalanceInteragationEventHandler : IConsumer<TopupContracts>
                 entity_id = request.Message.transId,
                 event_type = "topup.created",
                 action = PushType.InWeb,
-                user_id = user.user_id,
+                user_id = user.Id,
                 detail = new Dictionary<string, object> {
                    {"entity_id",request.Message.transId },
-                   {"user_id",user.user_id},
+                   {"user_id",user.Id},
                    {"transfer_amount",request.Message.tranferAmount }
                 },
                 priority = PriorityMessage.High

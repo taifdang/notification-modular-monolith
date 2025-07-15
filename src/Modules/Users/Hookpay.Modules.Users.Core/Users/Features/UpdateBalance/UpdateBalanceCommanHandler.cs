@@ -23,12 +23,12 @@ public class UpdateBalanceCommanHandler : IRequestHandler<UpdateBalanceCommand, 
     {
         try
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.user_id == request.userId);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == request.userId);
             if (user is null) return null!;
-            user.user_balance += request.tranferAmount;
+            user.Balance += request.tranferAmount;
             await _context.SaveChangesAsync();
             //publish intergation event -> user
-            return new UserDto { username = user.user_name,email = user.user_email,balance=user.user_balance,phone=user.user_phone};
+            return new UserDto { username = user.Username,email = user.Email,balance=user.Balance,phone=user.Phone};
         }
         catch
         {

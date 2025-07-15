@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hookpay.Modules.Topups.Core.Data.Migrations
 {
     [DbContext(typeof(TopupDbContext))]
-    [Migration("20250714152439_update_init_tbl")]
-    partial class update_init_tbl
+    [Migration("20250715140114_add-initial_tbl")]
+    partial class addinitial_tbl
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,11 @@ namespace Hookpay.Modules.Topups.Core.Data.Migrations
 
             modelBuilder.Entity("Hookpay.Modules.Topups.Core.Topups.Models.Topup", b =>
                 {
-                    b.Property<int>("topup_id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("topup_id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -39,8 +39,22 @@ namespace Hookpay.Modules.Topups.Core.Data.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<string>("Creator")
+                        .HasColumnType("varchar(20)");
+
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Source")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<decimal>("TranferAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -48,21 +62,12 @@ namespace Hookpay.Modules.Topups.Core.Data.Migrations
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("topup_creator")
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("topup_source")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<decimal>("topup_tranfer_amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("topup_trans_id")
+                    b.Property<int>("Version")
                         .HasColumnType("int");
 
-                    b.HasKey("topup_id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("topup_trans_id")
+                    b.HasIndex("TransactionId")
                         .IsUnique();
 
                     b.ToTable("Topup", "dbo");

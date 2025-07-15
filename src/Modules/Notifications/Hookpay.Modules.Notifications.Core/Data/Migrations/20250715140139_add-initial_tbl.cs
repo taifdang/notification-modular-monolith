@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class update_init_tbl : Migration
+    public partial class addinitial_tbl : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,19 +19,20 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    correlationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    eventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    payload = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    processed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Payload = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsProcessed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Version = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InboxMessage", x => x.correlationId);
+                    table.PrimaryKey("PK_InboxMessage", x => x.CorrelationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,22 +40,25 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    mess_id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    mess_correlationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    mess_userId = table.Column<int>(type: "int", nullable: false),
-                    mess_title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    mess_body = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    mess_processed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    MessageType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    IsProcessed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Version = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Message", x => x.mess_id);
+                    table.PrimaryKey("PK_Message", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,28 +66,30 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    userId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    correlationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageId = table.Column<int>(type: "int", nullable: false),
+                    MessageType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Version = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OutboxMessage", x => x.id);
+                    table.PrimaryKey("PK_OutboxMessage", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_mess_correlationId",
+                name: "IX_Message_CorrelationId",
                 schema: "dbo",
                 table: "Message",
-                column: "mess_correlationId",
+                column: "CorrelationId",
                 unique: true);
         }
 

@@ -22,11 +22,11 @@ public class SignInCommandHandler : IRequestHandler<SignInCommand, string>
     public async Task<string> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
         //email:index non-cluster
-        var user =  await _context.Users.SingleOrDefaultAsync(x => x.user_email == request.email);
+        var user =  await _context.Users.SingleOrDefaultAsync(x => x.Email == request.email);
         if (user is null) return string.Empty;
-        if (!user.user_password.Equals(request.password)) return string.Empty;
+        if (!user.Password.Equals(request.password)) return string.Empty;
         if (user is null) return string.Empty;
-        var result = GenerateJwtToken(user.user_id,user.user_email,user.user_name);
+        var result = GenerateJwtToken(user.Id,user.Email,user.Username);
         return result;
     }
     public string GenerateJwtToken(int userId,string email,string username)

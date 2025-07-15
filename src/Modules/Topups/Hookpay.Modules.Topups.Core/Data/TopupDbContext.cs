@@ -22,34 +22,34 @@ namespace Hookpay.Modules.Topups.Core.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
-        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-        {
-            var reponse = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-            await _dispatchDomainEvent();
-            return reponse;
-        }
-        public override int SaveChanges()
-        {
-            return base.SaveChanges();
-        }
-        private async Task _dispatchDomainEvent()
-        {
-            var domainEntites = ChangeTracker.Entries<IAggregate>()
-                .Select(x => x.Entity)
-                .Where(x=>x.DomainEvents.Any())
-                .ToArray();
-            foreach(var domainEvent in domainEntites)
-            {
-                var events = domainEvent.DomainEvents.ToArray();    
-                domainEvent.ClearDomainEvent();
-                foreach(var entityDomainEvent in events)
-                {
-                    await _mediator.Publish(entityDomainEvent);                 
-                }
-            }
+        //public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        //{
+        //    var reponse = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        //    await _dispatchDomainEvent();
+        //    return reponse;
+        //}
+        //public override int SaveChanges()
+        //{
+        //    return base.SaveChanges();
+        //}
+        //private async Task _dispatchDomainEvent()
+        //{
+        //    var domainEntites = ChangeTracker.Entries<IAggregate>()
+        //        .Select(x => x.Entity)
+        //        .Where(x=>x.DomainEvents.Any())
+        //        .ToArray();
+        //    foreach(var domainEvent in domainEntites)
+        //    {
+        //        var events = domainEvent.DomainEvents.ToArray();    
+        //        domainEvent.ClearDomainEvent();
+        //        foreach(var entityDomainEvent in events)
+        //        {
+        //            await _mediator.Publish(entityDomainEvent);                 
+        //        }
+        //    }
             
 
-        }
+        //}
         
     }
 }

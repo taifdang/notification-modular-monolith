@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Models
 {
-    public enum PriorityMessage
+    public enum MessagePriority
     {
         Low = 0,
         Medium = 1,

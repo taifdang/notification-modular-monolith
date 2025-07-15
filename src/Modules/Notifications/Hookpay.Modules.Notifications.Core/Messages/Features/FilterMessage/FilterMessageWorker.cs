@@ -23,6 +23,7 @@ public class FilterMessageWorker : BackgroundService
     private readonly IServiceScopeFactory _prodvider;
     private readonly ILogger<FilterMessageWorker> _logger;
     public IMediator _mediator;
+    public MessageDbContext _context;
     public FilterMessageWorker(ILogger<FilterMessageWorker> logger, IServiceScopeFactory provider)
     {
         _logger = logger;
@@ -37,47 +38,85 @@ public class FilterMessageWorker : BackgroundService
             try
             {
                 var scope = _prodvider.CreateScope();
-                var _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
+                _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
                 _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                 var _publisher   = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
-
-                var messages = _context.Message.Where(x=>x.mess_processed == false).OrderBy(x=>x.mess_id).Take(3).ToList();             
+                //Filter all => userId ???
+                var messages = _context.Message.Where(x=>x.IsProcessed == false).OrderBy(x=>x.Id).Take(3).ToList();             
                 if (messages is null) return;
-                var listMessageId = messages.Select(x => x.mess_id).ToList();
+                var listMessageId = messages.Select(x => x.Id).ToList();
                 var reMessages = await FilterUser(messages);
-                var listFilter = messages.Where(x => reMessages.Contains(x.mess_userId)).ToList();
-                             
+                var listFilter = messages.Where(x => reMessages.Contains(x.UserId)).ToList();
+                //
+
+
+                
+                //           
+
+
                 foreach(var filter in listFilter)
                 {
                     Console.OutputEncoding = Encoding.UTF8;                  
-                    Console.WriteLine(filter.mess_body);
+                    Console.WriteLine(filter.Body);
                     //send message
                     //OUTBOX
                     await _publisher.SendAsync<MessageEventContracts>(
                         new MessageEventContracts(
-                            filter.mess_correlationId,
-                            filter.mess_id,
-                            filter.mess_title,
-                            filter.mess_body)
+                            filter.CorrelationId,
+                            filter.Id,
+                            filter.Title,
+                            filter.Body)
                         );
                 }
                 await _context.Message
-                    .Where(x => listMessageId.Contains(x.mess_id))
-                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.mess_processed, true));             
+                    .Where(x => listMessageId.Contains(x.Id))
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsProcessed, true));             
             }          
             catch(Exception ex)
             {
-                _logger.LogError($"[woker.filter]::error>> {ex.ToString()}");
+                _logger.LogError($"[woker.filter]::error>> {ex.ToString()} _ {DateTimeOffset.Now}");
             }
-            _logger.LogCritical("[woker.filter]>>> running at: {time}", DateTimeOffset.Now);
+            //_logger.LogCritical("[woker.filter]>>> running at: {time}", DateTimeOffset.Now);
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }       
     }
     public async Task<List<int>> FilterUser(List<Message> messages)
     {
-        var userIds = messages.Select(x => x.mess_userId).Distinct().ToList();
+        var userIds = messages.Select(x => x.UserId).Distinct().ToList();
         var listUserFilter = await _mediator.Send(new UserFlilterContracts(userIds));
         return listUserFilter;
        
+    }
+    public void LoadBatchUserCache(List<Message> messages)
+    {
+        //Check caching => list user enable
+        //if user is locked => change user_status => AllowNotification = false
+        //bit [userId-0/1]: userId - [AllowNotification]
+        var cache_caching = new Dictionary<int, int>()
+        {
+            {1,1},{2,0},{3,1},{4,1}
+        };
+        while (true)
+        {
+
+        }
+
+    }
+    public void MessageHandler()
+    {
+        var messageActive = _context.Message.Where(x => x.IsProcessed == false).OrderBy(x => x.Id).Take(10).ToList();
+        foreach(var message in messageActive)
+        {
+
+        }
+    }
+    public Task LoadStreaming()
+    {
+       
+        while (true)
+        {
+            break;
+        }
+        return Task.CompletedTask;
     }
 }

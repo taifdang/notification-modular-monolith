@@ -27,7 +27,7 @@ public class UsersRepository : IUserRepository
     }
     public async Task<Models.Users> GetAsync(int userId)
     {
-        return await _users.SingleOrDefaultAsync(x => x.user_id == userId);
+        return await _users.SingleOrDefaultAsync(x => x.Id == userId);
     }
 
 }

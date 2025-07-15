@@ -15,14 +15,14 @@ public class UserSettingConfiguration : IEntityTypeConfiguration<UserSetting>
     {
         builder.ToTable("UserSetting", "dbo");
 
-        builder.HasKey(x => x.set_id);
-        builder.Property(u => u.set_id)
+        builder.HasKey(x => x.Id);
+        builder.Property(u => u.Id)
             .ValueGeneratedOnAdd();
         
-        builder.Property(x => x.set_user_id)
+        builder.Property(x => x.UserId)
             .IsRequired();
        
-        builder.Property(x => x.disable_notification)
+        builder.Property(x => x.AllowNotification)
             .IsRequired()
             .HasDefaultValue(false);
       

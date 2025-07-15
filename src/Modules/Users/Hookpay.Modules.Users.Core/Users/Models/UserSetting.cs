@@ -9,9 +9,9 @@ namespace Hookpay.Modules.Users.Core.Users.Models
 {
     public class UserSetting
     {
-        public int set_id { get; set; }
-        public int set_user_id { get; set; }
-        public bool disable_notification { get; set; }
-        public Users? users { get; set; }
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public bool AllowNotification { get; set; }
+        public Users? Users { get; set; }
     }
 }

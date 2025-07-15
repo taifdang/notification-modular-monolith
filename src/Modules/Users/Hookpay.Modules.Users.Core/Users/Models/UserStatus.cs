@@ -8,7 +8,7 @@ namespace Hookpay.Modules.Users.Core.Users.Models
 {
     public enum UserStatus
     {
-        Active = 1,
-        Locked = 2,
+        Active = 0,
+        Locked = 1,
     }
 }

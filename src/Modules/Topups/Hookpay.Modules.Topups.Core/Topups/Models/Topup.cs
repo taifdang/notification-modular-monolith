@@ -14,23 +14,23 @@ namespace Hookpay.Modules.Topups.Core.Topups.Models
     {
         public Topup() { }
 
-        public int topup_id { get; set; }
-        public int topup_trans_id { get; set; } = default!;
-        public string? topup_source { get; set; }
-        public string? topup_creator { get; set; }
-        public decimal topup_tranfer_amount { get; set; }
+        public int Id { get; set; }
+        public int TransactionId { get; set; } = default!;
+        public string? Source { get; set; }
+        public string? Creator { get; set; }
+        public decimal TranferAmount { get; set; }
         //public DateTime topup_created_at { get; set; }
 
         public static Topup Create(int transId,string creator,decimal tranfer_amount)
         {
             var topup = new Topup
             {
-                topup_trans_id = transId,
-                topup_creator = creator,
-                topup_tranfer_amount = tranfer_amount,
+                TransactionId = transId,
+                Creator = creator,
+                TranferAmount = tranfer_amount,
                 //topup_created_at = DateTime.UtcNow,
             };
-            var @event = new CreateTopupDomainEvent(topup.topup_creator, topup.topup_tranfer_amount);
+            var @event = new CreateTopupDomainEvent(topup.Creator, topup.TranferAmount);
             topup.AddDomainEvent(@event);
 
             return topup;

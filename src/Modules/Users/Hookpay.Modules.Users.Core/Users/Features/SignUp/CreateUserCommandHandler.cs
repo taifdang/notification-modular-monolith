@@ -18,12 +18,12 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserD
     {
         var user = new Models.Users 
         { 
-            user_name = request.username,
-            user_password = request.password,
-            user_email = request.email,
-            user_phone = request.phone,
+            Username = request.username,
+            Password = request.password,
+            Email = request.email,
+            Phone = request.phone,
         };
         await _repository.AddAsync(user); 
-        return new UserDto { username = user.user_name,email = user.user_email, phone = user.user_phone};
+        return new UserDto { username = user.Username,email = user.Email, phone = user.Phone};
     }
 }

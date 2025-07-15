@@ -15,9 +15,10 @@ public class InboxMessageConfiguration : IEntityTypeConfiguration<InboxMessage>
     {
         builder.ToTable("InboxMessage", "dbo");
 
-        builder.HasKey(x=>x.correlationId);
+        builder.HasKey(x=>x.CorrelationId);
   
-        builder.Property(x => x.processed).IsRequired().HasDefaultValue(false);
+        builder.Property(x => x.IsProcessed).IsRequired().HasDefaultValue(false);
+        builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
 
 
 

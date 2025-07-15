@@ -10,13 +10,15 @@ namespace Hookpay.Modules.Notifications.Core.Models;
 
 public class Message : Aggregate
 {  
-    public int mess_id { get; set; }  
-    public Guid mess_correlationId { get; set; }
-    public int mess_userId { get; set; }  
-    public string mess_title { get; set; }
-    public string mess_body { get; set; }
+    public int Id { get; set; }  
+    public Guid CorrelationId { get; set; }
+    public int UserId { get; set; }  
+    public string Title { get; set; }
+    public string Body { get; set; }
     //public DateTime mess_createdAt { get; set; }
-    public bool mess_processed { get; set; } = false;
+    public MessagePriority Priority { get; set; }
+    public MessageType MessageType { get; set; }
+    public bool IsProcessed { get; set; } = false;
     public static Message Create(
         Guid correlationId, 
         int userId ,
@@ -27,12 +29,12 @@ public class Message : Aggregate
     {
         var message = new Message()
         {
-            mess_correlationId = correlationId,
-            mess_userId = userId,
-            mess_title = title,
-            mess_body = body,
+            CorrelationId = correlationId,
+            UserId = userId,
+            Title = title,
+            Body = body,
             //mess_createdAt = createdAt,
-            mess_processed = false
+            IsProcessed = false          
         };
         return message;
     }

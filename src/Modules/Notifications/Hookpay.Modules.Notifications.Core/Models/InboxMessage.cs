@@ -10,20 +10,20 @@ namespace Hookpay.Modules.Notifications.Core.Models;
 
 public class InboxMessage:Aggregate
 { 
-    public Guid correlationId { get; set; } 
-    public string eventType {  get; set; }
-    public string payload { get; set; }
+    public Guid CorrelationId { get; set; } 
+    public string EventType {  get; set; }
+    public string Payload { get; set; }
     //public DateTime createdAt { get; set; }
-    public bool processed { get; set; }
+    public bool IsProcessed { get; set; }
     public static InboxMessage Create(Guid correlationId, string eventType, string payload)
     {
         var inboxMessage = new InboxMessage
         {
-            correlationId = correlationId,
-            eventType = eventType,
-            payload = payload,
+            CorrelationId = correlationId,
+            EventType = eventType,
+            Payload = payload,
             //createdAt = DateTime.UtcNow,
-            processed = true
+            IsProcessed = true
         };
         //inboxMessage.AddDomainEvent();
         return inboxMessage;

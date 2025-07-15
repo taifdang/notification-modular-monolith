@@ -15,9 +15,11 @@ public class OutboxMessageConfiguartion : IEntityTypeConfiguration<OutboxMessage
     {
         builder.ToTable("OutboxMessage", "dbo");
 
-        builder.HasKey(x => x.id);
-        builder.Property(x => x.id).IsRequired().ValueGeneratedOnAdd();
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).IsRequired().ValueGeneratedOnAdd();
 
-        builder.Property(x => x.status).IsRequired().HasDefaultValue(MessageStatus.Pending);
+        builder.Property(x => x.Status).IsRequired().HasDefaultValue(MessageStatus.Pending);
+        builder.Property(x => x.MessageType).IsRequired().HasDefaultValue(MessageType.All);
+        builder.Property(x=>x.IsDeleted).IsRequired().HasDefaultValue(false);
     }
 }
