@@ -1,14 +1,10 @@
 ﻿using Hookpay.Modules.Notifications.Core.Data;
-using Hookpay.Modules.Notifications.Core.Messages.Features.FilterMessage;
+using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
+using Hookpay.Modules.Notifications.Core.Messages.Features.HangfireJobHandler;
 using Hookpay.Shared.EFCore;
-using Hookpay.Shared.SignalR;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Hookpay.Modules.Notifications.Core;
 
@@ -20,6 +16,10 @@ public static class Extensions
         //.AddHostedService<FilterMessageWorker>();      
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(NotificationRoot).Assembly));
         services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
+        services.AddSingleton<IHangfireJobHandler, HangfireJobHandler>();
+        services.AddSingleton<MessageAllHandler>();
+        services.AddScoped<MessagePersonalHandler>();
+
         return services;
     }
 }

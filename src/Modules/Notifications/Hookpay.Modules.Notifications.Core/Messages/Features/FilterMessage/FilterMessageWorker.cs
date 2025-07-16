@@ -1,4 +1,7 @@
-﻿using Hookpay.Modules.Notifications.Core.Data;
+﻿using Hangfire;
+using Hookpay.Modules.Notifications.Core.Data;
+using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
+using Hookpay.Modules.Notifications.Core.Messages.Features.HangfireJobHandler;
 using Hookpay.Modules.Notifications.Core.Models;
 using Hookpay.Shared.Caching;
 using Hookpay.Shared.Contracts;
@@ -23,9 +26,8 @@ public class FilterMessageWorker : BackgroundService
 {
     private readonly IServiceScopeFactory _prodvider;
     private readonly ILogger<FilterMessageWorker> _logger;
-    public IMediator _mediatr;
     public MessageDbContext _context;
-    public IBusPublisher _publisher;
+    public IHangfireJobHandler _hangfireJob;
     public FilterMessageWorker(ILogger<FilterMessageWorker> logger, IServiceScopeFactory provider)
     {
         _logger = logger;
@@ -41,41 +43,16 @@ public class FilterMessageWorker : BackgroundService
             {
                 var scope = _prodvider.CreateScope();
                 _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
-                _mediatr = scope.ServiceProvider.GetRequiredService<IMediator>();
-                _publisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
+                //_mediatr = scope.ServiceProvider.GetRequiredService<IMediator>();
+                //_publisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
 
-                #region command
-                //    //Filter all => userId ???
-                //    var messages = _context.Message.Where(x=>x.IsProcessed == false).OrderBy(x=>x.Id).Take(3).ToList();             
-                //    if (messages is null) return;
-                //    var listMessageId = messages.Select(x => x.Id).ToList();
-                //    var reMessages = await FilterUser(messages);
-                //    var listFilter = messages.Where(x => reMessages.Contains(x.UserId)).ToList();                            
-                //    //           
-
-                //    foreach(var filter in listFilter)
-                //    {
-                //        Console.OutputEncoding = Encoding.UTF8;                  
-                //        Console.WriteLine(filter.Body);
-                //        //send message
-                //        //OUTBOX
-                //        await _publisher.SendAsync<MessageEventContracts>(
-                //            new MessageEventContracts(
-                //                filter.CorrelationId,
-                //                filter.Id,
-                //                filter.Title,
-                //                filter.Body)
-                //            );
-                //    }
-                //    await _context.Message
-                //        .Where(x => listMessageId.Contains(x.Id))
-                //        .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsProcessed, true));
-                #endregion
                 var messages = _context.Message
                                .Where(x => x.IsProcessed == false)
                                .OrderBy(x => x.Id)
                                .Take(10)
                                .ToList();
+                var messageId = messages.Select(x => x.Id).ToList();
+
                 if (messages is null)
                 {
                     return;
@@ -86,18 +63,20 @@ public class FilterMessageWorker : BackgroundService
                     switch (msg.MessageType)
                     {
                         case MessageType.All:
-                            //handler
-                            await MessageAllHandler(msg);
+                            //await ScheduleJob(msg);
+                            await _hangfireJob.ScheduleJob(msg);
                             break;
                         case MessageType.Personal:
                             listMessagePersonal.Add(msg);
                             break;
                     }
                 }
-                await MessagePersonalHandler(listMessagePersonal);
+                //await MessagePersonalHandler(listMessagePersonal);
+                var personalHandler = scope.ServiceProvider.GetRequiredService<MessagePersonalHandler>();
+                await personalHandler.SendInQueueAsync(listMessagePersonal);
 
                 await _context.Message
-                       .Where(x => messages.Contains(x))//Id
+                       .Where(x => messageId.Contains(x.Id))//Id
                        .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsProcessed, true));
             }
             catch (Exception ex)
@@ -107,40 +86,35 @@ public class FilterMessageWorker : BackgroundService
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }       
     }
-    public async Task<List<int>> FilterUser(List<Message> messages)
-    {
-        var userIds = messages.Select(x => x.UserId).Distinct().ToList();
-        var listUserFilter = await _mediatr.Send(new UserFlilterContracts(userIds));
-        return listUserFilter;
+    //public async Task<List<int>> FilterUser(List<Message> messages)
+    //{
+    //    var userIds = messages.Select(x => x.UserId).Distinct().ToList();
+    //    var listUserFilter = await _mediatr.Send(new UserFlilterContracts(userIds));      
+    //    return listUserFilter;
        
-    }
-    public Dictionary<int,int> LoadBatchUserCache()
-    {      
-        //bit [userId-AllowNotification]: 0_Active;1_Locked
-        var cache_caching = new Dictionary<int, int>()
-        {
-            {2,1},{3,0},{4,1},{5,1}
-        };
-        if (cache_caching is null)
-        {
-            //meditR.send()
-        }
-        return cache_caching;
-    }
-    public async Task MessagePersonalHandler(List<Message> listMessagePersonal)
-    {
-        var userStatusCache = LoadBatchUserCache();
+    //}
+    //public Dictionary<int,int> LoadBatchUserCache()
+    //{      
+    //    //bit [userId-AllowNotification]: 0_Active;1_Locked
+    //    var cache_caching = new Dictionary<int, int>()
+    //    {
+    //        {2,1},{3,0},{4,1},{5,1}
+    //    };
+    //    if (cache_caching is null)
+    //    {
+    //        //meditR.send()
+    //    }
+    //    return cache_caching;
+    //}
+    //public async Task MessagePersonalHandler(List<Message> listMessagePersonal)
+    //{
+    //    var userStatusCache = LoadBatchUserCache();
        
-        var listUserIdValid = listMessagePersonal
-            .Where(x => userStatusCache.TryGetValue(x.UserId, out int status) && status == 0)
-            .Select(x => new MessageEvent(x.CorrelationId, x.UserId, x.Title, x.Body))
-            //.Distinct()
-            .ToList();
-        await _publisher.SendAsync<MessagePersonalContracts>(new MessagePersonalContracts(listUserIdValid));
-    }
-    public async Task MessageAllHandler(Message message)
-    {
-        await _publisher.SendAsync<MessageAllContracts>(
-            new MessageAllContracts(message.CorrelationId,message.Id,message.Title,message.Body));
-    }  
+    //    var listUserIdValid = listMessagePersonal
+    //        .Where(x => userStatusCache.TryGetValue(x.UserId, out int status) && status == 0)
+    //        .Select(x => new MessageEvent(x.CorrelationId, x.UserId, x.Title, x.Body))
+    //        //.Distinct()
+    //        .ToList();
+    //    await _publisher.SendAsync<MessagePersonalContracts>(new MessagePersonalContracts(listUserIdValid));
+    //} 
 }

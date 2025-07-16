@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{139ED664
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hookpay.Bootstrapper", "src\Bootstrapper\Hookpay.Bootstrapper\Hookpay.Bootstrapper.csproj", "{CEED7552-52AC-52E4-E191-2A6564A05D14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hookpay.Shared", "src\Shared\Hookpay.Shared\Hookpay.Shared.csproj", "{A66B5CE2-0419-DA55-D5B1-97247589AA38}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hookpay.Modules.Users.Api", "src\Modules\Users\Hookpay.Modules.Users.Api\Hookpay.Modules.Users.Api.csproj", "{4A0656E3-CEAE-13D4-59D6-CB5D4D74BFFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hookpay.Modules.Users.Core", "src\Modules\Users\Hookpay.Modules.Users.Core\Hookpay.Modules.Users.Core.csproj", "{032279EC-315F-5A75-13B8-2352B8CD343D}"
@@ -31,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hookpay.Modules.Notificatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hookpay.Modules.Notifications.Core", "src\Modules\Notifications\Hookpay.Modules.Notifications.Core\Hookpay.Modules.Notifications.Core.csproj", "{150B7853-F977-160E-4DFA-F33250756335}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hookpay.Shared", "src\Shared\Hookpay.Shared\Hookpay.Shared.csproj", "{A66B5CE2-0419-DA55-D5B1-97247589AA38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +41,6 @@ Global
 		{CEED7552-52AC-52E4-E191-2A6564A05D14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEED7552-52AC-52E4-E191-2A6564A05D14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEED7552-52AC-52E4-E191-2A6564A05D14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A0656E3-CEAE-13D4-59D6-CB5D4D74BFFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A0656E3-CEAE-13D4-59D6-CB5D4D74BFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A0656E3-CEAE-13D4-59D6-CB5D4D74BFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,6 +65,10 @@ Global
 		{150B7853-F977-160E-4DFA-F33250756335}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{150B7853-F977-160E-4DFA-F33250756335}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{150B7853-F977-160E-4DFA-F33250756335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A66B5CE2-0419-DA55-D5B1-97247589AA38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,7 +76,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{139ED664-7E31-444E-887C-67C6D434CC78} = {5B7CFC87-E8A4-46E7-840D-14E63B76A9EA}
 		{CEED7552-52AC-52E4-E191-2A6564A05D14} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{A66B5CE2-0419-DA55-D5B1-97247589AA38} = {6F8DADE5-BBFE-4D75-8247-0481500F1BF5}
 		{4A0656E3-CEAE-13D4-59D6-CB5D4D74BFFE} = {139ED664-7E31-444E-887C-67C6D434CC78}
 		{032279EC-315F-5A75-13B8-2352B8CD343D} = {139ED664-7E31-444E-887C-67C6D434CC78}
 		{C94E34ED-7795-42E0-AFC3-BD12F539C09B} = {5B7CFC87-E8A4-46E7-840D-14E63B76A9EA}
@@ -85,6 +84,7 @@ Global
 		{A5557F8D-07A5-4CEF-85CB-C53EE1F3C7DD} = {5B7CFC87-E8A4-46E7-840D-14E63B76A9EA}
 		{F5D34D0C-9CF1-5CF6-F6C6-21052DA7CC4A} = {A5557F8D-07A5-4CEF-85CB-C53EE1F3C7DD}
 		{150B7853-F977-160E-4DFA-F33250756335} = {A5557F8D-07A5-4CEF-85CB-C53EE1F3C7DD}
+		{A66B5CE2-0419-DA55-D5B1-97247589AA38} = {6F8DADE5-BBFE-4D75-8247-0481500F1BF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E263E09-CA8B-480B-A86A-FFEDC0195361}
