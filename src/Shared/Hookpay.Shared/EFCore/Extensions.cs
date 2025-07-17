@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,12 @@ namespace Hookpay.Shared.EFCore
         {
             var options = services.GetOptions<MssqlOptions>("mssql");
             services.AddDbContext<T>(x => x.UseSqlServer(options.ConnectionString));
+            return services;
+        }
+        public static IServiceCollection AddHangfireStorageMSSQL(this IServiceCollection services)
+        {
+            var options = services.GetOptions<MssqlOptions>("mssql");
+            services.AddHangfire(x => x.UseSqlServerStorage(options.ConnectionString));
             return services;
         }
 

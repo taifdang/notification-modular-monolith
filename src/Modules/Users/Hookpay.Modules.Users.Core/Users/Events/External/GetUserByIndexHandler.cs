@@ -19,10 +19,11 @@ public class GetUserByPageIndexHandler : IRequestHandler<GetUserByPageIndex, Lis
     }
     public async Task<List<int>> Handle(GetUserByPageIndex request, CancellationToken cancellationToken)
     {
-        return await _context.Users
+        return await _context.Users.
+             OrderBy(x=>x.Id)
             .Skip(request.pageSize*request.pageIndex)
             .Take(request.pageSize)
-            .Select(x=>x.Id)
+            .Select(x => x.Id)
             .ToListAsync();
     }
 }

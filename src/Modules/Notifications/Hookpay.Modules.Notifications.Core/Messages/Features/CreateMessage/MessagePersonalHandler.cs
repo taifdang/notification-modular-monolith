@@ -28,7 +28,7 @@ public class MessagePersonalHandler
         //bit [userId-AllowNotification]: 0_Active;1_Locked
         var cache_caching = new Dictionary<int, int>()
         {
-            {2,1},{3,0},{4,1},{5,1}
+            {2,0},{3,0},{4,0},{5,0}
         };
         if (cache_caching is null)
         {
@@ -38,17 +38,28 @@ public class MessagePersonalHandler
     }
     public async Task SendInQueueAsync(List<Message> listMessagePersonal)
     {
-        var userStatusCache = LoadUserCache();
+        try
+        {
+            var userStatusCache = LoadUserCache();
 
-        using var scope = _provider.CreateScope();
-        var _publisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
+            using var scope = _provider.CreateScope();
+            var _publisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
 
-        var listUserIdValid = listMessagePersonal
-            .Where(x => userStatusCache.TryGetValue(x.UserId, out int status) && status == 0)
-            .Select(x => new MessageEvent(x.CorrelationId, x.UserId, x.Title, x.Body))
-            //.Distinct()
-            .ToList();
-        await _publisher.SendAsync<MessagePersonalContracts>(new MessagePersonalContracts(listUserIdValid));
+            var listUserIdValid = listMessagePersonal
+                .Where(x => userStatusCache.TryGetValue(x.UserId, out int status) && status == 0)
+                .Select(x => new MessagePersonalContracts(x.CorrelationId, x.UserId, x.Title, x.Body))
+                //.Distinct()
+                .ToList();
+            //await _publisher.SendAsync<MessagePersonalContracts>(new MessagePersonalContracts(listUserIdValid));
+            foreach (var item in listUserIdValid)
+            {
+                await _publisher.SendAsync<MessagePersonalContracts>(item);
+            }
+        }
+        catch(Exception ex) 
+        {
+            _logger.LogError($"[messeage.personal]::{ex.ToString()}");
+        }
     }
 
 }

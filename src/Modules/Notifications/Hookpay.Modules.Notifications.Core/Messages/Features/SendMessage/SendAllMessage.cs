@@ -1,5 +1,8 @@
 ﻿using Hookpay.Shared.Contracts;
+using Hookpay.Shared.SignalR;
 using MassTransit;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +13,29 @@ namespace Hookpay.Modules.Notifications.Core.Messages.Features.SendMessage;
 
 public class SendAllMessage : IConsumer<MessageAllContracts>
 {
-    public Task Consume(ConsumeContext<MessageAllContracts> context)
+    private readonly ILogger<SendAllMessage> _logger;
+    private readonly INotificationHubService _hub;
+    public SendAllMessage(
+       ILogger<SendAllMessage> logger,
+       INotificationHubService hub
+       )
     {
-        throw new NotImplementedException();
+        _logger = logger;
+        _hub = hub;
     }
-    public Task LoadStreaming()
+    public  Task Consume(ConsumeContext<MessageAllContracts> context)
     {
-        while (true)
+        try
         {
-            break;
+            _logger.LogWarning($"[message.send]::{context.Message.body}");
+            return Task.CompletedTask;
+
         }
-        return Task.CompletedTask;
+        catch
+        {
+            _logger.LogCritical($"occure error");
+            return Task.CompletedTask;
+        }
     }
+   
 }

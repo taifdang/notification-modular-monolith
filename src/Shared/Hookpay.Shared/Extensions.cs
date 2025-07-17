@@ -1,6 +1,8 @@
-﻿using Hookpay.Shared.Api;
+﻿using Hangfire;
+using Hookpay.Shared.Api;
 using Hookpay.Shared.Caching;
 using Hookpay.Shared.Domain.Models;
+using Hookpay.Shared.EFCore;
 using Hookpay.Shared.EventBus;
 using Hookpay.Shared.Modules;
 using Hookpay.Shared.SignalR;
@@ -48,6 +50,10 @@ namespace Hookpay.Shared
             services.AddSingleton<IMessageConvert,MessageConvert>();
             //
             services.AddSingleton<INotificationHubService, NotificationHub>();
+            //
+            services.AddHangfireStorageMSSQL();
+            
+            
             //services.AddMassTransitCustom();
 
             services.AddControllers()

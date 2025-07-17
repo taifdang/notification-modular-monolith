@@ -23,22 +23,36 @@ public class MessageAllHandler
     {
         try
         {
-            int totalUser = await _mediator.Send(new UserTotalItem());
+            int totalUser = 0;
+            try
+            {
+                 totalUser = await _mediator.Send(new UserTotalItem());
+            }
+            catch
+            {
+                _logger.LogError("Occur error in load user total");
+                throw;
+            }
             int pageSize = 10;
             int pageCount = (int)Math.Ceiling(totalUser / (decimal)pageSize);
+            //int pageCount = totalUser % pageSize > 0 ? totalUser / pageSize + 1 : totalUser / pageSize;
             int pageIndex = 0;
 
-            while (true)
+            while (pageIndex<pageCount)
             {
                 var listUser = await _mediator.Send(new GetUserByPageIndex(pageIndex, pageSize));
-                if (listUser == null) break;
+                if (listUser == null || listUser.Count() ==0)
+                {
+                    _logger.LogError("listUser = null || 0");
+                    break;
+                }
                 await SendInQueueAsync(listUser, message);
                 pageIndex++;
             }
         }
-        catch
+        catch(Exception ex)
         {
-            throw new Exception("Occur error in hangfire caller");
+            _logger.LogError("Occur error in hangfire caller:{ex}",ex);
         }
     }   
     public async Task SendInQueueAsync(List<int> UserIds, Message message)
@@ -54,7 +68,7 @@ public class MessageAllHandler
         }
         catch
         {
-            throw new Exception("Occur error");
+            _logger.LogError("Occur error");
         }
     }
 }

@@ -31,7 +31,7 @@ public class FilterMessageWorker : BackgroundService
     public FilterMessageWorker(ILogger<FilterMessageWorker> logger, IServiceScopeFactory provider)
     {
         _logger = logger;
-        _prodvider = provider;
+        _prodvider = provider;        
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -62,6 +62,7 @@ public class FilterMessageWorker : BackgroundService
                     {
                         case MessageType.All:
                             //await ScheduleJob(msg);
+                            var _hangfireJob = scope.ServiceProvider.GetRequiredService<IHangfireJobHandler>();
                             await _hangfireJob.ScheduleJob(msg);
                             break;
                         case MessageType.Personal:
@@ -72,15 +73,21 @@ public class FilterMessageWorker : BackgroundService
                 var personalHandler = scope.ServiceProvider.GetRequiredService<MessagePersonalHandler>();
                 await personalHandler.SendInQueueAsync(listMessagePersonal);
 
-                await _context.Message
-                       .Where(x => messageId.Contains(x.Id))//Id
-                       .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsProcessed, true));
+                //not change field_verison <- query in database
+                //await _context.Message
+                //       .Where(x => messageId.Contains(x.Id))//Id
+                //       .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsProcessed, true));
+                foreach (var msg in messages)
+                {
+                    msg.IsProcessed = true;
+                }
+                await _context.SaveChangesAsync(stoppingToken);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"[woker.filter]::error>> {ex.ToString()} _ {DateTimeOffset.Now}");
             }
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
-        }
+         }
     }
 }

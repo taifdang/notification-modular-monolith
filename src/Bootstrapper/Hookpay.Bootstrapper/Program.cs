@@ -1,5 +1,6 @@
 ﻿
 
+using Hangfire;
 using Hookpay.Modules.Topups.Api;
 using Hookpay.Modules.Topups.Core;
 using Hookpay.Shared;
@@ -114,6 +115,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 app.MapHub<NotificationHub>("/notification");
+app.MapHangfireDashboard("/hangfire");
 _assemblies.Clear();
 _modules.Clear();
 app.Run();

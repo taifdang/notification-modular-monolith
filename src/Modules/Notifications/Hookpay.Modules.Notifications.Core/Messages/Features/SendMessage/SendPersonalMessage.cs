@@ -19,17 +19,18 @@ public class SendPersonalMessage : IConsumer<MessagePersonalContracts>
         _logger = logger;
         _hub = hub;
     }
-    public async Task Consume(ConsumeContext<MessagePersonalContracts> context)
+
+    public Task Consume(ConsumeContext<MessagePersonalContracts> context)
     {
         try
         {
-            //
-            _logger.LogInformation(context.Message.messages?.ToString());
-
+            _logger.LogWarning($"[message.send]::{context.Message.body}");
+            return Task.CompletedTask;
         }
         catch
         {
-            _logger.LogError("error connect");
+            _logger.LogCritical($"occure error");
+            return Task.CompletedTask;
         }
     }
 }

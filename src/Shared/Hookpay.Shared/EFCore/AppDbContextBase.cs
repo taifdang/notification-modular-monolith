@@ -142,6 +142,7 @@ public class AppDbContextBase : DbContext, IDbContext
                         case EntityState.Modified:
                             entry.Entity.UpdatedBy = userId;
                             entry.Entity.UpdatedAt = DateTime.Now;
+                            entry.Entity.Version++;
                             break;
 
                         case EntityState.Deleted:
@@ -149,6 +150,7 @@ public class AppDbContextBase : DbContext, IDbContext
                             entry.Entity.UpdatedBy = userId;
                             entry.Entity.UpdatedAt = DateTime.Now;
                             entry.Entity.IsDeleted = true;
+                            entry.Entity.Version++;
                             break;
                     }
                 }
