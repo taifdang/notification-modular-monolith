@@ -1,7 +1,8 @@
 ﻿using Hookpay.Modules.Notifications.Core.Models;
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.EventBus;
-using MassTransit.Mediator;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,13 @@ namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 public class MessagePersonalHandler
 {
     private readonly ILogger<MessagePersonalHandler> _logger;
+    private readonly IServiceScopeFactory _provider;
     private readonly IMediator _mediator;
-    private readonly IBusPublisher _publisher;
-    public MessagePersonalHandler(ILogger<MessagePersonalHandler> logger, IMediator mediator, IBusPublisher publisher)
+    public MessagePersonalHandler(ILogger<MessagePersonalHandler> logger, IMediator mediator, IServiceScopeFactory provider)
     {
         _logger = logger;
         _mediator = mediator;
-        _publisher = publisher;
+        _provider = provider;
     }
     public Dictionary<int, int> LoadUserCache()
     {
@@ -38,6 +39,9 @@ public class MessagePersonalHandler
     public async Task SendInQueueAsync(List<Message> listMessagePersonal)
     {
         var userStatusCache = LoadUserCache();
+
+        using var scope = _provider.CreateScope();
+        var _publisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
 
         var listUserIdValid = listMessagePersonal
             .Where(x => userStatusCache.TryGetValue(x.UserId, out int status) && status == 0)

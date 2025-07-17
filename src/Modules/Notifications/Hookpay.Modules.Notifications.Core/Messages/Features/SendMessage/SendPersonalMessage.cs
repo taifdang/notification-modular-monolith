@@ -24,6 +24,8 @@ public class SendPersonalMessage : IConsumer<MessagePersonalContracts>
         try
         {
             //
+            _logger.LogInformation(context.Message.messages?.ToString());
+
         }
         catch
         {

@@ -2,25 +2,22 @@
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.EventBus;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 
 public class MessageAllHandler
 {
-    private readonly IBusPublisher _publisher;
     private readonly ILogger<MessageAllHandler> _logger;
     private readonly IMediator _mediator;
-    public MessageAllHandler(IBusPublisher publisher, ILogger<MessageAllHandler> logger, IMediator mediator)
+    private readonly IServiceScopeFactory _provider;
+    public MessageAllHandler(ILogger<MessageAllHandler> logger, IMediator mediator, IServiceScopeFactory provider)
     {
-        _publisher = publisher;
         _logger = logger;
         _mediator = mediator;
+        _provider = provider;
     }
     public async Task LoadDataStreaming(Message message)
     {
@@ -46,6 +43,8 @@ public class MessageAllHandler
     }   
     public async Task SendInQueueAsync(List<int> UserIds, Message message)
     {
+        using var scope = _provider.CreateScope();
+        var _publisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
         try
         {
             foreach (var id in UserIds)

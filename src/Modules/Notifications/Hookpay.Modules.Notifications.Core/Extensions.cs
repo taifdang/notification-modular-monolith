@@ -1,7 +1,9 @@
 ﻿using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
+using Hookpay.Modules.Notifications.Core.Messages.Features.FilterMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Features.HangfireJobHandler;
 using Hookpay.Shared.EFCore;
+using Hookpay.Shared.EventBus;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,11 +15,12 @@ public static class Extensions
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
         services.AddMSSQL<MessageDbContext>();      
-        //.AddHostedService<FilterMessageWorker>();      
+        services.AddHostedService<FilterMessageWorker>();      
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(NotificationRoot).Assembly));
         services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
-        services.AddSingleton<IHangfireJobHandler, HangfireJobHandler>();
-        services.AddSingleton<MessageAllHandler>();
+        services.AddScoped<IBusPublisher, BusPublisher>();
+        services.AddScoped<IHangfireJobHandler, HangfireJobHandler>();
+        services.AddScoped<MessageAllHandler>();
         services.AddScoped<MessagePersonalHandler>();
 
         return services;
