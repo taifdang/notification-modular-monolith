@@ -26,8 +26,6 @@ public class FilterMessageWorker : BackgroundService
 {
     private readonly IServiceScopeFactory _prodvider;
     private readonly ILogger<FilterMessageWorker> _logger;
-    public MessageDbContext _context;
-    public IHangfireJobHandler _hangfireJob;
     public FilterMessageWorker(ILogger<FilterMessageWorker> logger, IServiceScopeFactory provider)
     {
         _logger = logger;
@@ -42,7 +40,7 @@ public class FilterMessageWorker : BackgroundService
             try
             {
                 var scope = _prodvider.CreateScope();
-                _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
+                var _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
                 var messages = _context.Message
                                .Where(x => x.IsProcessed == false)
                                .OrderBy(x => x.Id)

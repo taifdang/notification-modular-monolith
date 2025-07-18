@@ -23,18 +23,19 @@ public class SendAllMessage : IConsumer<MessageAllContracts>
         _logger = logger;
         _hub = hub;
     }
-    public  Task Consume(ConsumeContext<MessageAllContracts> context)
+    public  async Task Consume(ConsumeContext<MessageAllContracts> context)
     {
         try
         {
+            await _hub.SendAllAsync(context.Message.body);
             _logger.LogWarning($"[message.send]::{context.Message.body}");
-            return Task.CompletedTask;
+            
 
         }
         catch
         {
             _logger.LogCritical($"occure error");
-            return Task.CompletedTask;
+           
         }
     }
    
