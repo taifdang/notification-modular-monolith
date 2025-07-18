@@ -30,7 +30,7 @@ public static class Extensions
             options.Queues = new[] { "default" };
         });
 
-        //services.AddHostedService<FilterMessageWorker>();
+        services.AddHostedService<FilterMessageWorker>();
 
         return services;
     }

@@ -41,6 +41,8 @@ public class SignInCommandHandler : IRequestHandler<SignInCommand, string>
             var claims = new[]
             {
                 new Claim("uid",userId.ToString()),
+                //new Claim(JwtRegisteredClaimNames.Name,username),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Name,username),
                 new Claim(JwtRegisteredClaimNames.Email,email),
                 new Claim(JwtRegisteredClaimNames.Iat,DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),

@@ -45,7 +45,6 @@ builder.Services.AddMassTransit(x =>
 //builder.Services.AddControllers();
 //builder.Services.AddControllers().AddApplicationPart(typeof(UserRoot).Assembly);
 
-builder.Services.AddSignalR();
 //
 builder.Services.AddSwaggerGen(options =>
 {
@@ -81,6 +80,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {
+
         x.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -89,11 +89,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = "https://hookpay.com",
             ValidAudience = "https://hookpay.com",
-            //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this-is-key-jwt-security"))
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"]))
+
+
         };
+        x.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    (path.StartsWithSegments("/notification")))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
+        
     });
 builder.Services.AddAuthorization();
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -108,6 +126,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 foreach (var module in _modules)
 {
     module.Use(app);
@@ -116,6 +135,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+app.MapControllers();
 app.MapHub<NotificationHub>("/notification");
 app.MapHangfireDashboard("/hangfire");
 _assemblies.Clear();

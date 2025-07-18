@@ -27,10 +27,10 @@ public class SendAllMessage : IConsumer<MessageAllContracts>
     {
         try
         {
-            await _hub.SendAllAsync(context.Message.body);
+            //await _hub.SendAllAsync(context.Message.body);
+            await _hub.SendPersonalAsync(context.Message.userId.ToString(),context.Message.body);
             _logger.LogWarning($"[message.send]::{context.Message.body}");
             
-
         }
         catch
         {

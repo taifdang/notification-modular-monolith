@@ -20,17 +20,18 @@ public class SendPersonalMessage : IConsumer<MessagePersonalContracts>
         _hub = hub;
     }
 
-    public Task Consume(ConsumeContext<MessagePersonalContracts> context)
+    public async Task Consume(ConsumeContext<MessagePersonalContracts> context)
     {
         try
         {
+            await _hub.SendAllAsync(context.Message.body);
             _logger.LogWarning($"[message.send]::{context.Message.body}");
-            return Task.CompletedTask;
+          
         }
         catch
         {
             _logger.LogCritical($"occure error");
-            return Task.CompletedTask;
+           
         }
     }
 }

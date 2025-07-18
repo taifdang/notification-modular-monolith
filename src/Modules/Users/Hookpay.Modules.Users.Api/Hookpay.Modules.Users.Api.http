@@ -1,0 +1,12 @@
+﻿@Hookpay.Modules.Users.Api_HostAddress = https://localhost:7001/
+
+POST https://localhost:7001/api/users/sign-in
+# Authorization: bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  "email": "user4@gmail.com",
+  "password": "123"
+}
+
+###
