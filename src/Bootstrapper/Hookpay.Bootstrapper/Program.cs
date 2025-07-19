@@ -1,13 +1,16 @@
 ﻿
 
+using Azure.Core;
 using Hangfire;
 using Hookpay.Modules.Topups.Api;
 using Hookpay.Modules.Topups.Core;
 using Hookpay.Shared;
 using Hookpay.Shared.Modules;
 using Hookpay.Shared.SignalR;
+using Hookpay.Shared.Utils;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -19,6 +22,16 @@ var configuration = builder.Configuration;
 
 var _assemblies = ModuleLoader.LoadAssemblies(configuration, "Hookpay.Modules.");
 var _modules = ModuleLoader.LoadModules(_assemblies);
+var tokenParameter = new TokenValidationParameters
+{
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = "https://hookpay.com",
+    ValidAudience = "https://hookpay.com",
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"]))
+};
 
 builder.Services.AddModularInfrastructure(_assemblies, _modules);
 foreach (var module in _modules)
@@ -45,7 +58,6 @@ builder.Services.AddMassTransit(x =>
 //builder.Services.AddControllers();
 //builder.Services.AddControllers().AddApplicationPart(typeof(UserRoot).Assembly);
 
-//
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApi", Version = "v1" });
@@ -76,39 +88,40 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAuthentication();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {
-
-        x.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://hookpay.com",
-            ValidAudience = "https://hookpay.com",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"]))
-
-
-        };
-        x.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
+        x.TokenValidationParameters = tokenParameter;
+    });
+builder.Services.AddAuthentication(nameof(TokenScheme))
+    .AddJwtBearer(nameof(TokenScheme), options =>
+    {
+        options.Events = new JwtBearerEvents
+        {     
+            OnMessageReceived = (context) =>
             {
-                var accessToken = context.Request.Query["token"];
-                var path = context.HttpContext.Request.Path;
-                if (!string.IsNullOrEmpty(accessToken) &&
-                    (path.StartsWithSegments("/notification")))
+                var path = context.Request.Path;
+                if (path.StartsWithSegments("/hubs"))
                 {
-                    context.Token = accessToken;
+                    var accessToken = context.Request.Query["token"];
+                    if (!string.IsNullOrWhiteSpace(accessToken))
+                    {
+                        context.Token = accessToken;
+                        Console.WriteLine($"{nameof(TokenScheme)} in Pipeline");
+                    }
                 }
                 return Task.CompletedTask;
             }
         };
-        
+        options.TokenValidationParameters = tokenParameter;
     });
+
+builder.Services.AddAuthorization(c =>
+{
+    c.AddPolicy("Token", pb => pb
+    .AddAuthenticationSchemes(nameof(TokenScheme))
+    .RequireAuthenticatedUser());
+});
 builder.Services.AddAuthorization();
 builder.Services.AddSignalR();
 
@@ -136,10 +149,12 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 app.MapControllers();
-app.MapHub<NotificationHub>("/notification");
+app.MapHub<NotificationHub>("/hubs")
+    .RequireAuthorization(new AuthorizeAttribute
+{
+    AuthenticationSchemes = nameof(TokenScheme)
+});
 app.MapHangfireDashboard("/hangfire");
 _assemblies.Clear();
 _modules.Clear();
 app.Run();
-
-

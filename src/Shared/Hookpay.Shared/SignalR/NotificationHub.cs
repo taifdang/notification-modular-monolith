@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hookpay.Shared.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Hookpay.Shared.SignalR;
 
-[Authorize]
+[Authorize(Policy = "Token")]
 public class NotificationHub:Hub, INotificationHubService
 {
     private readonly ILogger<NotificationHub> _logger;
@@ -54,7 +56,8 @@ public class NotificationHub:Hub, INotificationHubService
         if (Context.User?.Identity?.IsAuthenticated == true)
         {
             var userId = Context.UserIdentifier;
-            _logger.LogCritical($"[signalR]::id_{Context.ConnectionId} connected at {DateTime.Now}");
+            var user = Context.User?.Claims.FirstOrDefault(x=>x.Type == "uid")?.Value;
+            _logger.LogCritical($"[signalR]::{userId}::{user}>> connected at {DateTime.Now}");
             return base.OnConnectedAsync();
         }
         _logger.LogCritical($"token isValid");
