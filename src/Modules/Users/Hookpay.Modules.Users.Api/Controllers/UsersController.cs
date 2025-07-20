@@ -1,10 +1,9 @@
-﻿using Hookpay.Modules.Users.Core.Users.Dtos;
+﻿
 using Hookpay.Modules.Users.Core.Users.Features.GetAvailableUsers;
 using Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser;
-using Hookpay.Modules.Users.Core.Users.Features.SignIn;
+using Hookpay.Modules.Users.Core.Users.Features.UserSignedIn;
 using Hookpay.Shared.Utils;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,11 +26,16 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<Result<TokenReponse>> SignIn(SignInCommand command,CancellationToken cancellationToken)
+    public async Task<Result<UserSignedInResult>> SignIn(UserSignedIn command,CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command,cancellationToken);
-        if (string.IsNullOrEmpty(result)) return Result<TokenReponse>.Failure();        
-        return Result<TokenReponse>.Success(new TokenReponse { accessToken = result});
+
+        if (string.IsNullOrEmpty(result.accessToken))
+        {
+            return Result<UserSignedInResult>.Failure();
+        }       
+
+        return Result<UserSignedInResult>.Success(result);
     }
     [HttpPost("sign-up")]
     [ProducesResponseType(StatusCodes.Status201Created)]

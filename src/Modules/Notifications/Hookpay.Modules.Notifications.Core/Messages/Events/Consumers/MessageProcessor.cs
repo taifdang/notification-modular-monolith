@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Events.Consumers;
 
-public class MessageProcessor : IConsumer<MessageContracts>
+public class MessageProcessor : IConsumer<MessageCreated>
 {
     private readonly MessageDbContext _context;
     private readonly IMessageConvert _convert;
@@ -24,7 +24,7 @@ public class MessageProcessor : IConsumer<MessageContracts>
         _convert = convert;
         _logger = logger;   
     }
-    public async Task Consume(ConsumeContext<MessageContracts> request)
+    public async Task Consume(ConsumeContext<MessageCreated> request)
     {
         try
         {

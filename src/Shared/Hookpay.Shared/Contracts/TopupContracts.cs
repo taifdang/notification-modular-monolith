@@ -8,5 +8,6 @@ using System.Threading.Tasks;
 namespace Hookpay.Shared.Contracts;
 
 public record TopupContracts(int transId,string username,decimal tranferAmount):IIntegrationEvent;
+public record TopupCreated(int transId, string username, decimal transferAmount) : IIntegrationEvent;
 
 

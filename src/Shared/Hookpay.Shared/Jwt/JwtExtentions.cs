@@ -1,0 +1,51 @@
+﻿using Hookpay.Shared.EFCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Hookpay.Shared.Jwt;
+
+public static class JwtExtentions
+{
+    public static string GenerateJwtToken(int userId, string email, string username)
+    {
+        try
+        {
+            var claims = new []
+            {
+                new Claim("uid",userId.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name,username),
+                new Claim(JwtRegisteredClaimNames.Email,email),
+                new Claim(JwtRegisteredClaimNames.Iat,DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+            };
+           
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("a-string-secret-at-least-256-bits-long"));
+
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                   issuer: "https://hookpay.com",
+                   audience: "https://hookpay.com",
+                   claims: claims,
+                   expires: DateTime.UtcNow.AddMinutes(10),
+                   signingCredentials: cred
+               );
+
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwtToken;
+        }
+        catch
+        {
+            throw new Exception("Token generate is invalid");
+        }
+    }
+}

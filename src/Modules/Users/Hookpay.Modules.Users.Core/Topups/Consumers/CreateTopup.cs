@@ -50,7 +50,7 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
         High = 2,
     }
 
-    public class CreateTopup : IConsumer<TopupContracts>
+    public class CreateTopup : IConsumer<TopupCreated>
     {
         private readonly UserDbContext _userDbContext;
         private readonly IBusPublisher _publisher;
@@ -62,7 +62,7 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
             _logger = logger;
         }
 
-        public async Task Consume(ConsumeContext<TopupContracts> context)
+        public async Task Consume(ConsumeContext<TopupCreated> context)
         {
             _logger.LogCritical($"consumer for {nameof(CreateTopup)} is processing ...");
 
@@ -78,15 +78,15 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
                 throw new Exception("User cannot be null or empty");
             }
 
-            userEntity.Balance += context.Message.tranferAmount;
+            userEntity.Balance += context.Message.transferAmount;
 
             //note: dictionary<string,object> / string => message global
-            var newMessage = Message.Create(context.Message.transId, userEntity.Id, context.Message.tranferAmount);
+            var newMessage = Message.Create(context.Message.transId, userEntity.Id, context.Message.transferAmount);
 
             //note: processor after
             await _userDbContext.SaveChangesAsync();
 
-            await _publisher.SendAsync(new MessageContracts(Guid.NewGuid(), "topup.created",JsonSerializer.Serialize(newMessage)));
+            await _publisher.SendAsync(new MessageCreated(Guid.NewGuid(), "topup.created",JsonSerializer.Serialize(newMessage)));
         }
     }
 }
