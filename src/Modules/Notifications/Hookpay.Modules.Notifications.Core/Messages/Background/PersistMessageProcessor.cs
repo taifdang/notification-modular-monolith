@@ -5,7 +5,6 @@ using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateM
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateMessagePersonal;
 using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.Hangfire;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Background;

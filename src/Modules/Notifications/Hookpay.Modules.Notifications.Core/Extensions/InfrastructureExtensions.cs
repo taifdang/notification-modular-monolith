@@ -2,8 +2,6 @@
 using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Background;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
-using Hookpay.Modules.Notifications.Core.Messages.Features.FilterMessage;
-using Hookpay.Modules.Notifications.Core.Messages.Features.HangfireJobHandler;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.EventBus;
 using Hookpay.Shared.Hangfire;
@@ -21,7 +19,6 @@ public static class InfrastructureExtensions
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(NotificationRoot).Assembly));
         services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
         services.AddScoped<IBusPublisher, BusPublisher>();
-        services.AddScoped<IHangfireJobHandler, HangfireJobHandler>();
         services.AddScoped<MessageAllHandler>();
         services.AddScoped<MessagePersonalHandler>();
         //

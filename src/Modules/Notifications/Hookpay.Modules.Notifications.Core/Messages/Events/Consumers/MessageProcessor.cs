@@ -4,12 +4,7 @@ using Hookpay.Shared.Contracts;
 using Hookpay.Shared.Utils;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Events.Consumers;
 
