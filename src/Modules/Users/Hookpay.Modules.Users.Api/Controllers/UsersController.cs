@@ -1,13 +1,11 @@
 ﻿using Hookpay.Modules.Users.Core.Users.Dtos;
+using Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser;
 using Hookpay.Modules.Users.Core.Users.Features.SignIn;
-using Hookpay.Modules.Users.Core.Users.Features.SignUp;
-using Hookpay.Shared.Caching;
 using Hookpay.Shared.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Api.Controllers;
 
@@ -38,11 +36,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<Result<object>> SignUp(CreateUserCommand command,CancellationToken cancellationToken)
+    public async Task<Result<RegisterNewUserResult>> RegisterUser(RegisterNewUser command,CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command,cancellationToken);
-        if (result is null) return Result<object>.Failure();
-        return Result<object>.Success(result);
+        if (result is null) return Result<RegisterNewUserResult>.Failure();
+        return Result<RegisterNewUserResult>.Success(result);
     }
     [HttpPost("WeatherForCast"),Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
