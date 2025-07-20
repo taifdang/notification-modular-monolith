@@ -16,7 +16,6 @@ public class Message : Aggregate
     public int UserId { get; set; }  
     public string Title { get; set; }
     public string Body { get; set; }
-    //public DateTime mess_createdAt { get; set; }
     public MessagePriority Priority { get; set; }
     public MessageType MessageType { get; set; }
     public bool IsProcessed { get; set; } = false;
@@ -24,8 +23,7 @@ public class Message : Aggregate
         Guid correlationId, 
         int userId ,
         string title, 
-        string body
-        //DateTime createdAt
+        string body      
     )
     {
         var message = new Message()
@@ -33,11 +31,14 @@ public class Message : Aggregate
             CorrelationId = correlationId,
             UserId = userId,
             Title = title,
-            Body = body,
-            //mess_createdAt = createdAt,
+            Body = body,          
             IsProcessed = false          
         };
         return message;
+    }
+    public void ChangeState(bool isProcessed)
+    {
+        IsProcessed = isProcessed;
     }
 
 }

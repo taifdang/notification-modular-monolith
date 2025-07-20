@@ -35,6 +35,7 @@
   <ItemGroup>
     <Folder Include="Configurations\" />
     <Folder Include="MediatR\" />
+    <Folder Include="Mapster\" />
   </ItemGroup>
 
 </Project>

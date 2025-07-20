@@ -23,15 +23,15 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Features.FilterMessage;
 
-public class FilterMessageWorker : BackgroundService
+public class FilterMessageBackgroundService(ILogger<FilterMessageBackgroundService> _logger, IServiceScopeFactory _provider) : BackgroundService
 {
-    private readonly IServiceScopeFactory _prodvider;
-    private readonly ILogger<FilterMessageWorker> _logger;
-    public FilterMessageWorker(ILogger<FilterMessageWorker> logger, IServiceScopeFactory provider)
-    {
-        _logger = logger;
-        _prodvider = provider;        
-    }
+    //private readonly IServiceScopeFactory _prodvider;
+    //private readonly ILogger<FilterMessageBackgroundService> _logger;
+    //public FilterMessageBackgroundService(ILogger<FilterMessageBackgroundService> logger, IServiceScopeFactory provider)
+    //{
+    //    _logger = logger;
+    //    _prodvider = provider;        
+    //}
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -40,7 +40,7 @@ public class FilterMessageWorker : BackgroundService
         {
             try
             {
-                var scope = _prodvider.CreateScope();
+                var scope = _provider.CreateScope();
                 var _context = scope.ServiceProvider.GetRequiredService<MessageDbContext>();
                 var messages = _context.Message
                                .Where(x => x.IsProcessed == false)

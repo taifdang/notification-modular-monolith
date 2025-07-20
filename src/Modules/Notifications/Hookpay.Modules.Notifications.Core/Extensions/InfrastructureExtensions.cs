@@ -1,10 +1,12 @@
 ﻿using Hangfire;
 using Hookpay.Modules.Notifications.Core.Data;
+using Hookpay.Modules.Notifications.Core.Messages.Background;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Features.FilterMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Features.HangfireJobHandler;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.EventBus;
+using Hookpay.Shared.Hangfire;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +25,9 @@ public static class InfrastructureExtensions
         services.AddScoped<MessageAllHandler>();
         services.AddScoped<MessagePersonalHandler>();
         //
+        services.AddScoped<IPersistMessageProcessor,PersistMessageProcessor>();
+        services.AddTransient<HangfireMediator>();
+        //
         services.AddHangfireStorageMSSQL();
         services.AddHangfireServer(options =>
         {
@@ -30,7 +35,8 @@ public static class InfrastructureExtensions
             options.Queues = new[] { "default" };
         });
 
-        //services.AddHostedService<FilterMessageWorker>();
+        //services.AddHostedService<FilterMessageBackgroundService>();
+        services.AddHostedService<PersistMesssageBackgroundService>();
 
         return services;
     }
