@@ -1,5 +1,5 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
-using Hookpay.Modules.Users.Core.Users.Models;
+using Hookpay.Modules.Users.Core.Users.Enums;
 using Hookpay.Shared.Contracts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

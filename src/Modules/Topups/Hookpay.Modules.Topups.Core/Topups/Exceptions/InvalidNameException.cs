@@ -1,6 +1,6 @@
 ﻿using Hookpay.Shared.Exceptions;
 
-namespace Hookpay.Modules.Topups.Core.Exceptions
+namespace Hookpay.Modules.Topups.Core.Topups.Exceptions
 {
     public class InvalidNameException : BadRequestException
     {

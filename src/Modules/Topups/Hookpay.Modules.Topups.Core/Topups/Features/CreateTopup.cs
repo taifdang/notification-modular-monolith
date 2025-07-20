@@ -1,9 +1,8 @@
 ﻿using Hookpay.Modules.Topups.Core.Data;
-using Hookpay.Modules.Topups.Core.Exceptions;
-using Hookpay.Modules.Topups.Core.Topups.Dtos;
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.Domain.Events;
 using Hookpay.Shared.EventBus;
+using Hookpay.Modules.Topups.Core.Topups.Exceptions;
 using MediatR;
 
 namespace Hookpay.Modules.Topups.Core.Topups.Features
@@ -40,7 +39,8 @@ namespace Hookpay.Modules.Topups.Core.Topups.Features
         {
             if(request is null)
             {
-                throw new InvalidTopupException();
+                throw new InvalidNameException();
+                
             }
 
             var creator = request.description.Split("NAPTIEN ")[1].ToLower();

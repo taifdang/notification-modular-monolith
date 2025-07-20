@@ -1,4 +1,5 @@
-﻿using Hookpay.Modules.Users.Core.Users.Models;
+﻿using Hookpay.Modules.Users.Core.Users.Enums;
+using Hookpay.Modules.Users.Core.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

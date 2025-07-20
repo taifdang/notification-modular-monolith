@@ -1,4 +1,4 @@
-﻿using Hookpay.Modules.Users.Core;
+﻿using Hookpay.Modules.Users.Core.Extensions;
 using Hookpay.Shared.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

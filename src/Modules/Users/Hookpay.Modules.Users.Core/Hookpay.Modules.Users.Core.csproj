@@ -19,6 +19,7 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Settings\" />
     <Folder Include="Users\Features\GetUserByPage\" />
+    <Folder Include="Users\Exceptions\" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hookpay.Modules.Users.Core.Users.Models
+namespace Hookpay.Modules.Users.Core.Users.Enums
 {
     public enum UserStatus
     {
