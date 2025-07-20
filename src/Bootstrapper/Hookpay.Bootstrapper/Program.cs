@@ -107,7 +107,7 @@ builder.Services.AddAuthentication(nameof(TokenScheme))
                     if (!string.IsNullOrWhiteSpace(accessToken))
                     {
                         context.Token = accessToken;
-                        Console.WriteLine($"{nameof(TokenScheme)} in Pipeline");
+                        //Console.WriteLine($"{nameof(TokenScheme)} in Pipeline");
                     }
                 }
                 return Task.CompletedTask;

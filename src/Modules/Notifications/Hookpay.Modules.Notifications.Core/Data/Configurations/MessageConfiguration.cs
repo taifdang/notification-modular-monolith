@@ -1,4 +1,5 @@
-﻿using Hookpay.Modules.Notifications.Core.Models;
+﻿using Hookpay.Modules.Notifications.Core.Messages.Enums;
+using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

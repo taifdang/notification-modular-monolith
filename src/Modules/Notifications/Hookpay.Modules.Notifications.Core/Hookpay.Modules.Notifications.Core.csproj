@@ -12,9 +12,8 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Messages\Exception\" />
-    <Folder Include="Messages\Dao\" />
     <Folder Include="Messages\Dtos\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
   

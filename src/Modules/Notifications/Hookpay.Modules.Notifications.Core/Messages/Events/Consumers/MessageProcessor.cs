@@ -1,5 +1,5 @@
 ﻿using Hookpay.Modules.Notifications.Core.Data;
-using Hookpay.Modules.Notifications.Core.Models;
+using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.Utils;
 using MassTransit;
@@ -11,14 +11,14 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Hookpay.Modules.Notifications.Core.Messages.Events.External;
+namespace Hookpay.Modules.Notifications.Core.Messages.Events.Consumers;
 
-public class ReceivedMessageHandler : IConsumer<MessageContracts>
+public class MessageProcessor : IConsumer<MessageContracts>
 {
     private readonly MessageDbContext _context;
     private readonly IMessageConvert _convert;
-    private readonly ILogger<ReceivedMessageHandler> _logger;
-    public ReceivedMessageHandler(MessageDbContext context,IMessageConvert convert, ILogger<ReceivedMessageHandler> logger) 
+    private readonly ILogger<MessageProcessor> _logger;
+    public MessageProcessor(MessageDbContext context,IMessageConvert convert, ILogger<MessageProcessor> logger) 
     { 
         _context = context;
         _convert = convert;
@@ -29,7 +29,6 @@ public class ReceivedMessageHandler : IConsumer<MessageContracts>
         try
         {
             var inbox = InboxMessage.Create(request.Message.correlationId, request.Message.eventType, request.Message.payload);
-            //
             var data = JsonSerializer.Deserialize<MessagePayload>(request.Message.payload);
             var body = _convert.MessageRender(data.event_type, data.detail);
 
@@ -38,11 +37,11 @@ public class ReceivedMessageHandler : IConsumer<MessageContracts>
             _context.InboxMessage.Add(inbox);
             _context.Message.Add(message);
             await _context.SaveChangesAsync();
-            _logger.LogCritical($"[consumer.notification.receive]::___+++___+++___");
+            _logger.LogCritical($"[consumer.notification.receive]::{DateTime.Now}");
         }
         catch (Exception ex)
         {
-            _logger.LogError($"[consumer.message.receive]::error>>{ex.ToString()}");
+            _logger.LogError($"[consumer.message.receive]::error::{ex.ToString()}");
         }
     }
 }

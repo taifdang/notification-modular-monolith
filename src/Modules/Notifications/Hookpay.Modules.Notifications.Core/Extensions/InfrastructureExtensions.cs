@@ -9,9 +9,9 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace Hookpay.Modules.Notifications.Core;
+namespace Hookpay.Modules.Notifications.Core.Extensions;
 
-public static class Extensions
+public static class InfrastructureExtensions
 {
     public static IServiceCollection AddCore(this IServiceCollection services)
     {

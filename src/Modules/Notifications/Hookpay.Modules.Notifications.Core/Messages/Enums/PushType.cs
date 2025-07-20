@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hookpay.Modules.Notifications.Core.Models;
+namespace Hookpay.Modules.Notifications.Core.Messages.Enums;
 
-public enum MessageType
+public enum PushType
 {
-    All = 0,
-    Personal = 1,
-    None = 2,
+    InWeb = 0,
+    Email = 1,
+    Sms = 2,
 }

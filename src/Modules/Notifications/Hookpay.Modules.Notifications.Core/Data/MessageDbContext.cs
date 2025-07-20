@@ -1,4 +1,4 @@
-﻿using Hookpay.Modules.Notifications.Core.Models;
+﻿using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.EFCore;
 using Microsoft.EntityFrameworkCore;
 using System;

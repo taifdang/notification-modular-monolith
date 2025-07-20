@@ -1,6 +1,6 @@
 ﻿using Hangfire;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
-using Hookpay.Modules.Notifications.Core.Models;
+using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.Contracts;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,4 +1,4 @@
-﻿using Hookpay.Modules.Notifications.Core;
+﻿using Hookpay.Modules.Notifications.Core.Extensions;
 using Hookpay.Shared.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

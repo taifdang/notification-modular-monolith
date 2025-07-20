@@ -1,8 +1,9 @@
 ﻿using Hangfire;
 using Hookpay.Modules.Notifications.Core.Data;
+using Hookpay.Modules.Notifications.Core.Messages.Enums;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Features.HangfireJobHandler;
-using Hookpay.Modules.Notifications.Core.Models;
+using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.Caching;
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.EventBus;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hookpay.Modules.Notifications.Core.Models
+namespace Hookpay.Modules.Notifications.Core.Messages.Enums
 {
     public enum MessagePriority
     {

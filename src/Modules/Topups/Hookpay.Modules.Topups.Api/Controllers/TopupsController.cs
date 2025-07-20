@@ -1,4 +1,5 @@
-﻿using Hookpay.Modules.Topups.Core.Topups.Features;
+﻿using Hookpay.Modules.Topups.Core.Topups.Dtos;
+using Hookpay.Modules.Topups.Core.Topups.Features;
 using Hookpay.Shared.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -18,14 +19,15 @@ namespace Hookpay.Modules.Topups.Api.Controllers
     {
         private readonly IMediator _mediatr;
         public TopupsController(IMediator mediatr) { _mediatr = mediatr; }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<Result<object>> CreateTopupEvent(CreateTopupCommand command,CancellationToken cancellationToken)
+        public async Task<Result<CreateTopupResult>> CreateTopupEvent(CreateTopup command,CancellationToken cancellationToken)
         {
             var result = await _mediatr.Send(command, cancellationToken); 
-            if(result is null) return Result<object>.Failure();           
-            return Result<object>.Success(result);
+            if(result is null) return Result<CreateTopupResult>.Failure();           
+            return Result<CreateTopupResult>.Success(result);
 
         }
     }

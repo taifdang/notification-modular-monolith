@@ -16,7 +16,5 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Data\Migrations\" />
-	  <Folder Include="Topups\Dtos\" />
-	  <Folder Include="Topups\Exceptions\" />
 	</ItemGroup>
 </Project>
