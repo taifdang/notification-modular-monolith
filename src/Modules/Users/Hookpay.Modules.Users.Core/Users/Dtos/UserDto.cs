@@ -8,9 +8,9 @@ namespace Hookpay.Modules.Users.Core.Users.Dtos;
 
 public class UserDto
 {
-    public int id {  get; set; }    
-    public string username { get; set; }    
-    public string email { get;set; }
-    public decimal? balance {  get; set; }
-    public string phone { get; set; }
+    public int Id {  get; set; }    
+    public string Username { get; set; }    
+    public string Email { get;set; }
+    public decimal? Balance {  get; set; }
+    public string Phone { get; set; }
 }

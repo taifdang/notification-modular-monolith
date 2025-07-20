@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hookpay.Shared.Core.Pagination;
 
 namespace Hookpay.Modules.Users.Core.Users.Features.GetUserByIds;
 
@@ -33,6 +34,7 @@ public class GetUserByIdsCommandHandler : IRequestHandler<UserFlilterContracts, 
                 x.user.Status == UserStatus.Active)
             .Select(x => x.user.Id)
             .ToListAsync();
+        
         return list_userId;
     }
 }

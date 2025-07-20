@@ -9,6 +9,8 @@
   <ItemGroup>
 	<PackageReference Include="Hangfire.AspNetCore" Version="1.8.20" />
 	<PackageReference Include="Hangfire.SqlServer" Version="1.8.20" />
+	<PackageReference Include="Mapster" Version="7.4.2-pre02" />
+	<PackageReference Include="Mapster.DependencyInjection" Version="1.0.3-pre02" />
 	<PackageReference Include="MassTransit" Version="8.5.0" />
 	<PackageReference Include="MassTransit.RabbitMQ" Version="8.5.0" />
 	<PackageReference Include="MediatR" Version="12.4.0" />

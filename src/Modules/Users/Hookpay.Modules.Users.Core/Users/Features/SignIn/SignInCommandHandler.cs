@@ -26,7 +26,7 @@ public class SignInCommandHandler : IRequestHandler<SignInCommand, string>
     public SignInCommandHandler(UserDbContext context,IRequestCache cache, IConfiguration configuration) {  _context = context;_cache = cache;_configuration = configuration; }
     public async Task<string> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
-        //email:index non-cluster
+        //Email:index non-cluster
         var user =  await _context.Users.SingleOrDefaultAsync(x => x.Email == request.email);
         if (user is null) return string.Empty;
         if (!user.Password.Equals(request.password)) return string.Empty;
@@ -41,7 +41,7 @@ public class SignInCommandHandler : IRequestHandler<SignInCommand, string>
             var claims = new[]
             {
                 new Claim("uid",userId.ToString()),
-                //new Claim(JwtRegisteredClaimNames.Name,username),
+                //new Claim(JwtRegisteredClaimNames.Name,Username),
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Name,username),
                 new Claim(JwtRegisteredClaimNames.Email,email),
