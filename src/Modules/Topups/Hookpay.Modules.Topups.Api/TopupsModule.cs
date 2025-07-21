@@ -24,7 +24,7 @@ namespace Hookpay.Modules.Topups.Api
             module.AddCore();
         }
 
-        public void Use(IApplicationBuilder app)
+        public void Use(WebApplication app)
         {
             app.UseRouting();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

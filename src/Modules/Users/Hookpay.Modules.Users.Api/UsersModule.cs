@@ -24,9 +24,9 @@ namespace Hookpay.Modules.Users.Api
             services.AddCore();
         }
 
-        public void Use(IApplicationBuilder app)
+        public void Use(WebApplication app)
         {
-            
+            app.UseCore();
         }
     }
 }

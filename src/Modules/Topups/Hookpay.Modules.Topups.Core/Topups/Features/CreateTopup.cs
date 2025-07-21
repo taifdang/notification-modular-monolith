@@ -57,7 +57,7 @@ namespace Hookpay.Modules.Topups.Core.Topups.Features
             //note: processor method publish and savechange via domainevent
             await _topupDbContext.SaveChangesAsync(cancellationToken);
 
-            await _publisher.SendAsync<TopupContracts>(new TopupContracts(topupEntity.TransactionId, topupEntity.Creator, topupEntity.TransferAmount), cancellationToken);         
+            await _publisher.SendAsync(new TopupCreated(topupEntity.TransactionId, topupEntity.Creator, topupEntity.TransferAmount), cancellationToken);         
 
             return new CreateTopupResult(newTopup.TransactionId, request.transferType, request.transferType, request.transferAmount);
         }

@@ -24,7 +24,7 @@ public class NotificationsModule : IModule
         module.AddCore();
     }
 
-    public void Use(IApplicationBuilder app)
+    public void Use(WebApplication app)
     {
         
     }

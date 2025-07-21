@@ -6,7 +6,9 @@ using Hookpay.Shared.EFCore;
 using Hookpay.Shared.EventBus;
 using Hookpay.Shared.Hangfire;
 using MassTransit;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using User;
 
 
 namespace Hookpay.Modules.Notifications.Core.Extensions;
@@ -19,7 +21,7 @@ public static class InfrastructureExtensions
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(NotificationRoot).Assembly));
         services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
         services.AddScoped<IBusPublisher, BusPublisher>();
-        services.AddScoped<MessageAllHandler>();
+       
         services.AddScoped<MessagePersonalHandler>();
         //
         services.AddScoped<IPersistMessageProcessor,PersistMessageProcessor>();
@@ -31,10 +33,19 @@ public static class InfrastructureExtensions
             options.ServerName = "localhost";
             options.Queues = new[] { "default" };
         });
-
-        //services.AddHostedService<FilterMessageBackgroundService>();
+        //
+        services.AddScoped<ICreateMessageProcessor, CreateMesssageProcessor>();
+        services.AddGrpcClient<UserGrpcService.UserGrpcServiceClient>(x =>
+        {
+            x.Address = new Uri("https://localhost:7001");
+        });        
         services.AddHostedService<PersistMesssageBackgroundService>();
 
         return services;
+    }
+    public static WebApplication UseCore(this WebApplication app)
+    {
+       
+        return app;
     }
 }

@@ -8,9 +8,10 @@ public static class PaginationExtensions
 {
     public class PagedResult<T>
     {
-        public int CurrentPage { get; set; }    
+        public int PageNumber { get; set; }    
         public int PageSize { get; set; }
-        public int TotalCount { get; set; }
+        public int TotalItem { get; set; }
+        public int TotalPage { get; set; }
         public IReadOnlyList<T>? Results {  get; set; }
     }
     // ref: https://www.c-sharpcorner.com/article/pagination-in-c-sharp-complete-guide-with-easy-code-examples/
@@ -18,14 +19,17 @@ public static class PaginationExtensions
     {
         var result = new PagedResult<T>
         {
-            CurrentPage = pageNumber,
+            PageNumber = pageNumber,
             PageSize = pageSize,
-            TotalCount = query.Count()
+            TotalItem = query.Count()
         };
-        var pageCount = (int)Math.Ceiling(result.TotalCount / (double)pageSize);
-        var skip = (pageNumber - 1) * pageSize;
+
+        result.TotalPage = (int)Math.Ceiling(result.TotalItem / (double)pageSize);
+
+        var skip = (pageNumber - 1) * pageSize;        
 
         result.Results = await query.Skip(skip).Take(pageSize).ToListAsync(cancellationToken);
+
         return result;
     }
 }

@@ -1,17 +1,27 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Modules.Users.Core.Users.Dtos;
-using Hookpay.Modules.Users.Core.Users.Models;
-using Hookpay.Shared.Contracts;
 using Hookpay.Shared.Core.Pagination;
 using MapsterMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hookpay.Modules.Users.Core.Users.Features.GetAvailableUsers;
 
-public record GetAvailableUsers : IRequest<GetAvailableUsersResult>;
+public record GetAvailableUsers (int pageNumber, int pageSize ) : IRequest<GetAvailableUsersResult>;
 
-public record GetAvailableUsersResult(List<UserDto> UserDtos);
+public record GetAvailableUsersResult(
+    List<UserDto> UserDtos,
+    int PageNumber,
+    int PageSize,
+    int TotalPage,
+    int TotalItem);
+
+public record GetAvailableUsersReponse(
+    List<UserDto> UserDtos, 
+    int PageNumber, 
+    int PageSize,
+    int TotalPage,
+    int TotalItem
+    );
 
 public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetAvailableUsersResult>
 {
@@ -24,6 +34,11 @@ public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetA
     }
     public async Task<GetAvailableUsersResult> Handle(GetAvailableUsers request, CancellationToken cancellationToken)
     {
+        if(request.pageNumber <= 0 || request.pageSize <=0)
+        {
+            throw new Exception("PageNumber || PageSize is invalid");
+        } 
+
         var query =  _userDbContext.Users.AsQueryable()
             .Where(x => 
                 !x.IsDeleted && 
@@ -31,7 +46,11 @@ public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetA
                 x.UserSetting.AllowNotification == true)
             .OrderBy(x => x.Id);
             
-        var user = await PaginationExtensions.GetPagedData(query, 1, 10, cancellationToken);
+        var user = await PaginationExtensions.GetPagedData(
+            query,
+            request.pageNumber,
+            request.pageSize, 
+            cancellationToken);
 
         if (!user.Results.Any())
         {
@@ -40,6 +59,12 @@ public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetA
 
         var userDtos = _mapper.Map<List<UserDto>>(user.Results);   
         
-        return new GetAvailableUsersResult(userDtos);
+        return new GetAvailableUsersResult(
+            userDtos,
+            user.PageNumber,
+            user.PageSize,
+            user.TotalPage,
+            user.TotalItem
+            );
     }
 }

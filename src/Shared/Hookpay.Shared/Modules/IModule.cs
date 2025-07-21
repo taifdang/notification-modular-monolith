@@ -13,6 +13,6 @@ namespace Hookpay.Shared.Modules
         string Name { get; }
         IEnumerable<string> Policies { get; }
         void Register(IServiceCollection module);
-        void Use(IApplicationBuilder app);
+        void Use(WebApplication app);
     }
 }

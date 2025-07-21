@@ -1,6 +1,8 @@
-﻿using Hangfire;
+﻿using Google.Protobuf;
+using Hangfire;
 using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Enums;
+using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateMessageAll;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateMessagePersonal;
 using Hookpay.Modules.Notifications.Core.Messages.Models;
@@ -13,10 +15,17 @@ public class PersistMessageProcessor : IPersistMessageProcessor
 {
     private readonly MessageDbContext _messageDbContext;
     private readonly IBackgroundJobClient _backgroundJob;
-    public PersistMessageProcessor(MessageDbContext messageDbContext, IBackgroundJobClient backgroundJob)
+    //
+    private readonly ICreateMessageProcessor _createMessageProcessor;
+    public PersistMessageProcessor(
+        MessageDbContext messageDbContext,
+        IBackgroundJobClient backgroundJob,
+        ICreateMessageProcessor createMessageProcessor
+        )
     {
         _messageDbContext = messageDbContext;
         _backgroundJob = backgroundJob;
+        _createMessageProcessor = createMessageProcessor;
     }
 
     public async Task ChangeMessageStatusAsync(Message message, CancellationToken cancellationToken = default)
@@ -49,7 +58,7 @@ public class PersistMessageProcessor : IPersistMessageProcessor
         {
             case MessageType.All:
 
-                var sendAll = _backgroundJob.ScheduleCommand(new CreateMessageAll(), 30);
+                var sendAll = _backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);           
 
                 if (sendAll)
                 {
@@ -58,6 +67,7 @@ public class PersistMessageProcessor : IPersistMessageProcessor
                 }
                 else
                 {
+                    Console.WriteLine($"[user_callback]");
                     return;
                 }
             case MessageType.Personal:
