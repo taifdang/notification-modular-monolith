@@ -1,4 +1,5 @@
-﻿using Hookpay.Shared.Caching;
+﻿using Hookpay.Modules.Notifications.Core.Messages.Enums;
+using Hookpay.Shared.Caching;
 using MassTransit;
 using MediatR;
 using User;
@@ -45,11 +46,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
                     throw new Exception("User is not empty");
                 }
                            
-                //signalR
-                foreach (var user in users.UserDto)
-                {
-                    await PublishAsync((int)user.Id, message);
-                }
+                await PublishAllAsync(users.UserDto, message);
 
                 TotalPage = users.TotalPage;
                 PageNumber++;
@@ -63,7 +60,10 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
 
     }
 
-    public Task AddPersonalMessageAsync(CancellationToken cancellationToken = default)
+    public Task AddPersonalMessageAsync(
+        int userId,
+        string message,
+        CancellationToken cancellationToken = default)
     {      
         throw new NotImplementedException();
     }
@@ -77,9 +77,28 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         throw new NotImplementedException();
     }
 
-    public Task PublishAllAsync(CancellationToken cancellationToken = default)
+    public async Task MessageLoadingProcessor(
+        string? message,
+        MessageProcessorType processorType, 
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        throw new Exception("User loop is not fail");
+    }
+  
+    public async Task PublishAllAsync<T>(IReadOnlyList<T> listUser, string message, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            //ref: https://dotnettutorials.net/lesson/dynamic-type-in-csharp/
+            foreach (dynamic? user in listUser)
+            {
+                await PublishAsync(user!.Id, message);
+            }
+        }
+        catch
+        {
+            throw new Exception("List data is invalid");
+        }
     }
 
     public Task PublishAsync(int userId, string message, CancellationToken cancellationToken = default)
@@ -87,5 +106,10 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         Console.WriteLine($"userId: {userId} :: message: {message}");
 
         return Task.CompletedTask;  
+    }
+
+    public Task SaveStatePublishMessage(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

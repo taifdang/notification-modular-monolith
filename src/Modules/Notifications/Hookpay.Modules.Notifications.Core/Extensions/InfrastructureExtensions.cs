@@ -22,7 +22,7 @@ public static class InfrastructureExtensions
         services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
         services.AddScoped<IBusPublisher, BusPublisher>();
        
-        services.AddScoped<MessagePersonalHandler>();
+        
         //
         services.AddScoped<IPersistMessageProcessor,PersistMessageProcessor>();
         services.AddTransient<HangfireMediator>();
@@ -44,8 +44,7 @@ public static class InfrastructureExtensions
         return services;
     }
     public static WebApplication UseCore(this WebApplication app)
-    {
-       
+    {      
         return app;
     }
 }

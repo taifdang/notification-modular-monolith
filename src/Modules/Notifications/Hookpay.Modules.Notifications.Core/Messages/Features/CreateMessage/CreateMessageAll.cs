@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateMessageAll;
+namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 
 public record CreateMessageAll(string message) : IRequest;
 

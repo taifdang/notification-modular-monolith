@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateMessagePersonal;
+namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 
 public record CreateMessagePersonal : IRequest;
 

@@ -1,10 +1,7 @@
-﻿using Google.Protobuf;
-using Hangfire;
+﻿using Hangfire;
 using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Enums;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
-using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateMessageAll;
-using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage.CreateMessagePersonal;
 using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.Hangfire;
 using Microsoft.EntityFrameworkCore;
@@ -57,8 +54,10 @@ public class PersistMessageProcessor : IPersistMessageProcessor
         switch(messageType)
         {
             case MessageType.All:
-
-                var sendAll = _backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);           
+             
+                var sendAll = 
+                _backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);           
+                
 
                 if (sendAll)
                 {
