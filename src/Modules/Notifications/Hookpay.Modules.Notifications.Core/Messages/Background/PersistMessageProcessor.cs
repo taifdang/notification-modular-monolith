@@ -12,8 +12,8 @@ public class PersistMessageProcessor : IPersistMessageProcessor
 {
     private readonly MessageDbContext _messageDbContext;
     private readonly IBackgroundJobClient _backgroundJob;
-    //
     private readonly ICreateMessageProcessor _createMessageProcessor;
+
     public PersistMessageProcessor(
         MessageDbContext messageDbContext,
         IBackgroundJobClient backgroundJob,
@@ -46,7 +46,12 @@ public class PersistMessageProcessor : IPersistMessageProcessor
 
     public async Task ProcessAsync(int messsageId, MessageType messageType, CancellationToken cancellationToken = default)
     {
-        var message = await _messageDbContext.Message.FirstOrDefaultAsync(x => x.Id == messsageId && x.MessageType == messageType, cancellationToken);
+        var message = 
+            await _messageDbContext.Message
+            .FirstOrDefaultAsync(x => 
+                x.Id == messsageId && 
+                x.MessageType == messageType,
+                cancellationToken);
 
         if (message == null)
             return;
@@ -54,11 +59,11 @@ public class PersistMessageProcessor : IPersistMessageProcessor
         switch(messageType)
         {
             case MessageType.All:
-             
-                var sendAll = 
-                _backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);           
-                
 
+                await _createMessageProcessor.AddAllMessageAsync(message.Body);
+                var sendAll = false;
+                //_backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);           
+                
                 if (sendAll)
                 {
                     await ChangeMessageStatusAsync(message, cancellationToken);
@@ -71,7 +76,10 @@ public class PersistMessageProcessor : IPersistMessageProcessor
                 }
             case MessageType.Personal:
 
-                var sendPersonal = _backgroundJob.EnqueueCommand(new CreateMessagePersonal());
+                await _createMessageProcessor.PublishAsync(message.UserId, message.Body);
+                var sendPersonal = false;
+                    //_backgroundJob.EnqueueCommand(new CreateMessagePersonal());
+
 
                 if (sendPersonal)
                 {

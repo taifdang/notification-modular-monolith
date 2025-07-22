@@ -15,9 +15,9 @@ namespace Hookpay.Modules.Users.Core.Extensions
         {
             services.AddMSSQL<UserDbContext>();
             services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UserRoot).Assembly));       
-            services.AddMassTransit(x =>
-                x.AddConsumers(typeof(UserRoot).Assembly)
-            );
+            //services.AddMassTransit(x =>
+            //    x.AddConsumers(typeof(UserRoot).Assembly)
+            //);
             //
             services.AddGrpc();
             //

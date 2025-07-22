@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Hookpay.Shared.Domain.Events;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,5 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Shared.Contracts
 {
-    //temp
-    public record GetAvailableUsersContract() : IRequest;
+    public record GetAvailableUsersContract() : IIntegrationEvent;
 }

@@ -23,8 +23,5 @@
     <ProjectReference Include="..\..\Modules\Users\Hookpay.Modules.Users.Api\Hookpay.Modules.Users.Api.csproj" />
     <ProjectReference Include="..\..\Shared\Hookpay.Shared\Hookpay.Shared.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
 
 </Project>

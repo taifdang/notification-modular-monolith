@@ -5,6 +5,7 @@ using Hookpay.Modules.Users.Core.Users.Features.UserSignedIn;
 using Hookpay.Shared.Utils;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,6 +50,7 @@ public class UsersController : ControllerBase
         return Result<RegisterNewUserResult>.Success(result);
     }
     [HttpPost("get-available-users")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

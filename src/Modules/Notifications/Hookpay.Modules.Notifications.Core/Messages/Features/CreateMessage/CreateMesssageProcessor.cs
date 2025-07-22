@@ -56,8 +56,6 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         {
             throw new Exception("User loop is not fail");
         }
-
-
     }
 
     public Task AddPersonalMessageAsync(

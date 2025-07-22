@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Shared.Jwt;
 
-public static class JwtExtentions
+public static class JwtGenerate
 {
     public static string GenerateJwtToken(int userId, string email, string username)
     {

@@ -31,7 +31,7 @@ public class UserSignedInHandler : IRequestHandler<UserSignedIn, UserSignedInRes
             throw new Exception("Not match password");
         }
 
-        var accessToken = JwtExtentions.GenerateJwtToken(user.Id, user.Email, user.Username);
+        var accessToken = JwtGenerate.GenerateJwtToken(user.Id, user.Email, user.Username);
 
         //exception
 
