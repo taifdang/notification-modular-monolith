@@ -1,10 +1,13 @@
 ﻿using Hangfire;
 using Hookpay.Modules.Notifications.Core;
+using Hookpay.Modules.Topups.Core;
 using Hookpay.Modules.Users.Core;
 using Hookpay.Shared.Caching;
+using Hookpay.Shared.Core;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.Jwt;
 using Hookpay.Shared.OpenApi;
+using Hookpay.Shared.PersistMessageProcessor;
 using Hookpay.Shared.SignalR;
 using Hookpay.Shared.Utils;
 using MassTransit;
@@ -29,6 +32,9 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddSingleton<IRequestCache, RequestCache>();
         builder.Services.AddSingleton<IMessageConvert, MessageConvert>();
         builder.Services.AddSingleton<INotificationHubService, NotificationHub>();
+        builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
+        builder.Services.AddScoped<IPersistMessageProcessor, PersistMessageProcessor>();
+       
         //
         builder.Services.AddHangfireStorageMSSQL();
 
@@ -42,7 +48,11 @@ public static class SharedInfrastructureExtensions
                 cfg.ConfigureEndpoints(context);
             });
         });
-        
+
+        //
+        //
+        builder.Services.AddScoped<IEventMapper, TopupEventMapper>();
+
 
         return builder;
     }

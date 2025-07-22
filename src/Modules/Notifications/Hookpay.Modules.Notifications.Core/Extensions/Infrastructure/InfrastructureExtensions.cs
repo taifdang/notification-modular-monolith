@@ -25,10 +25,10 @@ public static class InfrastructureExtensions
         builder.Services.AddHangfireCustom();
 
         builder.Services.AddScoped<IBusPublisher, BusPublisher>();
-        builder.Services.AddScoped<IPersistMessageProcessor, PersistMessageProcessor>();
+        builder.Services.AddScoped<IPersistMessageInternalProcessor, PersistMessageInternalProcessor>();
         builder.Services.AddScoped<ICreateMessageProcessor, CreateMesssageProcessor>();
 
-        builder.Services.AddHostedService<PersistMesssageBackgroundService>();
+        builder.Services.AddHostedService<PersistMesssageInternalBackgroundService>();
 
         return builder;
     }

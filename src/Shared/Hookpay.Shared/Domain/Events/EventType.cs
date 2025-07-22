@@ -3,7 +3,8 @@ namespace Hookpay.Shared.Domain.Events;
 
 [Flags]
 public enum EventType
-{
-    InteragationEvent = 1,
-    DomainEvent = 2
+{   
+    DomainEvent = 1,
+    InteragationEvent = 2,
+    InternalCommand = 3,
 }

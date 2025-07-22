@@ -3,7 +3,7 @@ using Hookpay.Modules.Notifications.Core.Messages.Models;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Background;
 
-public interface IPersistMessageProcessor
+public interface IPersistMessageInternalProcessor
 {
     Task ProcessAllAsync(CancellationToken cancellationToken = default);
 

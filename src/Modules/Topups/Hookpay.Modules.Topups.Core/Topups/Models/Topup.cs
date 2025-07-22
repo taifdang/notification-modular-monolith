@@ -22,7 +22,7 @@ namespace Hookpay.Modules.Topups.Core.Topups.Models
                 TransferAmount = tranfer_amount,               
             };
 
-            var @event = new CreateTopupDomainEvent(topup.Creator, topup.TransferAmount);
+            var @event = new TopupCreatedDomainEvent(topup.TransactionId ,topup.Creator, topup.TransferAmount);
 
             topup.AddDomainEvent(@event);
 

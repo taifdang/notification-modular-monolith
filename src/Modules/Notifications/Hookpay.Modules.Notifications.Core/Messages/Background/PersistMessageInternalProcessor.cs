@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Background;
 
-public class PersistMessageProcessor : IPersistMessageProcessor
+public class PersistMessageInternalProcessor : IPersistMessageInternalProcessor
 {
     private readonly MessageDbContext _messageDbContext;
     private readonly IBackgroundJobClient _backgroundJob;
     private readonly ICreateMessageProcessor _createMessageProcessor;
 
-    public PersistMessageProcessor(
+    public PersistMessageInternalProcessor(
         MessageDbContext messageDbContext,
         IBackgroundJobClient backgroundJob,
         ICreateMessageProcessor createMessageProcessor

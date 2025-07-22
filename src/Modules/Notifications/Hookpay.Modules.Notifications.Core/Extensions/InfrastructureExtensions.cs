@@ -24,7 +24,7 @@ public static class InfrastructureExtensions
        
         
         //
-        services.AddScoped<IPersistMessageProcessor,PersistMessageProcessor>();
+        services.AddScoped<IPersistMessageInternalProcessor,PersistMessageInternalProcessor>();
         services.AddTransient<HangfireMediator>();
         //
         services.AddHangfireStorageMSSQL();
@@ -39,7 +39,7 @@ public static class InfrastructureExtensions
         {
             x.Address = new Uri("https://localhost:7001");
         });        
-        services.AddHostedService<PersistMesssageBackgroundService>();
+        //services.AddHostedService<PersistMesssageInternalBackgroundService>();
 
         return services;
     }
