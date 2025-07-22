@@ -1,11 +1,7 @@
 ﻿using Hookpay.Shared.Domain.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 namespace Hookpay.Shared.EFCore;
 
 public interface IDbContext

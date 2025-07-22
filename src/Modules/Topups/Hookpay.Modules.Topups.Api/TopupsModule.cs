@@ -1,5 +1,4 @@
 ﻿using Hookpay.Modules.Topups.Core.Extensions;
-using Hookpay.Shared.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Topups.Api
 {
-    public class TopupsModule : IModule
+    public class TopupsModule 
     {       
         public string Name { get; } = "Topups";
 

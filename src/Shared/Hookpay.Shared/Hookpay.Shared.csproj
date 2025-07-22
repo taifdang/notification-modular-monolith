@@ -34,7 +34,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
     <Folder Include="MediatR\" />
     <Folder Include="Web\" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using Hookpay.Shared.Utils;
+﻿using Hookpay.Shared.Configurations;
+using Hookpay.Shared.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;

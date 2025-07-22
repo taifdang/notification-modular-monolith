@@ -1,5 +1,4 @@
 ﻿using Hookpay.Modules.Users.Core.Extensions;
-using Hookpay.Shared.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Api
 {
-    public class UsersModule : IModule
+    public class UsersModule 
     {      
         public string Name { get; } = "Users";
 

@@ -1,5 +1,4 @@
 ﻿using Hookpay.Modules.Notifications.Core.Extensions;
-using Hookpay.Shared.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Api;
 
-public class NotificationsModule : IModule
+public class NotificationsModule 
 {
     public string Name => "Notifications";
 
