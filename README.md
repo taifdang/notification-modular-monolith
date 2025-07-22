@@ -14,5 +14,7 @@
 
 ### 2. Masstransit + SignalR
 
+### 3. Grpc in queries
+
 ## 🔗 Refenrence
 ...
