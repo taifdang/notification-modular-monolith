@@ -1,7 +1,7 @@
 ﻿
 using Google.Protobuf;
 
-namespace Hookpay.Shared.Domain.Events;
+namespace Hookpay.Shared.PersistMessageProcessor;
 
 public class MessageEnvelope
 {

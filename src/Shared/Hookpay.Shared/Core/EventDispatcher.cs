@@ -44,7 +44,8 @@ public sealed class EventDispatcher (
 
         if(type != null && eventType == EventType.InternalCommand)
         {
-            var internalCommands = await MapInternalCommandEvent(events as IReadOnlyList<IDomainEvent>);
+            var internalCommands = await MapInternalCommandEvent(events as IReadOnlyList<IDomainEvent>)
+                .ConfigureAwait(false);
 
             foreach (var internalCommand in internalCommands)
             {

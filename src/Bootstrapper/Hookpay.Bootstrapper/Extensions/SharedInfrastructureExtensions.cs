@@ -33,9 +33,10 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddSingleton<IMessageConvert, MessageConvert>();
         builder.Services.AddSingleton<INotificationHubService, NotificationHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
-        builder.Services.AddScoped<IPersistMessageProcessor, PersistMessageProcessor>();
-       
-        //
+        
+
+        builder.Services.AddPersistMessageProcessor();
+        
         builder.Services.AddHangfireStorageMSSQL();
 
         builder.Services.AddMassTransit(x =>

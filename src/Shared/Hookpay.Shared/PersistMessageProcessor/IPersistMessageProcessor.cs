@@ -14,4 +14,20 @@ public interface IPersistMessageProcessor
         T internalCommand,
         CancellationToken cancellationToken = default)
         where T : class, IInternalCommand;
+
+    public Task ProcessAllAsync(     
+        CancellationToken cancellationToken = default);
+
+    public Task ProcessAsync(
+        Guid MessageId,
+        MessageDeliveryType deliveryType,
+        CancellationToken cancellationToken = default);
+
+    public Task<bool> ProcessOutboxAsync(
+        PersistMessage message,
+        CancellationToken cancellationToken = default);
+
+    public Task<bool> ProcessInternalAsync(
+        PersistMessage message,
+        CancellationToken cancellationToken = default);
 }
