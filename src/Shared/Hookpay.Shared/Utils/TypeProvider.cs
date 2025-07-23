@@ -9,6 +9,6 @@ public static class TypeProvider
             .SelectMany(x => x.GetTypes().Where(y => y.FullName == typeName || y.Name == typeName))
             .FirstOrDefault();
 
-        return typeof(Type);
+        return result;
     }
 }

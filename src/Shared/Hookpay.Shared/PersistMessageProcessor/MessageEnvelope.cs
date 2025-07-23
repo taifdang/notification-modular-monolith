@@ -8,11 +8,11 @@ public class MessageEnvelope
     public MessageEnvelope(object? message, IDictionary<string, object?>? headers = null)
     {
         Message = message;
-        Headers = headers;
+        Headers = headers ?? new Dictionary<string, object?>();
     }
 
-    public object? Message { get; set; }
-    public IDictionary<string, object?>? Headers { get; set; }
+    public object? Message { get; init; }
+    public IDictionary<string, object?> Headers { get; init; }
 }
 
 public class MessageEnvelope<T> : MessageEnvelope

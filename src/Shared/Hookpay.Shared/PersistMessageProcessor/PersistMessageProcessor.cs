@@ -67,7 +67,7 @@ public class PersistMessageProcessor : IPersistMessageProcessor
             new PersistMessage(
                 id,
                 messageEnvelope.Message.GetType().ToString(),
-                JsonSerializer.Serialize(messageEnvelope.Message),
+                JsonSerializer.Serialize(messageEnvelope),
                 deliveryType
                 ),
             cancellationToken
@@ -96,7 +96,7 @@ public class PersistMessageProcessor : IPersistMessageProcessor
     {
         //find message
         var message = await _persistMessageDbContext.PersistMessage
-            .FirstOrDefaultAsync(x => x.Id  == MessageId && x.DeliveryType == deliveryType);
+            .FirstOrDefaultAsync(x => x.Id  == MessageId && x.DeliveryType == deliveryType, cancellationToken);
 
         if (message is null)
             return;
@@ -140,8 +140,8 @@ public class PersistMessageProcessor : IPersistMessageProcessor
     }
     
 
-    public async Task<bool> ProcessOutboxAsync(PersistMessage message, CancellationToken cancellationToken)
-    {
+    private async Task<bool> ProcessOutboxAsync(PersistMessage message, CancellationToken cancellationToken)
+    {        
         var messageEnvelope = JsonSerializer.Deserialize<MessageEnvelope>(message.Data);
 
         if (messageEnvelope is null || messageEnvelope.Message is null)
@@ -156,10 +156,8 @@ public class PersistMessageProcessor : IPersistMessageProcessor
 
         await _publishEndpoint.Publish(data, context =>
         {
-            foreach(var header in messageEnvelope.Headers)
-            {
+            foreach (var header in messageEnvelope.Headers)
                 context.Headers.Set(header.Key, header.Value);
-            }
         }, cancellationToken);
 
         _logger.LogInformation(
@@ -172,7 +170,9 @@ public class PersistMessageProcessor : IPersistMessageProcessor
 
     }
 
-    public async Task<bool> ProcessInternalAsync(PersistMessage message, CancellationToken cancellationToken = default)
+    public async Task<bool> ProcessInternalAsync(
+        PersistMessage message, 
+        CancellationToken cancellationToken = default)
     {
         var messageEnvelope = JsonSerializer.Deserialize<MessageEnvelope>(message.Data);
 

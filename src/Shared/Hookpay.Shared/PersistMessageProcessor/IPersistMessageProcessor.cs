@@ -23,10 +23,6 @@ public interface IPersistMessageProcessor
         MessageDeliveryType deliveryType,
         CancellationToken cancellationToken = default);
 
-    public Task<bool> ProcessOutboxAsync(
-        PersistMessage message,
-        CancellationToken cancellationToken = default);
-
     public Task<bool> ProcessInternalAsync(
         PersistMessage message,
         CancellationToken cancellationToken = default);

@@ -28,7 +28,7 @@ public static class InfrastructureExtensions
         builder.Services.AddScoped<IPersistMessageInternalProcessor, PersistMessageInternalProcessor>();
         builder.Services.AddScoped<ICreateMessageProcessor, CreateMesssageProcessor>();
 
-        builder.Services.AddHostedService<PersistMesssageInternalBackgroundService>();
+        //builder.Services.AddHostedService<PersistMesssageInternalBackgroundService>();
 
         return builder;
     }
