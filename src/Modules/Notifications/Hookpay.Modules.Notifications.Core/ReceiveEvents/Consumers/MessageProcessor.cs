@@ -6,7 +6,7 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Hookpay.Modules.Notifications.Core.Messages.Events.Consumers;
+namespace Hookpay.Modules.Notifications.Core.ReceiveEvents.Consumers;
 
 public class MessageProcessor : IConsumer<MessageCreated>
 {

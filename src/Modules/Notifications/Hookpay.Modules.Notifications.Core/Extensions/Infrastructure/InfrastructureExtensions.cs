@@ -3,14 +3,8 @@ using Hookpay.Modules.Notifications.Core.Messages.Background;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.EventBus;
-using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Extensions.Infrastructure;
 
@@ -28,7 +22,7 @@ public static class InfrastructureExtensions
         builder.Services.AddScoped<IPersistMessageInternalProcessor, PersistMessageInternalProcessor>();
         builder.Services.AddScoped<ICreateMessageProcessor, CreateMesssageProcessor>();
 
-        //builder.Services.AddHostedService<PersistMesssageInternalBackgroundService>();
+        builder.Services.AddHostedService<PersistMesssageInternalBackgroundService>();
 
         return builder;
     }
