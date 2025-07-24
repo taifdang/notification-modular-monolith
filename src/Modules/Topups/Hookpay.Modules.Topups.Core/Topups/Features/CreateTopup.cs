@@ -44,7 +44,6 @@ namespace Hookpay.Modules.Topups.Core.Topups.Features
     public class CreateTopupHandler : IRequestHandler<CreateTopup, CreateTopupResult>
     {
         private readonly TopupDbContext _topupDbContext;
-        private readonly IBusPublisher _publisher;
         private readonly IEventDispatcher _eventDispatcher;
 
         public CreateTopupHandler(
@@ -53,16 +52,10 @@ namespace Hookpay.Modules.Topups.Core.Topups.Features
             IEventDispatcher eventDispatcher)
         {
             _topupDbContext = topupDbContext;
-            _publisher = publisher;
             _eventDispatcher = eventDispatcher;
         }
         public async Task<CreateTopupResult> Handle(CreateTopup request, CancellationToken cancellationToken)
-        {
-            if(request is null)
-            {
-                throw new InvalidNameException();
-                
-            }
+        {          
 
             var creator = request.Description.Split("NAPTIEN ")[1].ToLower();
 
