@@ -1,5 +1,6 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Modules.Users.Core.Users.Dtos;
+using Hookpay.Modules.Users.Core.Users.Exceptions;
 using Hookpay.Shared.Core.Pagination;
 using MapsterMapper;
 using MediatR;
@@ -35,7 +36,7 @@ public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetA
     {
         if(request.pageNumber <= 0 || request.pageSize <=0)
         {
-            throw new Exception("PageNumber || PageSize is invalid");
+            throw new InvalidPaginationParameter();
         } 
 
         var query =  _userDbContext.Users.AsQueryable()
@@ -53,7 +54,7 @@ public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetA
 
         if (!user.Results.Any())
         {
-            throw new Exception("Empty");
+            throw new UserAlreadyExistException();
         }
 
         var userDtos = _mapper.Map<List<UserDto>>(user.Results);   

@@ -1,4 +1,6 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
+using Hookpay.Modules.Users.Core.Topups.Exceptons;
+using Hookpay.Modules.Users.Core.Users.Exceptions;
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.Core;
 using Hookpay.Shared.EventBus;
@@ -75,26 +77,24 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
 
             if (context.Message is null)
             {
-                throw new Exception("Message cannot be null or empty");
+                throw new MessageNotFoundException();
             }
 
             var userEntity = await _userDbContext.Users.SingleOrDefaultAsync(x => x.Username == context.Message.username);
 
             if (userEntity is null)
             {
-                throw new Exception("User cannot be null or empty");
+                throw new UserAlreadyExistException();
             }
-
-            userEntity.Balance += context.Message.transferAmount;
+          
+            userEntity.Deposit(userEntity.Balance);
 
             //note: dictionary<string,object> / string => message global
             var newMessage = Message.Create(context.Message.transId, userEntity.Id, context.Message.transferAmount);
 
             //note: processor after
             await _userDbContext.SaveChangesAsync();
-
-            
-
+          
             //await _eventDispatcher.SendAsync(
             //    new MessageCreated(Guid.NewGuid(), "topup.created", JsonSerializer.Serialize(newMessage)));
 

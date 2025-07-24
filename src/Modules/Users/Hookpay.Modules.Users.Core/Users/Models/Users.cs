@@ -29,5 +29,10 @@ namespace Hookpay.Modules.Users.Core.Users.Models
 
             return user;
         }
+
+        public void Deposit(decimal amount)
+        {
+            Balance += amount;
+        }
     }
 }

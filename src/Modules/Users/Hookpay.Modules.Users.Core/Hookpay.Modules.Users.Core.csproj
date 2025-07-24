@@ -30,7 +30,6 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="UserSetting\Models\" />
-    <Folder Include="Users\Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="GrpcServer\Protos\user.proto" GrpcServices="Both" />
