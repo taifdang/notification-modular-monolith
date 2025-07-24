@@ -1,12 +1,6 @@
 ﻿using Hookpay.Modules.Users.Core.Users.Enums;
-using Hookpay.Modules.Users.Core.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Core.Data.Configuration;
 
@@ -54,7 +48,7 @@ public class UserConfiguration : IEntityTypeConfiguration<Users.Models.Users>
 
         builder.HasOne(x => x.UserSetting)
             .WithOne(x => x.Users)
-            .HasForeignKey<UserSetting>(x => x.UserId)
+            .HasForeignKey<Users.Models.UserSetting>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         
         

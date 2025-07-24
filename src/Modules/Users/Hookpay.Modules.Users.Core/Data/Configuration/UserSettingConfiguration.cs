@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Core.Data.Configuration;
 
-public class UserSettingConfiguration : IEntityTypeConfiguration<UserSetting>
+public class UserSettingConfiguration : IEntityTypeConfiguration<Users.Models.UserSetting>
 {
-    public void Configure(EntityTypeBuilder<UserSetting> builder)
+    public void Configure(EntityTypeBuilder<Users.Models.UserSetting> builder)
     {
         builder.ToTable("UserSetting", "dbo");
 

@@ -1,4 +1,5 @@
 ﻿
+using FluentValidation;
 using Hookpay.Modules.Users.Core.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,16 @@ public record UpdateUserSetting(int UserId, bool AllowNotification) : IRequest<U
 
 public record UpdateUserSettingResult(string status);
 
+public class UpdateUserSettingValidator : AbstractValidator<UpdateUserSetting>
+{
+    public UpdateUserSettingValidator()
+    {
+        RuleFor(x => x.UserId).NotEmpty().WithMessage("Please enter field UserId");
+
+        RuleFor(x => x.AllowNotification).NotEmpty().WithMessage("Please enter field AllowNotification");
+    }
+}
+
 public class UpdateUserSettingHandler : IRequestHandler<UpdateUserSetting, UpdateUserSettingResult>
 {
     private readonly UserDbContext _userDbContext;
@@ -17,6 +28,7 @@ public class UpdateUserSettingHandler : IRequestHandler<UpdateUserSetting, Updat
     {
         _userDbContext = userDbContext; 
     }
+
     public async Task<UpdateUserSettingResult> Handle(UpdateUserSetting request, CancellationToken cancellationToken)
     {
         var user = await _userDbContext.UserSetting
