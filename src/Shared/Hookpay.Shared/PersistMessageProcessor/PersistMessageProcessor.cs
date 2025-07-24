@@ -180,9 +180,8 @@ public class PersistMessageProcessor : IPersistMessageProcessor
             return false;
 
         var data = JsonSerializer.Deserialize(
-            messageEnvelope.GetType().ToString() ?? string.Empty,
-            TypeProvider.GetTypeFromAssembly(message.DataType) ?? typeof(object)
-            );
+           messageEnvelope.Message?.ToString() ?? string.Empty,
+           TypeProvider.GetTypeFromAssembly(message.DataType) ?? typeof(object));
 
         if (data is not IInternalCommand internalCommand)
             return false;

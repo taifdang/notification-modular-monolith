@@ -10,7 +10,10 @@ public class UserEventMapper : IEventMapper
 {
     public IIntegrationEvent? MapIntegrationEvent(IDomainEvent @event)
     {
-        throw new NotImplementedException();
+        return @event switch
+        {
+            _ => null
+        };
     }
 
     public IInternalCommand? MapInternalCommand(IDomainEvent @event)

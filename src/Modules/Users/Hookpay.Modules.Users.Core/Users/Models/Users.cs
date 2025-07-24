@@ -1,4 +1,5 @@
 ﻿using Hookpay.Modules.Users.Core.Users.Enums;
+using Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser;
 using Hookpay.Shared.Domain.Models;
 
 namespace Hookpay.Modules.Users.Core.Users.Models
@@ -12,7 +13,21 @@ namespace Hookpay.Modules.Users.Core.Users.Models
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public UserStatus Status { get; set; }     
-        // ? 
         public UserSetting? UserSetting { get; set; }
+
+        public static Users Create(string username, string password, string email, string phone)
+        {
+            var user = new Users
+            {
+                Username = username,
+                Password = password,
+                Email = email,
+                Phone = phone
+            };
+
+            user.AddDomainEvent(new UserCreatedDomainEvent(user.Id));
+
+            return user;
+        }
     }
 }

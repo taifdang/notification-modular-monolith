@@ -47,7 +47,7 @@ public sealed class EventDispatcher (
 
             if (type != null && eventType == EventType.InternalCommand)
             {
-                var internalCommands = await MapInternalCommandEvent(events as IReadOnlyList<IDomainEvent>)
+                var internalCommands = await MapDomainEventToInternalCommand(events as IReadOnlyList<IDomainEvent>)
                     .ConfigureAwait(false);
 
                 foreach (var internalCommand in internalCommands)
@@ -66,12 +66,13 @@ public sealed class EventDispatcher (
     }
 
     public async Task PublishIntegrationEventAsync(
-        IReadOnlyList<IIntegrationEvent> integrationEvents)
+        IReadOnlyList<IIntegrationEvent> integrationEvents, CancellationToken cancellationToken = default)
     {
         foreach(var integrationEvent in integrationEvents)
         {
             await _persistMessageProcessor.PublishMessageAsync(
-                new MessageEnvelope(integrationEvent, SetHeaders())
+                new MessageEnvelope(integrationEvent, SetHeaders()),
+                cancellationToken
             );
         }       
     }
@@ -82,16 +83,16 @@ public sealed class EventDispatcher (
     {
         _logger.LogTrace("Processing integration event start ...");
 
-        var wrappedIntegrationEvent =  GetWrappedIntegrationEvent(domainEvents?.ToList()).ToList();
+        var wrappedIntegrationEvent =  GetWrappedIntegrationEvent(domainEvents.ToList())?.ToList();
 
-        if(wrappedIntegrationEvent.Count() > 0)
+        if(wrappedIntegrationEvent?.Count() > 0)
         {
             return Task.FromResult<IReadOnlyList<IIntegrationEvent>>(wrappedIntegrationEvent);
         }
 
         var integrationEvents = new List<IIntegrationEvent>();
 
-        using var scope = _serviceScopeFactory.CreateScope();
+        //using var scope = _serviceScopeFactory.CreateScope();
 
         foreach(var domainEvent in domainEvents)
         {
@@ -112,24 +113,25 @@ public sealed class EventDispatcher (
         return Task.FromResult<IReadOnlyList<IIntegrationEvent>>(integrationEvents);
     }
 
-    public Task<IReadOnlyList<IInternalCommand>> MapInternalCommandEvent(IReadOnlyList<IDomainEvent> @events)
+    public Task<IReadOnlyList<IInternalCommand>> MapDomainEventToInternalCommand(IReadOnlyList<IDomainEvent> @events)
     {
         _logger.LogTrace("Processing internal command start ...");
 
         var internalCommands = new List<IInternalCommand>();
 
-        foreach(var @event in @events)
+        using var scope = _serviceScopeFactory.CreateScope();
+        foreach (var @event in @events)
         {
             var eventType = @event.GetType();
 
             _logger.LogTrace($"Handling domain event: {eventType.Name}");
 
-            var internalCommand = _eventMapper.MapInternalCommand(@event);
+            var integrationEvent = _eventMapper.MapInternalCommand(@event);
 
-            if(internalCommand is null)
+            if(integrationEvent is null)
                 continue;
 
-            internalCommands.Add(internalCommand);
+            internalCommands.Add(integrationEvent);
         }
 
         return Task.FromResult<IReadOnlyList<IInternalCommand>>(internalCommands);

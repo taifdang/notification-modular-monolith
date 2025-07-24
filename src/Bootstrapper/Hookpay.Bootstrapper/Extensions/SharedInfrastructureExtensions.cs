@@ -54,8 +54,8 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddMemoryCache();
 
         builder.Services.AddScoped<IEventMapper, TopupEventMapper>();
+        builder.Services.AddScoped<IEventMapper, UserEventMapper>();
 
-        
         return builder;
     }
 

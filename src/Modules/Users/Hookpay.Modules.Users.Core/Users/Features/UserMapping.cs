@@ -3,7 +3,7 @@ using Mapster;
 
 namespace Hookpay.Modules.Users.Core.Users.Features;
 
-public class UserEventMapping : IRegister
+public class UserMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {

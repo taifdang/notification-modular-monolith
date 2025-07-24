@@ -34,7 +34,7 @@ public class CompleteUserRegisterUserMonoHandler : IRequestHandler<CompleteUserR
             }
             else
             {
-                _userDbContext.UserSetting.Add(new Users.Models.UserSetting { UserId = user.Id, AllowNotification = true });
+                _userDbContext.UserSetting.Add(new Users.Models.UserSetting { UserId = request.Id, AllowNotification = true });
             }
 
             await _userDbContext.SaveChangesAsync();

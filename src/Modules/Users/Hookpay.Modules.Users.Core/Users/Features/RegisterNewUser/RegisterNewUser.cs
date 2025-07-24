@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Hookpay.Modules.Users.Core.Data;
+using Hookpay.Modules.Users.Core.Users.Models;
 using Hookpay.Shared.Core;
 using Hookpay.Shared.Domain.Events;
 using MediatR;
@@ -50,13 +51,7 @@ public class RegisterNewUserHandler : IRequestHandler<RegisterNewUser, RegisterN
 
     public async Task<RegisterNewUserResult> Handle(RegisterNewUser request, CancellationToken cancellationToken)
     {
-        var user = new Models.Users
-        {
-            Username = request.Username,
-            Password = request.Password,
-            Email = request.Email,
-            Phone = request.Phone,
-        };
+        var user = Models.Users.Create(request.Username, request.Password, request.Email, request.Phone);
 
         await _userDbContext.Users.AddAsync(user);
         //note: processor after
