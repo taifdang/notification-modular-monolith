@@ -1,9 +1,7 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.Core;
-using Hookpay.Shared.Domain.Models;
 using Hookpay.Shared.EventBus;
-using Hookpay.Shared.PersistMessageProcessor;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

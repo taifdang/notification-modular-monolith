@@ -13,9 +13,9 @@ namespace Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser
     {
         public RegisterNewUserValidator()
         {
-            RuleFor(x => x.Username).NotEmpty().WithMessage("Please enter field username");
+            RuleFor(x => x.Username).NotEmpty().WithMessage("Please enter field UserName");
 
-            RuleFor(x => x.Password).NotEmpty().WithMessage("Please enter field password");
+            RuleFor(x => x.Password).NotEmpty().WithMessage("Please enter field Password");
             RuleFor(x => x).Custom((x, context) =>
             {
                 if(x.Password != x.ConfirmPassword)
@@ -24,10 +24,10 @@ namespace Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser
                 }
             });
 
-            RuleFor(x => x.Phone).NotEmpty().WithMessage("Please enter field phone")
+            RuleFor(x => x.Phone).NotEmpty().WithMessage("Please enter field Phone")
                     .Matches(@"^[0-9]+$").WithMessage("A valid number is required")
                     .MaximumLength(13).WithMessage("Max number phone current is 13 digit");
-            RuleFor(x => x.Email).NotEmpty().WithMessage("Please enter field email")
+            RuleFor(x => x.Email).NotEmpty().WithMessage("Please enter field Email")
                     .EmailAddress().WithMessage("A valid message is required");
         }
     }

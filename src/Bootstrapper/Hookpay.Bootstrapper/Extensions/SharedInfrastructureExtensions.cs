@@ -6,6 +6,7 @@ using Hookpay.Modules.Users.Core;
 using Hookpay.Shared.Caching;
 using Hookpay.Shared.Core;
 using Hookpay.Shared.EFCore;
+using Hookpay.Shared.EventBus;
 using Hookpay.Shared.EventBus.MassTransit;
 using Hookpay.Shared.Jwt;
 using Hookpay.Shared.OpenApi;
@@ -41,6 +42,8 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddSingleton<IMessageConvert, MessageConvert>();
         builder.Services.AddSingleton<INotificationHubService, NotificationHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
+        //?
+        builder.Services.AddScoped<IBusPublisher, BusPublisher>();  
         
       
         builder.Services.AddHangfireStorageMSSQL();

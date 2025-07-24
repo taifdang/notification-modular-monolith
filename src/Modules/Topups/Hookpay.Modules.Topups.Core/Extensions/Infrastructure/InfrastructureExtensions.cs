@@ -1,8 +1,7 @@
-﻿using Hookpay.Modules.Topups.Core.Data;
+﻿using FluentValidation;
+using Hookpay.Modules.Topups.Core.Data;
 using Hookpay.Shared.EFCore;
-using Hookpay.Shared.EventBus;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Hookpay.Modules.Topups.Core.Extensions.Infrastructure;
 
@@ -12,9 +11,8 @@ public static class InfrastructureExtensions
     {
         builder.Services.AddMSSQL<TopupDbContext>();
         builder.Services.AddMediatRCustom();
-
-        builder.Services.AddScoped<IBusPublisher, BusPublisher>();
-
+        builder.Services.AddValidatorsFromAssembly(typeof(TopupRoot).Assembly);
+       
         return builder;
     }
 

@@ -11,7 +11,7 @@ public class PersistMessageProcessorBackgroundService
     IServiceProvider serviceProvider)
     : BackgroundService
 {
-   
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("PersistMessage BackgroundService is started ...");

@@ -13,7 +13,7 @@ public class TopupEventMapper : IEventMapper
     {
         return @event switch
         {
-            TopupCreatedDomainEvent e => new TopupCreated(e.transId, e.creator, e.tranferAmount),
+            TopupCreatedDomainEvent e => new TopupCreated(e.TransId, e.Creator, e.TransferAmount),
             _ => null
         };
     }
