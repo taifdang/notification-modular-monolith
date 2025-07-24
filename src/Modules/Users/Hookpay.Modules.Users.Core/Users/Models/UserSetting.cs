@@ -1,5 +1,4 @@
-﻿
-namespace Hookpay.Modules.Users.Core.Users.Models
+﻿namespace Hookpay.Modules.Users.Core.Users.Models
 {
     public class UserSetting
     {
@@ -7,5 +6,10 @@ namespace Hookpay.Modules.Users.Core.Users.Models
         public int UserId { get; set; }
         public bool AllowNotification { get; set; }
         public Users? Users { get; set; }
+
+        public void ChangeSettings(bool allowNotification)
+        {
+            AllowNotification = allowNotification;
+        }
     }
 }

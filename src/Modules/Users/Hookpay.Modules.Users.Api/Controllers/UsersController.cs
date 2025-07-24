@@ -2,6 +2,7 @@
 using Hookpay.Modules.Users.Core.Users.Features.GetAvailableUsers;
 using Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser;
 using Hookpay.Modules.Users.Core.Users.Features.UserSignedIn;
+using Hookpay.Modules.Users.Core.UserSetting.Features.UpdateUserSetting;
 using Hookpay.Shared.Utils;
 using Mapster;
 using MediatR;
@@ -23,6 +24,7 @@ public class UsersController : ControllerBase
         _mediator = mediator;
         _context = context;    
     }
+
     [HttpPost("sign-in")]
     //[Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -39,6 +41,7 @@ public class UsersController : ControllerBase
 
         return Result<UserSignedInResult>.Success(result);
     }
+
     [HttpPost("sign-up")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,9 +49,12 @@ public class UsersController : ControllerBase
     public async Task<Result<RegisterNewUserResult>> RegisterUser(RegisterNewUser command,CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command,cancellationToken);
+
         if (result is null) return Result<RegisterNewUserResult>.Failure();
+
         return Result<RegisterNewUserResult>.Success(result);
     }
+
     [HttpPost("get-available-users")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -57,9 +63,25 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetWeather()
     {
         var result = await _mediator.Send(new GetAvailableUsers(1,10));
+
         var response = result.Adapt<GetAvailableUsersReponse>();
+
         return Ok(response);      
     }
+
+    [HttpPost("change-setting")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> ChangeSetting(UpdateUserSetting command, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return Ok(result);
+    }
+
+
     [HttpGet("/")]
     public string GetGRPC() => "connected grpc ......";
 

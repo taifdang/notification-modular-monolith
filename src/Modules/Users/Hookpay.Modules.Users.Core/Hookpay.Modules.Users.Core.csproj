@@ -29,7 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="UserSetting\" />
+    <Folder Include="UserSetting\Models\" />
     <Folder Include="Users\Exceptions\" />
   </ItemGroup>
   <ItemGroup>

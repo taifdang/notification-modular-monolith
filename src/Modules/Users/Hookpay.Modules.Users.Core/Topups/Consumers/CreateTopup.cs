@@ -93,6 +93,8 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
             //note: processor after
             await _userDbContext.SaveChangesAsync();
 
+            
+
             //await _eventDispatcher.SendAsync(
             //    new MessageCreated(Guid.NewGuid(), "topup.created", JsonSerializer.Serialize(newMessage)));
 

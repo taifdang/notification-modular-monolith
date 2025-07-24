@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Hookpay.Modules.Users.Core.Data;
+using Hookpay.Shared.Core;
+using Hookpay.Shared.Domain.Events;
 using MediatR;
 
 namespace Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser
@@ -7,6 +9,8 @@ namespace Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser
     public record RegisterNewUser(string Username, string Password, string ConfirmPassword , string Email, string Phone) : IRequest<RegisterNewUserResult>;
 
     public record RegisterNewUserResult(int userId, string username, string email, decimal balance, string phone);
+
+    public record UserCreatedDomainEvent(int Id)  : IDomainEvent;
 
     //ref: https://code-maze.com/fluentvalidation-in-aspnet/
     public class RegisterNewUserValidator : AbstractValidator<RegisterNewUser>
@@ -34,10 +38,14 @@ namespace Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser
     public class RegisterNewUserHandler : IRequestHandler<RegisterNewUser, RegisterNewUserResult>
     {
         private readonly UserDbContext _userDbContext;
+        public readonly IEventDispatcher _eventDispatcher;
 
-        public RegisterNewUserHandler(UserDbContext userDbContext)
+        public RegisterNewUserHandler(
+            UserDbContext userDbContext,
+            IEventDispatcher eventDispatcher)
         {
             _userDbContext = userDbContext;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<RegisterNewUserResult> Handle(RegisterNewUser request, CancellationToken cancellationToken)
@@ -51,9 +59,13 @@ namespace Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser
             };
 
             await _userDbContext.Users.AddAsync(user);
-
             //note: processor after
             await _userDbContext.SaveChangesAsync();
+
+            await _eventDispatcher.SendAsync(
+                new UserCreatedDomainEvent(user.Id), 
+                typeof(IInternalCommand), 
+                cancellationToken);
 
             return new RegisterNewUserResult(user.Id, user.Username, user.Email, user.Balance, user.Phone);
         }

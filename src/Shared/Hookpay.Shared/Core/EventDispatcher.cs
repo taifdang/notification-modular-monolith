@@ -19,38 +19,41 @@ public sealed class EventDispatcher (
     public async Task SendAsync<T>(IReadOnlyList<T> events, Type type = null, CancellationToken cancellationToken = default) where T : IEvent
     {
 
-        //get eventType
-        var eventType = type != null && type.IsAssignableTo(typeof(IInternalCommand))
-                ? EventType.InternalCommand
-                : EventType.DomainEvent;
-
-
-        switch (events) 
+        if(events.Count() >0)
         {
-            case IReadOnlyList<IDomainEvent> domainEvents:
+            //get eventType
+            var eventType = type != null && type.IsAssignableTo(typeof(IInternalCommand))
+                    ? EventType.InternalCommand
+                    : EventType.DomainEvent;
 
-                //mapping domainEvent into integrationEvent
-                var integrationEvents = await MapDomainEventToIntegrationEvent(domainEvents).ConfigureAwait(false);
-                
-                await PublishIntegrationEventAsync(integrationEvents);
 
-                break;
-
-            case IReadOnlyList<IIntegrationEvent> integrationEvent:
-
-                await PublishIntegrationEventAsync(integrationEvent);
-
-                break;
-        }
-
-        if(type != null && eventType == EventType.InternalCommand)
-        {
-            var internalCommands = await MapInternalCommandEvent(events as IReadOnlyList<IDomainEvent>)
-                .ConfigureAwait(false);
-
-            foreach (var internalCommand in internalCommands)
+            switch (events)
             {
-                await _persistMessageProcessor.AddInternalMessageAsync(internalCommand, cancellationToken);
+                case IReadOnlyList<IDomainEvent> domainEvents:
+
+                    //mapping domainEvent into integrationEvent
+                    var integrationEvents = await MapDomainEventToIntegrationEvent(domainEvents).ConfigureAwait(false);
+
+                    await PublishIntegrationEventAsync(integrationEvents);
+
+                    break;
+
+                case IReadOnlyList<IIntegrationEvent> integrationEvent:
+
+                    await PublishIntegrationEventAsync(integrationEvent);
+
+                    break;
+            }
+
+            if (type != null && eventType == EventType.InternalCommand)
+            {
+                var internalCommands = await MapInternalCommandEvent(events as IReadOnlyList<IDomainEvent>)
+                    .ConfigureAwait(false);
+
+                foreach (var internalCommand in internalCommands)
+                {
+                    await _persistMessageProcessor.AddInternalMessageAsync(internalCommand, cancellationToken);
+                }
             }
         }
 
