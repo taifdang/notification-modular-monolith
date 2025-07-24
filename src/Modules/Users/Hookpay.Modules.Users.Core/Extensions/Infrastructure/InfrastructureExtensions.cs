@@ -1,4 +1,5 @@
-﻿using Hookpay.Modules.Users.Core.Data;
+﻿using FluentValidation;
+using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Modules.Users.Core.GrpcServer.Services;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.Mapster;
@@ -17,13 +18,7 @@ public static class InfrastructureExtensions
         builder.Services.AddMSSQL<UserDbContext>();
         builder.Services.AddMediatRCustom();
         builder.Services.AddMapsterCustom(typeof(UserRoot).Assembly);
-        //builder.Services.AddMassTransit(x =>x.AddConsumers(typeof(UserRoot).Assembly));
-
-        //
-        var typeAdapterConfig = TypeAdapterConfig.GlobalSettings;
-        typeAdapterConfig.Scan(typeof(UserRoot).Assembly);
-        var mapperConfig = new Mapper(typeAdapterConfig);
-        builder.Services.AddSingleton<IMapper>(mapperConfig);
+        builder.Services.AddValidatorsFromAssembly(typeof(UserRoot).Assembly);
         builder.Services.AddGrpc();
 
         return builder;

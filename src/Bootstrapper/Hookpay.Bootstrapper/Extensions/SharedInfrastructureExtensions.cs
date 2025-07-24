@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using FluentValidation.AspNetCore;
+using Hangfire;
 using Hookpay.Modules.Notifications.Core;
 using Hookpay.Modules.Topups.Core;
 using Hookpay.Modules.Users.Core;
@@ -21,15 +22,17 @@ public static class SharedInfrastructureExtensions
 {
     public static WebApplicationBuilder AddSharedInfrastructure(this WebApplicationBuilder builder)
     {
-        
-
-        
+             
         builder.Services.AddSignalR();     
         builder.Services.AddJwt();
 
         builder.Services.AddPersistMessageProcessor();
 
         builder.Services.AddControllers();
+
+        //validation
+        builder.Services.AddFluentValidation();
+
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddSwaggerCustom();
@@ -39,9 +42,7 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddSingleton<INotificationHubService, NotificationHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
         
-
-        
-        
+      
         builder.Services.AddHangfireStorageMSSQL();
 
         builder.Services.AddMassTransitCustom(AppDomain.CurrentDomain.GetAssemblies());
@@ -52,8 +53,6 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddScoped<IEventMapper, TopupEventMapper>();
 
         
-
-
         return builder;
     }
 

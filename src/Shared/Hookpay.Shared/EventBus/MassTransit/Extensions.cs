@@ -17,8 +17,9 @@ public static class Extensions
             x.AddConsumers(assemblies);       
 
             x.UsingInMemory((context, cfg) =>
-            {             
-                cfg.UseConsumeFilter(typeof(ConsumerFilter<>), context);
+            {     
+                //middleware for write event inbox
+                //cfg.UseConsumeFilter(typeof(ConsumerFilter<>), context);
 
                 cfg.ConfigureEndpoints(context);
             });

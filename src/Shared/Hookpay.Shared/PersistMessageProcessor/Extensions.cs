@@ -2,7 +2,10 @@
 using Hookpay.Shared.Configurations;
 using Hookpay.Shared.EFCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Hookpay.Shared.PersistMessageProcessor;
 
@@ -21,8 +24,16 @@ public static class Extensions
             {
                 var persistMessageDbContext = provider.GetRequiredService<PersistMessageDbContext>();
 
+                /*
+                var creator = (RelationalDatabaseCreator)persistMessageDbContext.GetService<IDatabaseCreator>();
+                if (!creator.HasTables())
+                {
+                   //logic
+                }
+                */
+
                 persistMessageDbContext.Database.EnsureCreated();
-                persistMessageDbContext.CreateTableIfNotExist();    
+                persistMessageDbContext.CreateTableIfNotExist();
 
                 return persistMessageDbContext;
             });
