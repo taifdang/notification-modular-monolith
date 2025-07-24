@@ -1,11 +1,5 @@
 ﻿using Hookpay.Modules.Users.Core.Users.Enums;
 using Hookpay.Shared.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Users.Core.Users.Models
 {

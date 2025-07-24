@@ -73,14 +73,14 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
         {
             _logger.LogCritical($"consumer for {nameof(CreateTopup)} is processing ...");
 
-            if(context.Message is null)
+            if (context.Message is null)
             {
                 throw new Exception("Message cannot be null or empty");
             }
 
             var userEntity = await _userDbContext.Users.SingleOrDefaultAsync(x => x.Username == context.Message.username);
 
-            if(userEntity is null)
+            if (userEntity is null)
             {
                 throw new Exception("User cannot be null or empty");
             }
@@ -96,7 +96,7 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
             //await _eventDispatcher.SendAsync(
             //    new MessageCreated(Guid.NewGuid(), "topup.created", JsonSerializer.Serialize(newMessage)));
 
-            await _busPublisher.SendAsync(new MessageCreated(Guid.NewGuid(), "topup.created",JsonSerializer.Serialize(newMessage)));
+            await _busPublisher.SendAsync(new MessageCreated(Guid.NewGuid(), nameof(TopupCreated),JsonSerializer.Serialize(newMessage)));
         }
     }
 }

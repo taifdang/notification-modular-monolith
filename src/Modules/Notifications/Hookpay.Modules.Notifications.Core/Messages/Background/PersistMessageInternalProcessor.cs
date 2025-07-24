@@ -3,7 +3,6 @@ using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Enums;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Models;
-using Hookpay.Shared.Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Background;

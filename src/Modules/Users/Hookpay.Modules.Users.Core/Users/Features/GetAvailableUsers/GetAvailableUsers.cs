@@ -20,8 +20,7 @@ public record GetAvailableUsersReponse(
     int PageNumber, 
     int PageSize,
     int TotalPage,
-    int TotalItem
-    );
+    int TotalItem);
 
 public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetAvailableUsersResult>
 {
@@ -64,7 +63,6 @@ public record GetAvailableUsersHandler : IRequestHandler<GetAvailableUsers, GetA
             user.PageNumber,
             user.PageSize,
             user.TotalPage,
-            user.TotalItem
-            );
+            user.TotalItem);
     }
 }

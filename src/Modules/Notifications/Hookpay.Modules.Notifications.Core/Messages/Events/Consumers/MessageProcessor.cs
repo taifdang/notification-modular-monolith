@@ -23,16 +23,18 @@ public class MessageProcessor : IConsumer<MessageCreated>
     {
         try
         {
-            var inbox = InboxMessage.Create(request.Message.correlationId, request.Message.eventType, request.Message.payload);
+            //var inbox = InboxMessage.Create(request.Message.correlationId, request.Message.eventType, request.Message.payload);
             var data = JsonSerializer.Deserialize<MessagePayload>(request.Message.payload);
+
             var body = _convert.MessageRender(data.event_type, data.detail);
 
             //internal event => send messsage
             var message = Message.Create(request.Message.correlationId, data.user_id, request.Message.eventType, body);
 
-            _context.InboxMessage.Add(inbox);
+            //_context.InboxMessage.Add(inbox);
             _context.Message.Add(message);
             await _context.SaveChangesAsync();
+
             _logger.LogCritical($"[consumer.notification.receive]::{DateTime.Now}");
         }
         catch (Exception ex)
