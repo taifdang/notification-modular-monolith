@@ -1,6 +1,7 @@
 ﻿
 using Hookpay.Shared.Domain.Events;
 using Hookpay.Shared.PersistMessageProcessor;
+using Hookpay.Shared.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -152,7 +153,7 @@ public sealed class EventDispatcher (
 
         var headers = new Dictionary<string, object>();
 
-        headers.Add("CorrelationId", Guid.NewGuid().ToString());
+        headers.Add("CorrelationId", _httpContextAccessor?.HttpContext?.GetCorrelationId());
         headers.Add("UserId", "1");
         headers.Add("Username", "2");
 

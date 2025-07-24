@@ -5,11 +5,13 @@ using Hookpay.Modules.Users.Core;
 using Hookpay.Shared.Caching;
 using Hookpay.Shared.Core;
 using Hookpay.Shared.EFCore;
+using Hookpay.Shared.EventBus.MassTransit;
 using Hookpay.Shared.Jwt;
 using Hookpay.Shared.OpenApi;
 using Hookpay.Shared.PersistMessageProcessor;
 using Hookpay.Shared.SignalR;
 using Hookpay.Shared.Utils;
+using Hookpay.Shared.Web;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 
@@ -21,12 +23,15 @@ public static class SharedInfrastructureExtensions
     {
         
 
-        builder.Services.AddHttpContextAccessor();
+        
         builder.Services.AddSignalR();     
         builder.Services.AddJwt();
-        builder.Services.AddMemoryCache();
+
+        builder.Services.AddPersistMessageProcessor();
 
         builder.Services.AddControllers();
+        builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddSwaggerCustom();
 
         builder.Services.AddSingleton<IRequestCache, RequestCache>();
@@ -35,24 +40,18 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
         
 
-        builder.Services.AddPersistMessageProcessor();
+        
         
         builder.Services.AddHangfireStorageMSSQL();
 
-        builder.Services.AddMassTransit(x =>
-        {
-            x.AddConsumers(typeof(UserRoot).Assembly);
-            x.AddConsumers(typeof(NotificationRoot).Assembly);
-
-            x.UsingInMemory((context, cfg) =>
-            {
-                cfg.ConfigureEndpoints(context);
-            });
-        });
+        builder.Services.AddMassTransitCustom(AppDomain.CurrentDomain.GetAssemblies());
 
         //
-        //
+        builder.Services.AddMemoryCache();
+
         builder.Services.AddScoped<IEventMapper, TopupEventMapper>();
+
+        
 
 
         return builder;
@@ -72,7 +71,9 @@ public static class SharedInfrastructureExtensions
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-        }        
+        }
+
+        app.UseCorrelationId();
         //app.UseRouting();
         //app.UseEndpoints(endpoints =>
         //{

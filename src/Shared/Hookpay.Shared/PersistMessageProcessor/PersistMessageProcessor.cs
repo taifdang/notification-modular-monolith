@@ -197,4 +197,36 @@ public class PersistMessageProcessor : IPersistMessageProcessor
 
         return true;
     }
+
+    public Task<PersistMessage> ExistMessageAsync(Guid messageId, CancellationToken cancellationToken = default)
+    {
+        return _persistMessageDbContext.PersistMessage
+            .FirstOrDefaultAsync(
+                x=>x.Id == messageId && 
+                x.DeliveryType == MessageDeliveryType.Inbox &&
+                x.MessageStatus == MessageStatus.Processed,
+                cancellationToken);
+
+    }
+
+    public Task<Guid> AddReceivedMessageAsync<T>(
+        T messageEnvelope,
+        CancellationToken cancellationToken = default) 
+        where T : MessageEnvelope
+    {
+        return SavePersistMessageAsync(messageEnvelope , MessageDeliveryType.Inbox, cancellationToken);
+    }
+
+    public async Task ProcessInboxAsync(Guid messageId, CancellationToken cancellationToken = default)
+    {
+        var message = await _persistMessageDbContext.PersistMessage
+            .FirstOrDefaultAsync(x =>
+                x.Id == messageId &&
+                x.DeliveryType == MessageDeliveryType.Inbox &&
+                x.MessageStatus == MessageStatus.InProgress,
+                cancellationToken                   
+            );
+
+        await ChangeMessageStatusAsync(message, cancellationToken);
+    }
 }

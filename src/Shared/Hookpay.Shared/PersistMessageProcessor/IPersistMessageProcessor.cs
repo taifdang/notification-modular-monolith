@@ -26,4 +26,17 @@ public interface IPersistMessageProcessor
     public Task<bool> ProcessInternalAsync(
         PersistMessage message,
         CancellationToken cancellationToken = default);
+
+    Task<PersistMessage> ExistMessageAsync(
+        Guid messageId,
+        CancellationToken cancellationToken = default);
+
+    Task<Guid> AddReceivedMessageAsync<T>(
+        T messageEnvelope,
+        CancellationToken cancellationToken = default)
+        where T : MessageEnvelope;
+
+    Task ProcessInboxAsync(
+       Guid messageId,
+       CancellationToken cancellationToken = default);
 }

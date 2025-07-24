@@ -27,6 +27,7 @@ public class MessageProcessor : IConsumer<MessageCreated>
             var data = JsonSerializer.Deserialize<MessagePayload>(request.Message.payload);
             var body = _convert.MessageRender(data.event_type, data.detail);
 
+            //internal event => send messsage
             var message = Message.Create(request.Message.correlationId, data.user_id, request.Message.eventType, body);
 
             _context.InboxMessage.Add(inbox);

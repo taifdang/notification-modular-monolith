@@ -1,7 +1,9 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Shared.Contracts;
+using Hookpay.Shared.Core;
 using Hookpay.Shared.Domain.Models;
 using Hookpay.Shared.EventBus;
+using Hookpay.Shared.PersistMessageProcessor;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -53,13 +55,20 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
     public class CreateTopup : IConsumer<TopupCreated>
     {
         private readonly UserDbContext _userDbContext;
-        private readonly IBusPublisher _publisher;
+        private readonly IEventDispatcher _eventDispatcher;
         private readonly ILogger<CreateTopup> _logger;
-        public CreateTopup(UserDbContext userDbContext, IBusPublisher publisher, ILogger<CreateTopup> logger)
+        private readonly IBusPublisher _busPublisher;
+        public CreateTopup(
+            UserDbContext userDbContext,
+            IEventDispatcher eventDispatcher, 
+            ILogger<CreateTopup> logger,
+            IBusPublisher busPublisher
+            )
         {
             _userDbContext = userDbContext;
-            _publisher = publisher; 
+            _eventDispatcher = eventDispatcher; 
             _logger = logger;
+            _busPublisher = busPublisher;   
         }
 
         public async Task Consume(ConsumeContext<TopupCreated> context)
@@ -86,7 +95,10 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
             //note: processor after
             await _userDbContext.SaveChangesAsync();
 
-            await _publisher.SendAsync(new MessageCreated(Guid.NewGuid(), "topup.created",JsonSerializer.Serialize(newMessage)));
+            //await _eventDispatcher.SendAsync(
+            //    new MessageCreated(Guid.NewGuid(), "topup.created", JsonSerializer.Serialize(newMessage)));
+
+            await _busPublisher.SendAsync(new MessageCreated(Guid.NewGuid(), "topup.created",JsonSerializer.Serialize(newMessage)));
         }
     }
 }

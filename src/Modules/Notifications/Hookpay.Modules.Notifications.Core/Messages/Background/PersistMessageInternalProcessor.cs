@@ -60,10 +60,11 @@ public class PersistMessageInternalProcessor : IPersistMessageInternalProcessor
         {
             case MessageType.All:
 
-                await _createMessageProcessor.AddAllMessageAsync(message.Body);
+                //schedule , deplay send message all processor
                 var sendAll = false;
+                await _createMessageProcessor.AddAllMessageAsync(message.Body);
                 //_backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);           
-                
+
                 if (sendAll)
                 {
                     await ChangeMessageStatusAsync(message, cancellationToken);
@@ -79,7 +80,6 @@ public class PersistMessageInternalProcessor : IPersistMessageInternalProcessor
                 await _createMessageProcessor.PublishAsync(message.UserId, message.Body);
                 var sendPersonal = false;
                     //_backgroundJob.EnqueueCommand(new CreateMessagePersonal());
-
 
                 if (sendPersonal)
                 {

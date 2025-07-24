@@ -34,6 +34,7 @@ public class Message : Aggregate
             Body = body,          
             IsProcessed = false          
         };
+
         return message;
     }
     public void ChangeState(bool isProcessed)
