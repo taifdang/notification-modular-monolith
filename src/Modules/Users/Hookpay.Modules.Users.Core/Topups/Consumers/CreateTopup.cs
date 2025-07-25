@@ -12,28 +12,27 @@ using System.Text.Json;
 namespace Hookpay.Modules.Users.Core.Topups.Consumers
 {
     public class Message() {
-        public int entity_id { get; set; }
-        public PushType action { get; set; } = default;
-        public string event_type { get; set; } = default!;
-        public int user_id { get; set; }
-        public Dictionary<string, object> detail { get; set; } = default!;
-        public PriorityMessage priority { get; set; } = default;
+        public int EntityId { get; set; }
+        public PushType PushType { get; set; } = default;
+        public string EventType { get; set; } = default!;
+        public int UserId { get; set; }
+        public Dictionary<string, object> MetaData { get; set; } = default!;
+        public PriorityMessage Priority { get; set; } = default;
         
         public static Message Create(int entityId, int userId, decimal transferAmount)
         {
             var message = new Message
             {
-                entity_id = entityId,
-                action = PushType.InWeb,
-                event_type = "topup.created",
-                user_id = userId,
-                detail = new Dictionary<string, object> 
+                EntityId = entityId,
+                PushType = PushType.InWeb,
+                EventType = nameof(TopupCreated),
+                UserId = userId,
+                MetaData = new Dictionary<string, object> 
                 {
-                    {"entity_id", entityId},
-                    {"user_id", userId},
-                    {"transfer_amount", transferAmount}
+                    {"EntityId", entityId},                
+                    {"TransferAmount", transferAmount}
                 },
-                priority = PriorityMessage.High             
+                Priority = PriorityMessage.High             
             };
 
             return message;         
@@ -94,11 +93,11 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
 
             //note: processor after
             await _userDbContext.SaveChangesAsync();
-          
-            //await _eventDispatcher.SendAsync(
-            //    new MessageCreated(Guid.NewGuid(), "topup.created", JsonSerializer.Serialize(newMessage)));
 
-            await _busPublisher.SendAsync(new MessageCreated(Guid.NewGuid(), nameof(TopupCreated),JsonSerializer.Serialize(newMessage)));
+            await _eventDispatcher.SendAsync(
+                new MessageCreated(Guid.NewGuid(), nameof(TopupCreated), JsonSerializer.Serialize(newMessage)));
+
+            //await _busPublisher.SendAsync(new MessageCreated(Guid.NewGuid(), nameof(TopupCreated),JsonSerializer.Serialize(newMessage)));
         }
     }
 }

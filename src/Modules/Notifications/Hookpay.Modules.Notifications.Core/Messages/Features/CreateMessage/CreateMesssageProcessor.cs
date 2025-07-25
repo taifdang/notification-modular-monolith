@@ -71,8 +71,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         if(user is not null)
         {
             await PublishAsync(userId, message);
-        }
- 
+        } 
     }
 
 

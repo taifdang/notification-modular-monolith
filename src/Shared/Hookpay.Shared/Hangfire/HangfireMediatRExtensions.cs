@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.States;
 using MediatR;
 
 namespace Hookpay.Shared.Hangfire;
@@ -11,7 +12,7 @@ public static class HangfireMediatRExtensions
 
         return string.IsNullOrWhiteSpace(taskId) ? false : true;
     }
-
+   
     public static bool ScheduleCommand<T>(this IBackgroundJobClient backgroundJobClient, T command, int timeout) where T : IRequest
     {
         var taskId =  backgroundJobClient.Schedule<HangfireMediator>(x => x.Run(command), TimeSpan.FromSeconds(timeout));

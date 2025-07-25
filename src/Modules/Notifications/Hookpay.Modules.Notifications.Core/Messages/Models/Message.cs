@@ -1,11 +1,5 @@
 ﻿using Hookpay.Modules.Notifications.Core.Messages.Enums;
 using Hookpay.Shared.Domain.Models;
-using MassTransit.Futures.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Models;
 
@@ -16,14 +10,18 @@ public class Message : Aggregate
     public int UserId { get; set; }  
     public string Title { get; set; }
     public string Body { get; set; }
-    public MessagePriority Priority { get; set; }
+    public string? MetaData { get; set; }
     public MessageType MessageType { get; set; }
-    public bool IsProcessed { get; set; } = false;
+    public Enums.PushType PushType { get; set; }
+    public MessagePriority Priority { get; set; }
+    public bool IsProcessed { get; set; }
+    public bool IsRead { get; set; }
     public static Message Create(
         Guid correlationId, 
         int userId ,
         string title, 
-        string body      
+        string body,
+        string metaData
     )
     {
         var message = new Message()
@@ -32,7 +30,10 @@ public class Message : Aggregate
             UserId = userId,
             Title = title,
             Body = body,          
-            IsProcessed = false          
+            IsProcessed = false,
+            IsRead = false,
+            MetaData = metaData
+
         };
 
         return message;
@@ -40,6 +41,10 @@ public class Message : Aggregate
     public void ChangeState(bool isProcessed)
     {
         IsProcessed = isProcessed;
+    }
+    public void ChangeReadState(bool isRead)
+    {
+        IsRead = isRead;
     }
 
 }

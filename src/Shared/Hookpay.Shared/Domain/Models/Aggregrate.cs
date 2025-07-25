@@ -12,8 +12,6 @@ public abstract class Aggregrate<T> : Entity, IAggregate<T>
 
     public int Version { get; set; } = -1;
 
-    //public T Id { get; protected set; }
-
     public void AddDomainEvent(IDomainEvent domainEvent)
     {
         _domainEvents.Add(domainEvent);

@@ -2,11 +2,6 @@
 using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hookpay.Modules.Notifications.Core.Data.Configurations;
 
@@ -23,7 +18,9 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
 
         builder.Property(x => x.Priority).IsRequired().HasDefaultValue(MessagePriority.Low);
         builder.Property(x => x.IsProcessed).IsRequired().HasDefaultValue(false);
+        builder.Property(x => x.IsRead).IsRequired().HasDefaultValue(false);
         builder.Property(x => x.MessageType).IsRequired().HasDefaultValue(MessageType.All);
+        builder.Property(x => x.PushType).IsRequired().HasDefaultValue(PushType.InWeb);
         builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
     }
 }
