@@ -20,7 +20,7 @@ public static class HangfireMediatRExtensions
         return string.IsNullOrWhiteSpace(taskId) ? false : true;
     }
 }
-
+[Queue("message_queue")]
 public class HangfireMediator
 {
     private readonly IMediator mediator;
