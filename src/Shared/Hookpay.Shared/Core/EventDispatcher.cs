@@ -31,13 +31,14 @@ public sealed class EventDispatcher (
             {
                 case IReadOnlyList<IDomainEvent> domainEvents:
 
-                    //mapping domainEvent into integrationEvent
+                    //mapping domainEvent into integrationEvent / mark by IHaveIntegrationEvent
                     var integrationEvents = await MapDomainEventToIntegrationEvent(domainEvents).ConfigureAwait(false);
 
                     await PublishIntegrationEventAsync(integrationEvents);
 
                     break;
 
+                    //non-mapping
                 case IReadOnlyList<IIntegrationEvent> integrationEvent:
 
                     await PublishIntegrationEventAsync(integrationEvent);
@@ -119,7 +120,7 @@ public sealed class EventDispatcher (
 
         var internalCommands = new List<IInternalCommand>();
 
-        using var scope = _serviceScopeFactory.CreateScope();
+        //using var scope = _serviceScopeFactory.CreateScope();
         foreach (var @event in @events)
         {
             var eventType = @event.GetType();

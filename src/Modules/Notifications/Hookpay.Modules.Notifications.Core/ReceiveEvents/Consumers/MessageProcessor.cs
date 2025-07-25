@@ -33,7 +33,7 @@ public class MessageProcessor : IConsumer<MessageCreated>
 
             //_context.InboxMessage.Add(inbox);
             _context.Message.Add(message);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
 
             _logger.LogCritical($"[consumer.notification.receive]::{DateTime.Now}");
         }

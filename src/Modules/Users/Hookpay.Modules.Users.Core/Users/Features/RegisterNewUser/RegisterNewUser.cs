@@ -50,13 +50,15 @@ public class RegisterNewUserHandler : IRequestHandler<RegisterNewUser, RegisterN
     }
 
     public async Task<RegisterNewUserResult> Handle(RegisterNewUser request, CancellationToken cancellationToken)
-    {
-        var user = Models.Users.Create(request.Username, request.Password, request.Email, request.Phone);
+    {       
+        var user = Models.Users.Create(request.Username, request.Password, request.Email, request.Phone);      
 
+        //get user id
         await _userDbContext.Users.AddAsync(user);
-        //note: processor after
+        
         await _userDbContext.SaveChangesAsync();
 
+        //note: The internal command processor (via the event mapper) must be given a DomainEvent
         await _eventDispatcher.SendAsync(
             new UserCreatedDomainEvent(user.Id), 
             typeof(IInternalCommand), 

@@ -76,7 +76,7 @@ public class PersistMessageInternalProcessor : IPersistMessageInternalProcessor
                 }
             case MessageType.Personal:
 
-                await _createMessageProcessor.PublishAsync(message.UserId, message.Body);
+                await _createMessageProcessor.AddPersonalMessageAsync(message.UserId, message.Body);
                 var sendPersonal = false;
                     //_backgroundJob.EnqueueCommand(new CreateMessagePersonal());
 

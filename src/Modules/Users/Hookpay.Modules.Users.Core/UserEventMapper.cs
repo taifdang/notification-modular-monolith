@@ -20,7 +20,7 @@ public class UserEventMapper : IEventMapper
     {
         return @event switch
         {
-            UserCreatedDomainEvent e => new CompleteUserRegisterUserMono(e.Id)
+            UserCreatedDomainEvent e => new CompleteRegisterUserMono(e.Id)
         };
     }
 }

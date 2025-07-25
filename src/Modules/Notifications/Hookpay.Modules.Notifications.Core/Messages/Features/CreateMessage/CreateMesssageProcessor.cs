@@ -12,7 +12,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
     private readonly UserGrpcService.UserGrpcServiceClient _userGrpcServiceClient;
     private readonly IRequestCache _requestCache;
     public CreateMesssageProcessor(
-        IPublishEndpoint publisher, 
+        IPublishEndpoint publisher,
         IMediator mediator,
         UserGrpcService.UserGrpcServiceClient userGrpcServiceClient,
         IRequestCache requestCache)
@@ -22,12 +22,12 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         _userGrpcServiceClient = userGrpcServiceClient;
         _requestCache = requestCache;
     }
-    public async Task AddAllMessageAsync(string message,CancellationToken cancellationToken = default)
-    {       
+    public async Task AddAllMessageAsync(string message, CancellationToken cancellationToken = default)
+    {
         int PageNumber = 1;
         int TotalPage = 1;
         int PageSize = 10;
-        
+
         try
         {
             while (true)
@@ -45,7 +45,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
                 {
                     throw new Exception("User is not empty");
                 }
-                           
+
                 await PublishAllAsync(users.UserDto, message);
 
                 TotalPage = users.TotalPage;
@@ -58,22 +58,23 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         }
     }
 
-    public Task AddPersonalMessageAsync(
+    public async Task AddPersonalMessageAsync(
         int userId,
         string message,
         CancellationToken cancellationToken = default)
-    {      
-        throw new NotImplementedException();
+    {
+        if (userId < 0 || string.IsNullOrWhiteSpace(message))
+            return;
+
+        var user = await IsExistUser(userId);   
+
+        if(user is not null)
+        {
+            await PublishAsync(userId, message);
+        }
+ 
     }
 
-    public Task LoadCacheDataAsync(CancellationToken cancellationToken = default)
-    {
-        //null
-        var users = _userGrpcServiceClient.GetAvailableUsers(
-            new GetAvailableUsersRequest { PageNumber = 1, PageSize = 10},
-            cancellationToken: cancellationToken);
-        throw new NotImplementedException();
-    }
 
     public async Task MessageLoadingProcessor(
         string? message,
@@ -109,5 +110,17 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
     public Task SaveStatePublishMessage(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
+    }
+
+    private async Task<GetAvailaleUserByIdResult> IsExistUser(int UserId, CancellationToken cancellationToken = default)
+    {
+
+        var user = _userGrpcServiceClient.GetAvailaleUserById(
+            new GetAvailaleUserByIdRequest { UserId = UserId},
+            cancellationToken: cancellationToken);
+
+        if(user is null)
+            return null;
+        return user;
     }
 }

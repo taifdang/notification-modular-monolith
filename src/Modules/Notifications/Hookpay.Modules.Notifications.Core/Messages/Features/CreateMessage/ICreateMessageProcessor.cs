@@ -9,7 +9,6 @@ public interface ICreateMessageProcessor
         string? message,
         MessageProcessorType processorType,       
         CancellationToken cancellationToken = default);
-    Task LoadCacheDataAsync(CancellationToken cancellationToken = default);
     Task AddAllMessageAsync(
         string message,
         CancellationToken cancellationToken = default);

@@ -5,6 +5,8 @@ package user;
 service UserGrpcService{
 
 	rpc GetAvailableUsers (GetAvailableUsersRequest) returns (GetAvailableUsersResult);
+
+	rpc GetAvailaleUserById(GetAvailaleUserByIdRequest) returns (GetAvailaleUserByIdResult);
 }
 
 message GetAvailableUsersResult{
@@ -26,4 +28,12 @@ message UserDtoResponse{
 	string Email = 3;
 	double Balance = 4;
 	string Phone = 5;
+}
+
+message GetAvailaleUserByIdRequest{
+	int32 UserId = 1;
+}
+
+message GetAvailaleUserByIdResult{
+	UserDtoResponse UserDto = 1;
 }

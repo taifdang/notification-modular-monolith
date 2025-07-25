@@ -7,17 +7,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hookpay.Modules.Users.Core.UserSetting.Features.CompletingRegisterUser;
 
-public record CompleteUserRegisterUserMono(int Id) : IInternalCommand, IRequest;
-public class CompleteUserRegisterUserMonoHandler : IRequestHandler<CompleteUserRegisterUserMono>
+public record CompleteRegisterUserMono(int Id) : IInternalCommand, IRequest;
+public class CompleteRegisterUserMonoHandler : IRequestHandler<CompleteRegisterUserMono>
 {
     private readonly UserDbContext _userDbContext;
    
-    public CompleteUserRegisterUserMonoHandler(UserDbContext userDbContext)
+    public CompleteRegisterUserMonoHandler(UserDbContext userDbContext)
     {
         _userDbContext = userDbContext;
     }
 
-    public async Task Handle(CompleteUserRegisterUserMono request, CancellationToken cancellationToken)
+    public async Task Handle(CompleteRegisterUserMono request, CancellationToken cancellationToken)
     {
         try
         {
@@ -34,7 +34,7 @@ public class CompleteUserRegisterUserMonoHandler : IRequestHandler<CompleteUserR
             }
             else
             {
-                _userDbContext.UserSetting.Add(new Users.Models.UserSetting { UserId = request.Id, AllowNotification = true });
+                await _userDbContext.UserSetting.AddAsync(new Users.Models.UserSetting { UserId = request.Id, AllowNotification = true });
             }
 
             await _userDbContext.SaveChangesAsync();
