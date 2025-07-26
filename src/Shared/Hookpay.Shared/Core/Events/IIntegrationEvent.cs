@@ -1,7 +1,6 @@
-﻿
-using MassTransit;
+﻿using MassTransit;
 
-namespace Hookpay.Shared.Domain.Events;
+namespace Hookpay.Shared.Core.Events;
 
 [ExcludeFromTopology]
 public interface IIntegrationEvent:IEvent

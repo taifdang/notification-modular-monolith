@@ -1,11 +1,11 @@
 ﻿using Hookpay.Modules.Topups.Core.Data;
 using Hookpay.Shared.Contracts;
-using Hookpay.Shared.Domain.Events;
 using Hookpay.Shared.EventBus;
 using Hookpay.Modules.Topups.Core.Topups.Exceptions;
 using MediatR;
 using Hookpay.Shared.Core;
 using FluentValidation;
+using Hookpay.Shared.Core.Events;
 
 namespace Hookpay.Modules.Topups.Core.Topups.Features
 {

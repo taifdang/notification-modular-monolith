@@ -1,6 +1,6 @@
 ﻿using Hookpay.Modules.Users.Core.Users.Enums;
 using Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser;
-using Hookpay.Shared.Domain.Models;
+using Hookpay.Shared.Core.Model;
 
 namespace Hookpay.Modules.Users.Core.Users.Models
 {

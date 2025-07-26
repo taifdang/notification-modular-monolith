@@ -1,5 +1,5 @@
 ﻿using Hookpay.Modules.Topups.Core.Topups.Features;
-using Hookpay.Shared.Domain.Models;
+using Hookpay.Shared.Core.Model;
 
 namespace Hookpay.Modules.Topups.Core.Topups.Models
 {

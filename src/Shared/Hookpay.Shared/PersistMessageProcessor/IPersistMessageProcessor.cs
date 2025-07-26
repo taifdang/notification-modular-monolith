@@ -1,5 +1,5 @@
 ﻿
-using Hookpay.Shared.Domain.Events;
+using Hookpay.Shared.Core.Events;
 
 namespace Hookpay.Shared.PersistMessageProcessor;
 

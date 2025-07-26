@@ -1,5 +1,5 @@
-﻿using Hookpay.Shared.Domain.Events;
-using Hookpay.Shared.Domain.Models;
+﻿using Hookpay.Shared.Core.Events;
+using Hookpay.Shared.Core.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Collections.Immutable;

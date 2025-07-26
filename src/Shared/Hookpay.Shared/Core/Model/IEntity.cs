@@ -1,5 +1,4 @@
-﻿
-namespace Hookpay.Shared.Domain.Models;
+﻿namespace Hookpay.Shared.Core.Model;
 
 public interface IEntity
 {    

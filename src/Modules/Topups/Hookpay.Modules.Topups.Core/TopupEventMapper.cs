@@ -2,7 +2,7 @@
 using Hookpay.Modules.Topups.Core.Topups.Features;
 using Hookpay.Shared.Contracts;
 using Hookpay.Shared.Core;
-using Hookpay.Shared.Domain.Events;
+using Hookpay.Shared.Core.Events;
 
 namespace Hookpay.Modules.Topups.Core;
 

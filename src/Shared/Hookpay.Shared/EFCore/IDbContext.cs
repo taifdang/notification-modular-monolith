@@ -1,4 +1,4 @@
-﻿using Hookpay.Shared.Domain.Events;
+﻿using Hookpay.Shared.Core.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 

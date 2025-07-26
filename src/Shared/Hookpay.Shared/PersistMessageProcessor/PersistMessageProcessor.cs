@@ -1,6 +1,6 @@
 ﻿
 
-using Hookpay.Shared.Domain.Events;
+using Hookpay.Shared.Core.Events;
 using Hookpay.Shared.Utils;
 using MassTransit;
 using MediatR;

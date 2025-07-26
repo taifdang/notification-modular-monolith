@@ -2,7 +2,7 @@
 using Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser;
 using Hookpay.Modules.Users.Core.UserSetting.Features.CompletingRegisterUser;
 using Hookpay.Shared.Core;
-using Hookpay.Shared.Domain.Events;
+using Hookpay.Shared.Core.Events;
 
 namespace Hookpay.Modules.Users.Core;
 

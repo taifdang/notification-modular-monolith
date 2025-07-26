@@ -2,7 +2,7 @@
 using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Modules.Users.Core.Users.Models;
 using Hookpay.Shared.Core;
-using Hookpay.Shared.Domain.Events;
+using Hookpay.Shared.Core.Events;
 using MediatR;
 
 namespace Hookpay.Modules.Users.Core.Users.Features.RegisterNewUser;

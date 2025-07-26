@@ -1,5 +1,4 @@
-﻿
-namespace Hookpay.Shared.Domain.Events;
+﻿namespace Hookpay.Shared.Core.Events;
 
 [Flags]
 public enum EventType

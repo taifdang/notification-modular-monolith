@@ -1,7 +1,7 @@
 ﻿
 
 using Hookpay.Modules.Users.Core.Data;
-using Hookpay.Shared.Domain.Events;
+using Hookpay.Shared.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

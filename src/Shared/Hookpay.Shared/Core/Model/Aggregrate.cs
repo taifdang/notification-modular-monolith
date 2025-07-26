@@ -1,6 +1,6 @@
-﻿using Hookpay.Shared.Domain.Events;
+﻿using Hookpay.Shared.Core.Events;
 
-namespace Hookpay.Shared.Domain.Models;
+namespace Hookpay.Shared.Core.Model;
 
 public abstract class Aggregate : Aggregrate<int>
 {

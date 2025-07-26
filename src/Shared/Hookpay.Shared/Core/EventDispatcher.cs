@@ -1,5 +1,5 @@
 ﻿
-using Hookpay.Shared.Domain.Events;
+using Hookpay.Shared.Core.Events;
 using Hookpay.Shared.PersistMessageProcessor;
 using Hookpay.Shared.Web;
 using Microsoft.AspNetCore.Http;

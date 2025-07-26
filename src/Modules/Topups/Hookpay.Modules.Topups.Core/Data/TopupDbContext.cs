@@ -1,5 +1,4 @@
 ﻿using Hookpay.Modules.Topups.Core.Topups.Models;
-using Hookpay.Shared.Domain.Models;
 using Hookpay.Shared.EFCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

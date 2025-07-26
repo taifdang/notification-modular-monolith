@@ -1,5 +1,5 @@
 ﻿using Hookpay.Modules.Notifications.Core.Messages.Enums;
-using Hookpay.Shared.Domain.Models;
+using Hookpay.Shared.Core.Model;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Models;
 
