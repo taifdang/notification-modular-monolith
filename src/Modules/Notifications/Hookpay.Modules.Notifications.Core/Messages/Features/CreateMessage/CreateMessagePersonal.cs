@@ -2,14 +2,20 @@
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 
-public record CreateMessagePersonal : IRequest;
+public record CreateMessagePersonal(int UserId, string Message) : IRequest;
 
 public class CreateMessagePersonalHandler : IRequestHandler<CreateMessagePersonal>
 {
-    public Task Handle(CreateMessagePersonal request, CancellationToken cancellationToken)
+    private readonly ICreateMessageProcessor _processor;
+    
+    public CreateMessagePersonalHandler(ICreateMessageProcessor processor)
+    {
+        _processor = processor;
+    }
+    public async Task Handle(CreateMessagePersonal request, CancellationToken cancellationToken)
     {
         Console.WriteLine("receive message personal");
 
-        return Task.CompletedTask;
+        await _processor.AddPersonalMessageAsync(request.UserId, request.Message);
     }
 }

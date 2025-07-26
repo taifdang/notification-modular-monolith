@@ -11,18 +11,22 @@ public interface ICreateMessageProcessor
         CancellationToken cancellationToken = default);
     Task AddAllMessageAsync(
         string message,
+        PushType pushType,
         CancellationToken cancellationToken = default);
     Task AddPersonalMessageAsync(
         int userId,
         string message,
+        PushType pushType,
         CancellationToken cancellationToken = default);
     Task PublishAllAsync<T>(
-        IReadOnlyList<T> listUser,
+        IReadOnlyList<T> ListUser,
         string message,
+        PushType pushType,
         CancellationToken cancellationToken = default);
     Task PublishAsync(
         int userId, 
         string message,
+        PushType pushType,  
         CancellationToken cancellationToken = default);
     Task SaveStatePublishMessage(CancellationToken cancellationToken = default);
 }

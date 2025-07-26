@@ -36,7 +36,6 @@ public class ReceiveMessageProcessor : IConsumer<MessageCreated>
                 body,
                 JsonSerializer.Serialize(data));//?
          
-
             _context.Message.Add(message);
             await _context.SaveChangesAsync();
 

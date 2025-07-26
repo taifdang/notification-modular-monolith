@@ -22,7 +22,10 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         _userGrpcServiceClient = userGrpcServiceClient;
         _requestCache = requestCache;
     }
-    public async Task AddAllMessageAsync(string message, CancellationToken cancellationToken = default)
+    public async Task AddAllMessageAsync(
+        string message, 
+        PushType pushType, 
+        CancellationToken cancellationToken = default)
     {
         int PageNumber = 1;
         int TotalPage = 1;
@@ -46,7 +49,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
                     throw new Exception("User is not empty");
                 }
 
-                await PublishAllAsync(users.UserDto, message);
+                await ProcessAllAsync(users.UserDto, message);
 
                 TotalPage = users.TotalPage;
                 PageNumber++;
@@ -61,6 +64,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
     public async Task AddPersonalMessageAsync(
         int userId,
         string message,
+        PushType pushType,
         CancellationToken cancellationToken = default)
     {
         if (userId < 0 || string.IsNullOrWhiteSpace(message))
@@ -70,7 +74,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
 
         if(user is not null)
         {
-            await PublishAsync(userId, message);
+            await PublishAsync(userId, message, pushType);
         } 
     }
 
@@ -83,7 +87,7 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         throw new Exception("User loop is not fail");
     }
   
-    public async Task PublishAllAsync<T>(IReadOnlyList<T> listUser, string message, CancellationToken cancellationToken = default)
+    public async Task ProcessAllAsync<T>(IReadOnlyList<T> listUser, string message, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -99,11 +103,20 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         }
     }
 
-    public Task PublishAsync(int userId, string message, CancellationToken cancellationToken = default)
+    public async Task PublishAsync(
+        int userId, 
+        string message,
+        PushType PushType, 
+        CancellationToken cancellationToken = default)
     {
+        //Push in queue => consumer push allow pushType
+
+        await _publisher.Publish( , cancellationToken);
+
+        await SaveStatePublishMessage();
+
         Console.WriteLine($"userId: {userId} :: message: {message}");
 
-        return Task.CompletedTask;  
     }
 
     public Task SaveStatePublishMessage(CancellationToken cancellationToken = default)
