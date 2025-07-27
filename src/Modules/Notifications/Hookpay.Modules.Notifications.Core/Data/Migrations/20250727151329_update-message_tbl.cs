@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hookpay.Modules.Notifications.Core.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class add_outbox_tbl : Migration
+    public partial class updatemessage_tbl : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,15 +22,15 @@ namespace Hookpay.Modules.Notifications.Core.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    EventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MetaData = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MessageType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     PushType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Priority = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     IsProcessed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    IsRead = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),

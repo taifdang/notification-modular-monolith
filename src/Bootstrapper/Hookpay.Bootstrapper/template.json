@@ -1,3 +1,3 @@
 ﻿{
-  "TopupCreated": "HD#{EntityId},payment successful {TransferAmount} VND."
+  "TopupCreated": "HD#{TopupId},payment successful {TransferAmount} VND."
 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Background;
 
-public class PersistMesssageInternalBackgroundService(ILogger<PersistMesssageInternalBackgroundService> logger, IServiceProvider provider) : BackgroundService
+public class MessageEventInternalBackgroundService(ILogger<MessageEventInternalBackgroundService> logger, IServiceProvider provider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -26,7 +26,7 @@ public class PersistMesssageInternalBackgroundService(ILogger<PersistMesssageInt
         {
             await using (var scope = provider.CreateAsyncScope())
             {
-                var service = scope.ServiceProvider.GetRequiredService<IPersistMessageInternalProcessor>();
+                var service = scope.ServiceProvider.GetRequiredService<IMessageEventInternalProcessor>();
                 
                 await service.ProcessAllAsync(cancellationToken);
             }

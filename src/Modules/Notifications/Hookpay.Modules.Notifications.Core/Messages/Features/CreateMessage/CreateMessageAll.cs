@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 
-public record CreateMessageAll(string message) : IRequest;
-
+public record CreateMessageAll(string data) : IRequest;
 public class CreateMessageAllHandler : IRequestHandler<CreateMessageAll>
 {
     private readonly ICreateMessageProcessor _processor;
@@ -20,6 +20,6 @@ public class CreateMessageAllHandler : IRequestHandler<CreateMessageAll>
     {
         _logger.LogInformation($"schedule job processor message all starting ...");
 
-        await _processor.AddAllMessageAsync(request.message);         
+        await _processor.AddAllMessageAsync(request.data);
     }
 }

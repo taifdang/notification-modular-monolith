@@ -3,18 +3,17 @@ using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Enums;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Models;
-using Hookpay.Shared.Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Background;
 
-public class PersistMessageInternalProcessor : IPersistMessageInternalProcessor
+public class MessageEventInternalProcessor : IMessageEventInternalProcessor
 {
     private readonly MessageDbContext _messageDbContext;
     private readonly IBackgroundJobClient _backgroundJob;
     private readonly ICreateMessageProcessor _createMessageProcessor;
 
-    public PersistMessageInternalProcessor(
+    public MessageEventInternalProcessor(
         MessageDbContext messageDbContext,
         IBackgroundJobClient backgroundJob,
         ICreateMessageProcessor createMessageProcessor
@@ -61,8 +60,9 @@ public class PersistMessageInternalProcessor : IPersistMessageInternalProcessor
             case MessageType.All:
 
                 //schedule , deplay send message all processor
-                var sendAll = _backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);
-                //await _createMessageProcessor.AddAllMessageAsync(message.Body);
+                var sendAll = false;
+                    //_backgroundJob.ScheduleCommand(new CreateMessageAll(message.Body), 30);
+                await _createMessageProcessor.AddAllMessageAsync(message.Data);
 
                 if (sendAll)
                 {
@@ -76,7 +76,7 @@ public class PersistMessageInternalProcessor : IPersistMessageInternalProcessor
                 }
             case MessageType.Personal:
 
-                await _createMessageProcessor.AddPersonalMessageAsync(message.UserId, message.Body);
+                await _createMessageProcessor.AddPersonalMessageAsync((int)message.UserId, message.Data);
                 var sendPersonal = false;
                     //_backgroundJob.EnqueueCommand(new CreateMessagePersonal());
 

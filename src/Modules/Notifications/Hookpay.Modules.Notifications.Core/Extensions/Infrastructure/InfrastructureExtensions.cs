@@ -3,6 +3,7 @@ using Hookpay.Modules.Notifications.Core.Messages.Background;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.EventBus;
+using Hookpay.Shared.Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,14 +16,15 @@ public static class InfrastructureExtensions
         builder.Services.AddMSSQL<MessageDbContext>();
         builder.Services.AddMediatRCustom();
         //builder.Services.AddMassTransit(x => x.AddConsumers(typeof(NotificationRoot).Assembly));
+        builder.Services.AddMapsterCustom(typeof(NotificationRoot).Assembly);
         builder.Services.AddGrpcClientCustom();
         builder.Services.AddHangfireCustom();
 
         builder.Services.AddScoped<IBusPublisher, BusPublisher>();
-        builder.Services.AddScoped<IPersistMessageInternalProcessor, PersistMessageInternalProcessor>();
+        builder.Services.AddScoped<IMessageEventInternalProcessor, MessageEventInternalProcessor>();
         builder.Services.AddScoped<ICreateMessageProcessor, CreateMesssageProcessor>();
 
-        builder.Services.AddHostedService<PersistMesssageInternalBackgroundService>();
+        builder.Services.AddHostedService<MessageEventInternalBackgroundService>();
 
         return builder;
     }

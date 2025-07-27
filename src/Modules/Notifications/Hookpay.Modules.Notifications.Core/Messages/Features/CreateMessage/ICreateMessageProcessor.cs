@@ -1,32 +1,23 @@
 ﻿
-using Hookpay.Modules.Notifications.Core.Messages.Enums;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
 
 public interface ICreateMessageProcessor
 {
-    Task MessageLoadingProcessor(
-        string? message,
-        MessageProcessorType processorType,       
-        CancellationToken cancellationToken = default);
     Task AddAllMessageAsync(
-        string message,
-        PushType pushType,
+        string data,
         CancellationToken cancellationToken = default);
     Task AddPersonalMessageAsync(
         int userId,
-        string message,
-        PushType pushType,
+        string data,
         CancellationToken cancellationToken = default);
-    Task PublishAllAsync<T>(
+    Task ProcessAllAsync<T>(
         IReadOnlyList<T> ListUser,
-        string message,
-        PushType pushType,
+        string data,
         CancellationToken cancellationToken = default);
-    Task PublishAsync(
-        int userId, 
-        string message,
-        PushType pushType,  
+    Task ProcessAsync(
+        int userId,
+        string data,  
         CancellationToken cancellationToken = default);
     Task SaveStatePublishMessage(CancellationToken cancellationToken = default);
 }

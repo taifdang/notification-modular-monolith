@@ -11,63 +11,75 @@ using System.Text.Json;
 
 namespace Hookpay.Modules.Users.Core.Topups.Consumers
 {
-    public class Message() {
-        public int EntityId { get; set; }
-        public PushType PushType { get; set; } = default;
-        public string EventType { get; set; } = default!;
-        public int UserId { get; set; }
-        public Dictionary<string, object> MetaData { get; set; } = default!;
-        public PriorityMessage Priority { get; set; } = default;
-        
-        public static Message Create(int entityId, int userId, decimal transferAmount)
-        {
-            var message = new Message
-            {
-                EntityId = entityId,
-                PushType = PushType.InWeb,
-                EventType = nameof(TopupCreated),
-                UserId = userId,
-                MetaData = new Dictionary<string, object> 
-                {
-                    {"EntityId", entityId},                
-                    {"TransferAmount", transferAmount}
-                },
-                Priority = PriorityMessage.High             
-            };
-
-            return message;         
-        }
-    }
     public enum PushType
     {
-        InWeb = 0,
+        InApp = 0,
         Email = 1,
         Sms = 2
     }
-    public enum PriorityMessage
+    public enum MessagePriority
     {
         Low = 0,
         Medium = 1,
         High = 2,
     }
+    public class MessagePayload
+    {   
+        public int EntityId { get; set; } //ex: userId/topupId,...
+        public string? Target { get; set; } //ex: deviceToken/userId/Email
+        public string? EventType { get; set; }
+        public PushType PushType { get; set; }
+        public Dictionary<string, object?>? Data { get; set; } = new Dictionary<string, object?>();
+        public MessagePriority Priority { get; set; }
 
+        public static MessagePayload Create(
+            int userId,
+            string target,
+            string eventType,
+            int topupId,
+            decimal transferAmount
+            )
+        {
+            var payload = new MessagePayload
+            {
+                EntityId = userId,
+                Target = userId.ToString(),
+                EventType = eventType,
+                PushType = PushType.InApp,
+                Data =  GetMetaData(topupId, transferAmount),
+                Priority = MessagePriority.High
+            };
+
+            return payload;
+        }
+
+        private static Dictionary<string, object?>? GetMetaData(
+            int topupId, 
+            decimal transferAmount)
+        {
+            var metaData = new Dictionary<string, object?>();
+
+            metaData.Add("TopupId", topupId);
+            metaData.Add("TransferAmount", transferAmount);
+
+            return metaData;
+        }
+    }
     public class CreateTopup : IConsumer<TopupCreated>
     {
         private readonly UserDbContext _userDbContext;
         private readonly IEventDispatcher _eventDispatcher;
         private readonly ILogger<CreateTopup> _logger;
-        private readonly IBusPublisher _busPublisher;
         public CreateTopup(
             UserDbContext userDbContext,
             IEventDispatcher eventDispatcher, 
-            ILogger<CreateTopup> logger,
-            IBusPublisher busPublisher
+            ILogger<CreateTopup> logger
+         
             )
         {
             _userDbContext = userDbContext;
             _eventDispatcher = eventDispatcher; 
-            _logger = logger;
-            _busPublisher = busPublisher;   
+            _logger = logger;      
         }
 
         public async Task Consume(ConsumeContext<TopupCreated> context)
@@ -88,16 +100,17 @@ namespace Hookpay.Modules.Users.Core.Topups.Consumers
           
             userEntity.Deposit(userEntity.Balance);
 
-            //note: dictionary<string,object> / string => message global
-            var newMessage = Message.Create(context.Message.transId, userEntity.Id, context.Message.transferAmount);
-
-            //note: processor after
+            var newMessage = MessagePayload.Create(
+                userEntity.Id,
+                string.Empty,
+                nameof(TopupCreated), 
+                context.Message.transId,
+                context.Message.transferAmount);
+                                     
             await _userDbContext.SaveChangesAsync();
 
             await _eventDispatcher.SendAsync(
-                new MessageCreated(Guid.NewGuid(), nameof(TopupCreated), JsonSerializer.Serialize(newMessage)));
-
-            //await _busPublisher.SendAsync(new MessageCreated(Guid.NewGuid(), nameof(TopupCreated),JsonSerializer.Serialize(newMessage)));
+                new MessageCreated(Guid.NewGuid(), nameof(TopupCreated), JsonSerializer.Serialize(newMessage)));          
         }
     }
 }

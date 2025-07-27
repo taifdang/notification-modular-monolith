@@ -1,16 +1,22 @@
 ﻿using Hookpay.Modules.Notifications.Core.Messages.Enums;
+using Hookpay.Modules.Notifications.Core.Messages.Features.NotificationDispatch;
+using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.Caching;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using User;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
+
 public class CreateMesssageProcessor : ICreateMessageProcessor
 {
     private readonly IPublishEndpoint _publisher;
     private readonly IMediator _mediator;
     private readonly UserGrpcService.UserGrpcServiceClient _userGrpcServiceClient;
     private readonly IRequestCache _requestCache;
+
     public CreateMesssageProcessor(
         IPublishEndpoint publisher,
         IMediator mediator,
@@ -22,26 +28,30 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         _userGrpcServiceClient = userGrpcServiceClient;
         _requestCache = requestCache;
     }
+
     public async Task AddAllMessageAsync(
-        string message, 
-        PushType pushType, 
+        string data,
         CancellationToken cancellationToken = default)
     {
-        int PageNumber = 1;
-        int TotalPage = 1;
-        int PageSize = 10;
+        int pageNumber = 1;
+        int totalPage = 1;
+        int pageSize = 10;
 
         try
         {
             while (true)
             {
-                if (PageNumber > TotalPage)
+                if (pageNumber > totalPage)
                 {
                     break;
                 }
 
                 var users = _userGrpcServiceClient.GetAvailableUsers(
-                    new GetAvailableUsersRequest { PageNumber = PageNumber, PageSize = PageSize },
+                    new GetAvailableUsersRequest 
+                    { 
+                        PageNumber = pageNumber, 
+                        PageSize = pageSize 
+                    },
                     cancellationToken: cancellationToken);
 
                 if (users is null)
@@ -49,10 +59,13 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
                     throw new Exception("User is not empty");
                 }
 
-                await ProcessAllAsync(users.UserDto, message);
+                await ProcessAllAsync(
+                    users.UserDto,
+                    data
+                    );
 
-                TotalPage = users.TotalPage;
-                PageNumber++;
+                totalPage = users.TotalPage;
+                pageNumber++;
             }
         }
         catch
@@ -63,38 +76,40 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
 
     public async Task AddPersonalMessageAsync(
         int userId,
-        string message,
-        PushType pushType,
+        string data,     
         CancellationToken cancellationToken = default)
     {
-        if (userId < 0 || string.IsNullOrWhiteSpace(message))
+        if (userId < 0 || string.IsNullOrWhiteSpace(data))
+            return;
+
+        var alert = JsonSerializer.Deserialize<Alert>(data);
+
+        if (userId != alert.UserId)
             return;
 
         var user = await IsExistUser(userId);   
 
         if(user is not null)
         {
-            await PublishAsync(userId, message, pushType);
+            await ProcessAsync(userId, data);
         } 
     }
 
-
-    public async Task MessageLoadingProcessor(
-        string? message,
-        MessageProcessorType processorType, 
-        CancellationToken cancellationToken = default)
-    {
-        throw new Exception("User loop is not fail");
-    }
   
-    public async Task ProcessAllAsync<T>(IReadOnlyList<T> listUser, string message, CancellationToken cancellationToken = default)
+    public async Task ProcessAllAsync<T>(
+        IReadOnlyList<T> users, 
+        string data,
+        CancellationToken cancellationToken = default)
     {
         try
         {
             //ref: https://dotnettutorials.net/lesson/dynamic-type-in-csharp/
-            foreach (dynamic? user in listUser)
+            foreach (dynamic? user in users)
             {
-                await PublishAsync(user!.Id, message);
+                await ProcessAsync(
+                    user!.Id, 
+                    data
+                    );
             }
         }
         catch
@@ -103,19 +118,25 @@ public class CreateMesssageProcessor : ICreateMessageProcessor
         }
     }
 
-    public async Task PublishAsync(
-        int userId, 
-        string message,
-        PushType PushType, 
+    public async Task ProcessAsync(
+        int userId,
+        string data,
         CancellationToken cancellationToken = default)
     {
+        //Deserialize
+        var alert = JsonSerializer.Deserialize<Alert>(data);
+
+        if (alert is null)
+        {
+            throw new Exception("alert fail");
+        }
+        
         //Push in queue => consumer push allow pushType
+         await _publisher.Publish(
+            new MessageEvent(userId, alert), 
+            cancellationToken);
 
-        await _publisher.Publish( , cancellationToken);
-
-        await SaveStatePublishMessage();
-
-        Console.WriteLine($"userId: {userId} :: message: {message}");
+        //await SaveStatePublishMessage();
 
     }
 
