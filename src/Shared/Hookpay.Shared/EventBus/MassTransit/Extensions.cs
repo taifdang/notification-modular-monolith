@@ -14,6 +14,9 @@ public static class Extensions
     {
         services.AddMassTransit(x =>
         {
+            //ref: https://stackoverflow.com/questions/17326185/what-are-the-different-kinds-of-cases
+            x.SetKebabCaseEndpointNameFormatter();
+
             x.AddConsumers(assemblies);       
 
             x.UsingInMemory((context, cfg) =>

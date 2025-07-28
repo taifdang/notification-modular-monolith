@@ -1,29 +1,23 @@
 ﻿using Hangfire.Logging;
 using Hookpay.Modules.Notifications.Core.Messages.Enums;
-using Hookpay.Modules.Notifications.Core.Messages.Features.SendMessage;
 using Hookpay.Modules.Notifications.Core.Messages.Models;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace Hookpay.Modules.Notifications.Core.Messages.Features.NotificationDispatch;
 
-public record MessageEvent(int userId, Alert alert);
+public record MessageEvent(int target, Alert alert);
 public class NotificationDispatcher : IConsumer<MessageEvent>
 {
     private readonly ILogger<NotificationDispatcher> _logger;   
     private readonly IEnumerable<INotificationChannel> _notificationChannels;
-
-    //private readonly Dictionary<string, object> keyValuePairs;
 
     public NotificationDispatcher(
         IEnumerable<INotificationChannel> notificationChannels,
         ILogger<NotificationDispatcher> logger)
     {
         _notificationChannels = notificationChannels;
-        _logger = logger;
-        //keyValuePairs = new Dictionary<string, object>();
-        //keyValuePairs.Add(nameof(PushType.Email), new EmailChannel());
-        //keyValuePairs.Add(nameof(PushType.InApp), new SignalRChannel());
+        _logger = logger;   
     }
     public async Task Consume(ConsumeContext<MessageEvent> context)
     {
@@ -39,7 +33,7 @@ public class NotificationDispatcher : IConsumer<MessageEvent>
 
         }
 
-        await channel.SendAsync(data);
+        await channel.SendAsync(context.Message.target, data);
 
         await SaveStateOutBoxMessageAsync();
                        
@@ -47,10 +41,9 @@ public class NotificationDispatcher : IConsumer<MessageEvent>
 
     private INotificationChannel GetChannel(PushType pushType)
     {
-        var channel = _notificationChannels.FirstOrDefault(x => x.PushType == pushType);
-        //var channel2 = keyValuePairs.TryGetValue(nameof(pushType), out var data);
-        if (channel == null)
-            return null;
+        var channel = _notificationChannels.FirstOrDefault(x => x.PushType == pushType);       
+        if (channel is null)
+            return null!;
         return channel;
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hookpay.Shared.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hookpay.Shared.SignalR;
 
-[Authorize(Policy = "Token")]
+[Authorize(Policy = nameof(TokenScheme))]
 public class NotificationHub:Hub, INotificationHubService
 {
     private readonly ILogger<NotificationHub> _logger;
@@ -26,7 +27,7 @@ public class NotificationHub:Hub, INotificationHubService
         {
             var userName = Context.User?.FindFirst("name")?.Value ?? string.Empty;
             await _hub.Clients.All.SendAsync($"{userName}::{message}");
-            _logger.LogError("[message_hub.send]::send success");
+            _logger.LogInformation("[message_hub.send]::send success");
         }
         catch(Exception ex) 
         {
@@ -38,7 +39,7 @@ public class NotificationHub:Hub, INotificationHubService
         try
         {        
             await _hub.Clients.User(userId).SendAsync($"{userId}::{message}");
-            _logger.LogError("[message_hub.send]::send success");
+            _logger.LogInformation("[message_hub.send]::send success");
         }
         catch (Exception ex)
         {

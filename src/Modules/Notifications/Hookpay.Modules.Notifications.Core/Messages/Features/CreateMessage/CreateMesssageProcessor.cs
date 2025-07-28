@@ -1,10 +1,8 @@
-﻿using Hookpay.Modules.Notifications.Core.Messages.Enums;
-using Hookpay.Modules.Notifications.Core.Messages.Features.NotificationDispatch;
+﻿using Hookpay.Modules.Notifications.Core.Messages.Features.NotificationDispatch;
 using Hookpay.Modules.Notifications.Core.Messages.Models;
 using Hookpay.Shared.Caching;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using User;
 

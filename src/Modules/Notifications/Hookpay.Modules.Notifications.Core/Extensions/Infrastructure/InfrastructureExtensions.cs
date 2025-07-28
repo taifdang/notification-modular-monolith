@@ -1,7 +1,7 @@
 ﻿using Hookpay.Modules.Notifications.Core.Data;
 using Hookpay.Modules.Notifications.Core.Messages.Background;
 using Hookpay.Modules.Notifications.Core.Messages.Features.CreateMessage;
-using Hookpay.Modules.Notifications.Core.Messages.Features.SendMessage;
+using Hookpay.Modules.Notifications.Core.Messages.Features.NotificationDispatch;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.EventBus;
 using Hookpay.Shared.Mapster;
@@ -26,7 +26,7 @@ public static class InfrastructureExtensions
         builder.Services.AddScoped<ICreateMessageProcessor, CreateMesssageProcessor>();
 
         builder.Services.AddScoped<INotificationChannel, EmailChannel>();
-        builder.Services.AddScoped<INotificationChannel, SignalRChannel>();
+        builder.Services.AddScoped<INotificationChannel, SignalrChannel>();
 
         builder.Services.AddHostedService<MessageEventInternalBackgroundService>();
 
