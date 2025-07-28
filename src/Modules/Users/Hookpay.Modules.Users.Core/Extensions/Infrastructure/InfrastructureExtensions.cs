@@ -3,9 +3,6 @@ using Hookpay.Modules.Users.Core.Data;
 using Hookpay.Modules.Users.Core.GrpcServer.Services;
 using Hookpay.Shared.EFCore;
 using Hookpay.Shared.Mapster;
-using Mapster;
-using MapsterMapper;
-using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

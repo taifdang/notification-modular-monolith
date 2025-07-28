@@ -1,4 +1,5 @@
 ﻿using Hookpay.Modules.Users.Core.Data;
+using Hookpay.Shared.Validation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,7 @@ public static class MediatRExtensions
     public static IServiceCollection AddMediatRCustom(this IServiceCollection services)
     {
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UserRoot).Assembly));
-
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(EfTxUserBehavior<,>));
 
         return services;
