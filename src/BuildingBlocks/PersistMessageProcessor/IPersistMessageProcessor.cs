@@ -8,7 +8,7 @@ namespace BuildingBlocks.PersistMessageProcessor;
 public interface IPersistMessageProcessor
 {
     Task PublishMessageAsync<TMessageEnvelope>(
-        TMessageEnvelope messageEnvelop,
+        TMessageEnvelope messageEnvelope,
         CancellationToken cancellationToken = default)
         where TMessageEnvelope : MessageEnvelope;
 

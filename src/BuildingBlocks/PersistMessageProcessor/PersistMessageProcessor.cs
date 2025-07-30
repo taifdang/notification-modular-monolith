@@ -1,13 +1,11 @@
-﻿
-
-
-using BuildingBlocks.Core;
-using BuildingBlocks.Core.Event;
+﻿using BuildingBlocks.Core.Event;
+using BuildingBlocks.Utils;
 using MassTransit;
+using MassTransit.Serialization;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace BuildingBlocks.PersistMessageProcessor;
 
@@ -35,7 +33,10 @@ public class PersistMessageProcessor : IPersistMessageProcessor
         CancellationToken cancellationToken = default) 
         where TMessageEnvelope : MessageEnvelope
     {
-        throw new NotImplementedException();
+        return SavePersistMessageAsync(
+            messageEnvelope,
+            MessageDeliveryType.Inbox,
+            cancellationToken);
     }
 
     public async Task ProcessAllAsync(CancellationToken cancellationToken = default)
@@ -97,26 +98,36 @@ public class PersistMessageProcessor : IPersistMessageProcessor
             
     }
 
-
-
-    public Task ProcessInboxAsync(Guid messageId, CancellationToken cancellationToken = default)
+    public async Task ProcessInboxAsync(Guid messageId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var message = await _persistMessageDbContext.PersistMessage.FirstOrDefaultAsync(
+            x => x.Id == messageId &&
+                 x.DeliveryType == MessageDeliveryType.Inbox &&
+                 x.MessageStatus == MessageStatus.InProgress,
+            cancellationToken
+            );
+
+        await ChangeMessageStatusAsync(message, cancellationToken);
     }
 
-    public Task PublishMessageAsync<TMessageEnvelope>(
-        TMessageEnvelope messageEnvelop,
+    public async Task PublishMessageAsync<TMessageEnvelope>(
+        TMessageEnvelope messageEnvelope,
         CancellationToken cancellationToken = default)
         where TMessageEnvelope : MessageEnvelope
     {
-        throw new NotImplementedException();
+        await SavePersistMessageAsync(messageEnvelope, MessageDeliveryType.Outbox, cancellationToken);
     }
  
 
-     public Task AddInternalMessageAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+     public async Task AddInternalMessageAsync<TCommand>(
+         TCommand command, 
+         CancellationToken cancellationToken)
          where TCommand : class, IInternalCommand
      {
-        throw new NotImplementedException();
+        await SavePersistMessageAsync(
+            new MessageEnvelope(command),
+            MessageDeliveryType.Internal,
+            cancellationToken);
      }
 
     public async Task<PersistMessage> ExistMessageAsync(Guid messageId, CancellationToken cancellationToken = default)
@@ -130,19 +141,104 @@ public class PersistMessageProcessor : IPersistMessageProcessor
     }
 
     #region Internal Method
-    private Task<bool> ProcessInternalAsync(PersistMessage message, CancellationToken cancellationToken = default)
+    private async Task<bool> ProcessInternalAsync(PersistMessage message, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var messageEnvelope = JsonSerializer.Deserialize<MessageEnvelope>(message.Data);
+
+        if (messageEnvelope is null || messageEnvelope.Message is null)
+            return false;
+
+        var data = JsonSerializer.Deserialize(
+            messageEnvelope.Message?.ToString() ?? string.Empty,
+            TypeProvider.GetTypeFromCurrentDomainAssembly(message.DataType) ?? typeof(object));
+
+        if(data is not IInternalCommand internalCommand)
+            return false;
+
+        await _mediator.Send(internalCommand, cancellationToken);
+
+        _logger.LogInformation(
+            "InternalCommand with id: {EventId} and deliveryType: {DeliveryType} processed from the persistent message processor",
+            message.Id,
+            message.DeliveryType);
+
+        return true;
     }
 
-    private Task<bool> ProcessOutboxAsync(PersistMessage message, CancellationToken cancellationToken = default)
+    private async Task<bool> ProcessOutboxAsync(PersistMessage message, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var messageEnvelope = JsonSerializer.Deserialize<MessageEnvelope>(message.Data);
+
+        if (messageEnvelope is null || messageEnvelope.Message is null)
+            return false;
+
+        var data = JsonSerializer.Deserialize(
+            messageEnvelope.Message?.ToString() ?? string.Empty,
+            TypeProvider.GetTypeFromCurrentDomainAssembly(message.DataType) ?? typeof(object));
+
+        if (data is not IEvent)
+            return false;
+
+        await _publishEndpoint.Publish(data, context=>
+        {
+            //set headers in queue
+            foreach(var header in messageEnvelope.Headers)
+                context.Headers.Set(header.Key, header.Value);
+
+        },cancellationToken);
+
+        _logger.LogInformation(
+            "Message with id: {EventId} and deliveryType: {DeliveryType} processed from the persistent message processor",
+            message.Id,
+            message.DeliveryType);
+
+        return true;
+
+    }
+
+    private async Task<Guid> SavePersistMessageAsync(
+        MessageEnvelope messageEnvelope,
+        MessageDeliveryType deliveryType,
+        CancellationToken cancellationToken = default)
+    {
+        //?
+        if (messageEnvelope.Message is null)
+            return default!;
+
+        Guid id;
+        if (messageEnvelope.Message is IEvent message)
+            id = message.eventId;
+        else
+            id = Guid.NewGuid();
+
+        await _persistMessageDbContext.PersistMessage.AddAsync( 
+            new PersistMessage
+            (
+                id,
+                messageEnvelope.Message.GetType().ToString(),
+                JsonSerializer.Serialize(messageEnvelope),
+                deliveryType
+            ), 
+            cancellationToken);
+
+        await _persistMessageDbContext.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation(
+            "Message with id: {EventId} and deliveryType: {DeliveryType} saved in the persistent message processor",
+            id,
+            deliveryType.ToString());
+
+        return id;
+
     }
 
     private async Task ChangeMessageStatusAsync(PersistMessage message, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        message.ChangeState(MessageStatus.Processed);
+
+        _persistMessageDbContext.PersistMessage.Update(message);
+
+        await _persistMessageDbContext.SaveChangesAsync();
     }
 
     #endregion

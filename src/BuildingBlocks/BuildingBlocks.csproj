@@ -36,7 +36,6 @@
     <Folder Include="Exceptions\" />
     <Folder Include="Mapster\" />
     <Folder Include="Validation\" />
-    <Folder Include="Utils\" />
     <Folder Include="Signalr\" />
   </ItemGroup>
 
