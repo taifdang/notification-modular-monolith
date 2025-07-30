@@ -150,7 +150,7 @@ public sealed class EventDispatcher(
 
     private IDictionary<string, object> SetHeaders()
     {
-        var headers = new Dictionary<string, object>();
+        var headers = new Dictionary<string, object?>();
 
         headers.Add("CorrelationId", httpContextAccessor?.HttpContext?.GetCorrelationId());
         headers.Add("UserId", httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));

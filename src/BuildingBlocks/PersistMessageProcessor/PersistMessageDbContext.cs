@@ -84,9 +84,9 @@ namespace BuildingBlocks.PersistMessageProcessor
                     }
                 }
             }
-            catch(Exception ex)
+            catch(System.Exception ex)
             {
-                throw new Exception("not find IVersion,please try again", ex);
+                throw new System.Exception("not find IVersion,please try again", ex);
             }
         }
 

@@ -16,6 +16,7 @@ using Hookpay.Shared.Utils;
 using Hookpay.Shared.Web;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hookpay.Bootstrapper.Extensions;
 
@@ -43,9 +44,9 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddSingleton<INotificationHubService, NotificationHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
         //?
-        builder.Services.AddScoped<IBusPublisher, BusPublisher>();  
-        
-      
+        builder.Services.AddScoped<IBusPublisher, BusPublisher>();
+
+
         builder.Services.AddHangfireStorageMSSQL();
 
         builder.Services.AddMassTransitCustom(AppDomain.CurrentDomain.GetAssemblies());

@@ -16,6 +16,7 @@
     <PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.16">
@@ -33,10 +34,7 @@
 
   <ItemGroup>
     <Folder Include="Masstransit\" />
-    <Folder Include="Exceptions\" />
-    <Folder Include="Mapster\" />
     <Folder Include="Validation\" />
-    <Folder Include="Signalr\" />
   </ItemGroup>
 
 </Project>

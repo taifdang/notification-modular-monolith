@@ -72,7 +72,7 @@ public class AppDbContextBase : DbContext, IDbContext
         try
         {
             await SaveChangesAsync(cancellationToken);
-            await _currentTransaction.CommitAsync(cancellationToken);
+            await _currentTransaction?.CommitAsync(cancellationToken)!;
         }
         catch
         {
@@ -179,9 +179,9 @@ public class AppDbContextBase : DbContext, IDbContext
 
             }
         }
-        catch(Exception ex) 
+        catch(System.Exception ex) 
         {
-            throw new Exception("Invalid, not find IAggregate ",ex);
+            throw new System.Exception("Invalid, not find IAggregate ",ex);
         }
     }
 }
