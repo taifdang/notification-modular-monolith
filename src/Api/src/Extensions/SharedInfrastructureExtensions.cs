@@ -1,6 +1,8 @@
-﻿using BuildingBlocks.Hangfire;
+﻿using BuildingBlocks.Core;
+using BuildingBlocks.Hangfire;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.OpenApi;
+using BuildingBlocks.PersistMessageProcessor;
 using BuildingBlocks.Web;
 using FluentValidation.AspNetCore;
 using Hangfire;
@@ -20,10 +22,14 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddFluentValidation();
 
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
 
         builder.Services.AddSwaggerCustom();
 
         builder.Services.AddHangfireStorageMssql();
+
+        //persistMessage
+        builder.Services.AddPersistMessageProcessor();
 
         builder.Services.AddMemoryCache();
 

@@ -52,7 +52,7 @@ public class AppDbContextBase : DbContext, IDbContext
                     throw;
                 }
 
-                // Refresh the original values
+                // Refresh original values to bypass next concurrency check
                 entry.CurrentValues.SetValues(databaseValues);
             }
 

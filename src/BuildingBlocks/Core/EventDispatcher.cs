@@ -65,7 +65,7 @@ public sealed class EventDispatcher(
 
                 foreach(var internalMessage in internalMessages)
                 {
-                    await persistMessageProcessor.AddInternalMessage(internalMessage, cancellationToken);
+                    await persistMessageProcessor.AddInternalMessageAsync(internalMessage, cancellationToken);
                 }
             }
 

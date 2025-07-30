@@ -12,21 +12,21 @@ public interface IPersistMessageProcessor
         CancellationToken cancellationToken = default)
         where TMessageEnvelope : MessageEnvelope;
 
-    Task<Guid> AddReceiveMessage<TMessageEnvelope>(
+    Task<Guid> AddReceiveMessageAsync<TMessageEnvelope>(
         TMessageEnvelope messageEnvelope,
         CancellationToken cancellationToken = default)
         where TMessageEnvelope : MessageEnvelope;
 
-    Task AddInternalMessage<TCommand>(
+    Task AddInternalMessageAsync<TCommand>(
         TCommand command,
         CancellationToken cancellationToken = default)
         where TCommand : class, IInternalCommand;
 
-    Task ProcessInboxMessaage(
+    Task ProcessInboxAsync(
         Guid messageId,
         CancellationToken cancellationToken = default);
 
-    Task ExistMessageAsync(
+    Task<PersistMessage> ExistMessageAsync(
         Guid messageId,
         CancellationToken cancellationToken = default);
 

@@ -102,7 +102,7 @@ public class PersistMessageDbContext : DbContext, IPersistMessageDbContext
     }
 
     public void CreateTableIfNotExist()
-    {
+    {       
         string sqlCreateTable = @"
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'PersistMessage')
             BEGIN
@@ -113,7 +113,7 @@ public class PersistMessageDbContext : DbContext, IPersistMessageDbContext
                     Data NVARCHAR(MAX),
                     Created DATETIME2 NOT NULL DEFAULT GETDATE(),
                     RetryCount INT NOT NULL DEFAULT 0,
-                    MessageStatus INT NOT NULL DEFAULT 1,
+                    MessageStatus TINYINT NOT NULL DEFAULT 1,
                     DeliveryType INT NOT NULL DEFAULT 1,
                     Version INT NOT NULL DEFAULT -1
                 );
