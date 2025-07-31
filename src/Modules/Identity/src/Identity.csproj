@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="Identity\Features\" />
+    <Folder Include="Data\Migrations\" />
     <Folder Include="Identity\Exceptions\" />
   </ItemGroup>
 

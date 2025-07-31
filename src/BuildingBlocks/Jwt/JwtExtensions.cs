@@ -23,23 +23,23 @@ public static class JwtExtensions
                 {                   
                     ValidateAudience = true,
                     ValidateIssuer = true,
-                    ValidIssuer = "https://noti-test.com",
-                    ValidAudience = "https://noti-test.com",
+                    ValidIssuer = "https://localhost:7265",
+                    ValidAudience = "https://localhost:7265",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(connectionString)),
                     ValidateLifetime = true,               
                     ValidateIssuerSigningKey = true,
                 };
             });
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-         .AddJwtBearer(options =>
+        services.AddAuthentication(nameof(TokenSchema))
+         .AddJwtBearer(nameof(TokenSchema), options =>
          {
              options.TokenValidationParameters = new TokenValidationParameters
              {
                  ValidateAudience = true,
                  ValidateIssuer = true,
-                 ValidIssuer = "https://noti-test.com",
-                 ValidAudience = "https://noti-test.com",
+                 ValidIssuer = "https://localhost:7265",
+                 ValidAudience = "https://localhost:7265",
                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(connectionString)),
                  ValidateLifetime = true,
                  ValidateIssuerSigningKey = true,

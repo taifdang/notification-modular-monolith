@@ -21,18 +21,19 @@ public static class Extensions
             var persistMessageDbContext = provider.GetRequiredService<PersistMessageDbContext>();
 
             //ref: https://learn.microsoft.com/en-us/ef/core/managing-schemas/ensure-created
-            var isExist = persistMessageDbContext.Database.EnsureCreated();
-            if (!isExist)
-            {
-                persistMessageDbContext.CreateTableIfNotExist();    
-            }
+            persistMessageDbContext.Database.EnsureCreated();
+            persistMessageDbContext.CreateTableIfNotExist();
+            //if (!isExist)
+            //{
+            //    persistMessageDbContext.CreateTableIfNotExist();    
+            //}
 
             return persistMessageDbContext;
         });
 
         services.AddScoped<IPersistMessageProcessor, PersistMessageProcessor>();
    
-        services.AddHostedService<PersistMessageBackgroundService>();
+        //services.AddHostedService<PersistMessageBackgroundService>();
 
         return services;
     }

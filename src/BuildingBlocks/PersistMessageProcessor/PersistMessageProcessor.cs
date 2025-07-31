@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Core.Event;
 using BuildingBlocks.Utils;
 using MassTransit;
-using MassTransit.Serialization;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

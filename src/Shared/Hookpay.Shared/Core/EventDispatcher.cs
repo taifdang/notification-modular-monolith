@@ -93,7 +93,7 @@ public sealed class EventDispatcher (
 
         var integrationEvents = new List<IIntegrationEvent>();
 
-        //using var scope = _serviceScopeFactory.CreateScope();
+        using var scope = _serviceScopeFactory.CreateScope();
 
         foreach(var domainEvent in domainEvents)
         {

@@ -1,6 +1,7 @@
 ﻿
+using BuildingBlocks.Core.Event;
+
 namespace BuildingBlocks.Contracts;
 
-public class IdentityContracts
-{
-}
+public record UserCreated(Guid Id, string Name) : IIntegrationEvent;
+

@@ -23,7 +23,7 @@ public static class Extensions
                     Name = "Authentization",
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
-                    Scheme = "schema",
+                    Scheme = "bearer",
                     Description = "Enter 'Bearer' [space] and your token in the text input below.\n\nExample: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'"
                 });
 

@@ -4,6 +4,7 @@ using BuildingBlocks.Core.Event;
 using BuildingBlocks.PersistMessageProcessor;
 using BuildingBlocks.Web;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
@@ -14,7 +15,8 @@ public sealed class EventDispatcher(
     IEventMapper eventMapper,
     ILogger<EventDispatcher> logger,
     IPersistMessageProcessor persistMessageProcessor,
-    IHttpContextAccessor httpContextAccessor) : IEventDispatcher
+    IHttpContextAccessor httpContextAccessor
+    ) : IEventDispatcher
 {
 
     public async Task SendAsync<T>(
@@ -93,7 +95,7 @@ public sealed class EventDispatcher(
 
         var integrationEvents = new List<IIntegrationEvent>();
 
-        foreach(var @event in events)
+        foreach (var @event in events)
         {
             var eventType = @event.GetType();
 
@@ -115,7 +117,7 @@ public sealed class EventDispatcher(
         
         var internalCommands = new List<IInternalCommand>();
 
-        foreach(var @event in events)
+        foreach (var @event in events)
         {
             var eventType = @event.GetType();
 

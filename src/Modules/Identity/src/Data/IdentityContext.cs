@@ -1,6 +1,4 @@
 ﻿
-
-
 using BuildingBlocks.Core.Event;
 using BuildingBlocks.Core.Model;
 using BuildingBlocks.EFCore;

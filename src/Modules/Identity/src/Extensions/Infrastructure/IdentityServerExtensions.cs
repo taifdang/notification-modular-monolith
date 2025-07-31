@@ -2,8 +2,10 @@
 using Identity.Data;
 using Identity.Identity.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 
 namespace Identity.Extensions.Infrastructure;
 
@@ -34,6 +36,20 @@ public static class IdentityServerExtensions
             options.Lockout.AllowedForNewUsers = true;
         });
 
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Events.OnRedirectToLogin = context => 
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            };
+
+            options.Events.OnRedirectToAccessDenied = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden; 
+                return Task.CompletedTask;
+            };
+        });
 
         return builder;
     }

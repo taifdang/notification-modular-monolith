@@ -13,6 +13,7 @@
     <PackageReference Include="Hangfire.SqlServer" Version="1.8.20" />
     <PackageReference Include="Mapster" Version="7.4.2-pre02" />
     <PackageReference Include="MassTransit" Version="8.5.0" />
+    <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.0" />
     <PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.16" />
@@ -33,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Masstransit\" />
     <Folder Include="Validation\" />
   </ItemGroup>
 
