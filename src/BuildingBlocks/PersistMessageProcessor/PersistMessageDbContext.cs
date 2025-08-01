@@ -97,15 +97,14 @@ namespace BuildingBlocks.PersistMessageProcessor
                 IF NOT EXISTS (SELECT * FROM sys.tables WHERE NAME = 'PersistMessage')
                 BEGIN
                     CREATE TABLE PersistMessage(
-                        Id UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(),
+                        Id UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
                         DataType NVARCHAR(MAX),
                         Data NVARCHAR(MAX),
-                        Created DATETIME2 NOTNULL DEFAULT GETDATE(),
+                        Created DATETIME2 NOT NULL DEFAULT GETDATE(),
                         RetryCount INT NOT NULL DEFAULT 0,
-                        MessageStatus TINYINT NOTNULL DEFAULT 1,
-                        DeliveryType TINYINT NOTNULL DEFAULT 1,
+                        MessageStatus TINYINT NOT NULL DEFAULT 1,
+                        DeliveryType TINYINT NOT NULL DEFAULT 1,
                         Version BIGINT NOT NULL DEFAULT -1,
-                        CONSTRAINT FK_Persist_Message PRIMARY KEY (Id)
                     );
                 END
             ";

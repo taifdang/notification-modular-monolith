@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
+using OpenIddict.Server;
 using System.Net;
 
 namespace Identity.Extensions.Infrastructure;
@@ -36,9 +38,40 @@ public static class IdentityServerExtensions
             options.Lockout.AllowedForNewUsers = true;
         });
 
+       
+        //ref: https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance
+        builder.Services.AddOpenIddict()
+            .AddCore(options =>
+            {
+                options.UseEntityFrameworkCore()
+                    .UseDbContext<IdentityContext>();
+            })
+            .AddServer(options =>
+            {
+                options.SetTokenEndpointUris("connect/token");
+                       //.SetAuthorizationEndpointUris("connect/authorize")
+                       //.SetLogoutEndpointUris("connect/logout");
+
+                options.AllowClientCredentialsFlow().AllowRefreshTokenFlow();
+                options.AllowPasswordFlow().AllowRefreshTokenFlow();
+
+                // Encryption and signing of tokens
+                options.AddDevelopmentEncryptionCertificate()
+                       .AddDevelopmentSigningCertificate()
+                       .DisableAccessTokenEncryption();
+
+                // Register the ASP.NET Core host and configure the ASP.NET Core options.
+                options.UseAspNetCore()
+                       .EnableTokenEndpointPassthrough()
+                       .EnableAuthorizationEndpointPassthrough()
+                       .EnableLogoutEndpointPassthrough()
+                       .DisableTransportSecurityRequirement();
+
+            });
+
         builder.Services.ConfigureApplicationCookie(options =>
         {
-            options.Events.OnRedirectToLogin = context => 
+            options.Events.OnRedirectToLogin = context =>
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Task.CompletedTask;
@@ -46,11 +79,12 @@ public static class IdentityServerExtensions
 
             options.Events.OnRedirectToAccessDenied = context =>
             {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden; 
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 return Task.CompletedTask;
             };
         });
 
-        return builder;
+
+        return builder; 
     }
 }

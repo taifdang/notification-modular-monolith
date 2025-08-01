@@ -1,12 +1,12 @@
 ﻿using BuildingBlocks.Constants;
-using BuildingBlocks.Contracts;
 using BuildingBlocks.Core;
 using BuildingBlocks.Core.CQRS;
 using FluentValidation;
+using Identity.Identity.Exceptions;
 using Identity.Identity.Models;
 using Mapster;
 using MapsterMapper;
-using MassTransit.Mediator;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,16 +54,16 @@ public class RegisterNewUserEndpoint(
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterNewUser(
-        RegisterNewUserRequestDto request, 
+        RegisterNewUser request, 
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<RegisterNewUser>(request);
+        //var command = mapper.Map<RegisterNewUser>(request);
 
-        var result = mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(request, cancellationToken);
 
-        var response = result.Adapt<RegisterNewUserResponseDto>();
+        //var response = result.Adapt<RegisterNewUserResponseDto>();
 
-        return Ok(response);
+        return Ok(result);
     }
 }
 
@@ -106,6 +106,8 @@ internal class RegisterNewUserHandler : ICommandHandler<RegisterNewUser, Registe
 
     public async Task<RegisterNewUserResult> Handle(RegisterNewUser request, CancellationToken cancellationToken)
     {
+        if(request is null)
+            throw new RegisterIdenttiyUserException("data empty");
 
         var applicationUser = new User()
         {
@@ -116,19 +118,24 @@ internal class RegisterNewUserHandler : ICommandHandler<RegisterNewUser, Registe
             PasswordHash = request.Password
         };
 
-        var identityUser = await _userManager.CreateAsync(applicationUser, request.Password);
+        var identityResult = await _userManager.CreateAsync(applicationUser, request.Password);
         var roleResult = await _userManager.AddToRoleAsync(applicationUser, IdentityConstant.Role.User);
 
-        if (identityUser.Succeeded == false)
+        if (identityResult.Succeeded == false)
         {
-            throw new Exception("");
+            throw new RegisterIdenttiyUserException(string.Join(',',identityResult.Errors.Select(x=>x.Description)));
         }
 
-        await _eventDispatcher.SendAsync(
-            new UserCreated(
-                applicationUser.Id,
-                applicationUser.FirstName + " " + applicationUser.LastName),
-            cancellationToken: cancellationToken);
+        if (roleResult.Succeeded == false)
+        {
+            throw new RegisterIdenttiyUserException(string.Join(',', roleResult.Errors.Select(x => x.Description)));
+        }
+
+        //await _eventDispatcher.SendAsync(
+        //    new UserCreated(
+        //        applicationUser.Id,
+        //        applicationUser.FirstName + " " + applicationUser.LastName),
+        //    cancellationToken: cancellationToken);
 
         return new RegisterNewUserResult(
             applicationUser.Id,
