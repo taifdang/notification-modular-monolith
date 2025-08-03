@@ -5,7 +5,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using System.Security.Claims;
@@ -14,7 +13,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 namespace Identity.Identity.Features.Authorize;
 
 [ApiController]
-public class AuthorizeController : ControllerBase
+public class SigninEventHandler : ControllerBase
 {
     private static ClaimsIdentity Identity = new ClaimsIdentity();
     private readonly IOpenIddictApplicationManager _applicationManager;
@@ -23,7 +22,7 @@ public class AuthorizeController : ControllerBase
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
 
-    public AuthorizeController(
+    public SigninEventHandler(
         IOpenIddictApplicationManager applicationManager, 
         IOpenIddictAuthorizationManager authorizationManager, 
         IOpenIddictScopeManager scopeManager,
@@ -37,7 +36,7 @@ public class AuthorizeController : ControllerBase
         _userManager = userManager;
     }      
 
-    [HttpPost("connect/token")]
+    [HttpPost("/token")]
     public async Task<IActionResult> ConnectToken()
     {
         try
@@ -128,17 +127,52 @@ public class AuthorizeController : ControllerBase
                 //Scope
                 Identity.SetScopes(openIdConnectRequest.GetScopes());
 
+               
                 //Resource
                 Identity.SetResources(await _scopeManager.ListResourcesAsync(Identity.GetScopes()).ToListAsync());
 
                 Identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));
-                Identity.AddClaim(new Claim(Claims.Audience, "Resourse"));
+                Identity.AddClaim(new Claim(Claims.Name, user.UserName));
 
                 Identity.SetDestinations(GetDestinations);
             }
             else if (openIdConnectRequest.IsRefreshTokenGrantType())
             {
-                throw new NotImplementedException();
+                var authenticateResult = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+                if (authenticateResult.Succeeded && authenticateResult.Principal != null)
+                {
+                    user = await _userManager.FindByIdAsync(user.Id.ToString());
+
+                    if(user == null)
+                    {
+                        return BadRequest(new OpenIddictResponse
+                        {
+                            Error = Errors.InvalidGrant,
+                            ErrorDescription = "The token is no longer valid."
+                        });
+                    }
+
+                    Identity.SetScopes(openIdConnectRequest.GetScopes());
+                    if (!string.IsNullOrEmpty(openIdConnectRequest.Scope) && openIdConnectRequest.Scope.Split(' ').Contains(OpenIddictConstants.Scopes.OfflineAccess))
+                        Identity.SetScopes(OpenIddictConstants.Scopes.OfflineAccess);
+
+                    Identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                    Identity.AddClaim(new Claim(ClaimTypes.Name, "Resourse"));
+
+                    Identity.SetDestinations(GetDestinations);
+                }
+                else if(authenticateResult.Failure is not null)
+                {
+                    var failureMessage = authenticateResult.Failure.Message;
+                    var failureException = authenticateResult.Failure.InnerException;
+                    return BadRequest(new OpenIddictResponse
+                    {
+                        Error = Errors.InvalidRequest,
+                        ErrorDescription = failureMessage + failureException
+                    });
+                }
+           
             }
             else
             {

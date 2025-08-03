@@ -1,13 +1,25 @@
 ﻿
+using Identity.Configurations;
 using Identity.Data;
+using Identity.Identity.Constants;
 using Identity.Identity.Models;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
+using OpenIddict.Client.AspNetCore;
 using OpenIddict.Server;
+using OpenIddict.Server.AspNetCore;
 using System.Net;
+using System.Security.Claims;
+using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Server.OpenIddictServerEvents;
+using static OpenIddict.Server.OpenIddictServerHandlers.Authentication;
 
 namespace Identity.Extensions.Infrastructure;
 
@@ -38,35 +50,58 @@ public static class IdentityServerExtensions
             options.Lockout.AllowedForNewUsers = true;
         });
 
-       
         //ref: https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance
+        builder.Services.AddScoped<UserValidator>();
         builder.Services.AddOpenIddict()
             .AddCore(options =>
             {
                 options.UseEntityFrameworkCore()
-                    .UseDbContext<IdentityContext>();
+                       .UseDbContext<IdentityContext>();
             })
             .AddServer(options =>
             {
-                options.SetTokenEndpointUris("connect/token");
-                       //.SetAuthorizationEndpointUris("connect/authorize")
-                       //.SetLogoutEndpointUris("connect/logout");
+                //set endpoint
+                options.SetTokenEndpointUris("/token");
+                //**can be use when extenal provider / third-party => open other tab =>code, callback => signin, token
+                //options.SetAuthorizationEndpointUris("/authorize");
 
-                options.AllowClientCredentialsFlow().AllowRefreshTokenFlow();
-                options.AllowPasswordFlow().AllowRefreshTokenFlow();
+                //set scope for server can be check
+                options.RegisterScopes(
+                    Scopes.Roles,
+                    Scopes.Email,
+                    Scopes.Profile,
+                    Permissions.Prefixes.Scope + "openid",
+                    Permissions.Prefixes.Scope + Constants.StandardScope.TopupApi,
+                    Permissions.Prefixes.Scope + Constants.StandardScope.ProfileApi,
+                    Permissions.Prefixes.Scope + Constants.StandardScope.NotificationApi,
+                    Permissions.Prefixes.Scope + Constants.StandardScope.NotificationModularMonolith);
 
-                // Encryption and signing of tokens
-                options.AddDevelopmentEncryptionCertificate()
-                       .AddDevelopmentSigningCertificate()
+                //enable flow processor
+               
+                options
+                    //** extenal provider / third-party
+                    //.AllowAuthorizationCodeFlow()
+                       .AllowClientCredentialsFlow()
+                       .AllowPasswordFlow()
                        .DisableAccessTokenEncryption();
 
-                // Register the ASP.NET Core host and configure the ASP.NET Core options.
-                options.UseAspNetCore()
-                       .EnableTokenEndpointPassthrough()
-                       .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
-                       .DisableTransportSecurityRequirement();
+                //add certificate
+                options.AddDevelopmentEncryptionCertificate()
+                       .AddDevelopmentSigningCertificate();
 
+                //register host
+                options.UseAspNetCore()
+                       .EnableAuthorizationEndpointPassthrough()
+                       .EnableTokenEndpointPassthrough();
+                          
+                //debuff security for testing => eventhandler
+                //options.EnableDegradedMode();
+
+            })
+            .AddValidation(options =>
+            {
+                options.UseLocalServer();
+                options.UseAspNetCore();
             });
 
         builder.Services.ConfigureApplicationCookie(options =>
