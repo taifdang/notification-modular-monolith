@@ -8,13 +8,22 @@
   <img width="717" height="458" alt="image" src="https://github.com/user-attachments/assets/5e177781-0243-4e1a-8f20-055679bf6392" />
 </div>
 
-## ⚙️ Technologies Used
+## ⚙️ The goals of this project
+- ❇️ Using CQRS implementation with MediatR library.
 
-### 1. Hangfire + Mediatr
-
-### 2. Masstransit + SignalR
-
-### 3. Grpc in queries
+## ⚙️ Technologies - Libraries
+- ✅ .Net 8
+- ✅ EF Core
+- ✅ MediatR
+- ✅ FluentValidation
+- ✅ Serilog
+- ✅ Polly
+- ✅ Mapster
+- ✅ Grpc-dotnet
+- ✅ Masstransit
+- ✅ OpenIdDict
+- ✅ Hangfire
+- ✅ SignalR
 
 ## 🔗 Refenrence
 ...
