@@ -17,7 +17,7 @@ public static class DbContextExtensions
         {
             options.UseSqlServer(mssqlOptions);
 
-            //OpenIdDict
+            //use schema
             options.UseOpenIddict();
         });
 

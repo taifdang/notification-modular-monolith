@@ -8,10 +8,6 @@ builder.AddIdentityModules();
 
 var app = builder.Build();
 
-//app.UseDeveloperExceptionPage();
-
-//app.UseForwardedHeaders();
-//app.UseRouting();
 //app.UseCors();
 
 app.UseAuthentication();

@@ -3,23 +3,17 @@ using Identity.Configurations;
 using Identity.Data;
 using Identity.Identity.Constants;
 using Identity.Identity.Models;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
-using OpenIddict.Client.AspNetCore;
 using OpenIddict.Server;
-using OpenIddict.Server.AspNetCore;
-using System.Net;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Server.OpenIddictServerEvents;
-using static OpenIddict.Server.OpenIddictServerHandlers.Authentication;
 
 namespace Identity.Extensions.Infrastructure;
 
@@ -51,7 +45,6 @@ public static class IdentityServerExtensions
         });
 
         //ref: https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance
-        builder.Services.AddScoped<UserValidator>();
         builder.Services.AddOpenIddict()
             .AddCore(options =>
             {
@@ -61,9 +54,7 @@ public static class IdentityServerExtensions
             .AddServer(options =>
             {
                 //set endpoint
-                options.SetTokenEndpointUris("/token");
-                //**can be use when extenal provider / third-party => open other tab =>code, callback => signin, token
-                //options.SetAuthorizationEndpointUris("/authorize");
+                options.SetTokenEndpointUris("/connect/token");
 
                 //set scope for server can be check
                 options.RegisterScopes(
@@ -76,27 +67,35 @@ public static class IdentityServerExtensions
                     Permissions.Prefixes.Scope + Constants.StandardScope.NotificationApi,
                     Permissions.Prefixes.Scope + Constants.StandardScope.NotificationModularMonolith);
 
-                //enable flow processor
-               
-                options
-                    //** extenal provider / third-party
-                    //.AllowAuthorizationCodeFlow()
-                       .AllowClientCredentialsFlow()
-                       .AllowPasswordFlow()
-                       .DisableAccessTokenEncryption();
+                //register flow 
+                options.AllowPasswordFlow();
+                options.AllowRefreshTokenFlow();
+
+                options.AcceptAnonymousClients();
 
                 //add certificate
                 options.AddDevelopmentEncryptionCertificate()
-                       .AddDevelopmentSigningCertificate();
+                        .AddDevelopmentSigningCertificate();
+
+                options.AddEventHandler<ValidateTokenRequestContext>(builder =>
+                    builder.UseScopedHandler<ValidateGrantType>());
+
+                options.AddEventHandler<ProcessSignInContext>(builder =>
+                {
+                    builder.UseScopedHandler<AssignProperties>();
+                });
+
+                options.DisableAccessTokenEncryption();
 
                 //register host
                 options.UseAspNetCore()
+                       .EnableStatusCodePagesIntegration()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableTokenEndpointPassthrough();
-                          
-                //debuff security for testing => eventhandler
-                //options.EnableDegradedMode();
-
+                       .EnableLogoutEndpointPassthrough()
+                       .EnableTokenEndpointPassthrough()
+                       .EnableUserinfoEndpointPassthrough()
+                       .EnableVerificationEndpointPassthrough()
+                       .DisableTransportSecurityRequirement();
             })
             .AddValidation(options =>
             {

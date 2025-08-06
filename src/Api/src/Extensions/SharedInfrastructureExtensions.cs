@@ -66,9 +66,11 @@ public static class SharedInfrastructureExtensions
             app.UseSwaggerUI();
         }
 
-        app.UseCorrelationId();
+        //app.UseCorrelationId();
 
         app.MapControllers();
+
+        
 
         return app;
     }
