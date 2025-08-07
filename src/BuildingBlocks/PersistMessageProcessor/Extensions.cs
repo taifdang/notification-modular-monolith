@@ -25,7 +25,7 @@ public static class Extensions
             persistMessageDbContext.CreateTableIfNotExist();
             //if (!isExist)
             //{
-            //    persistMessageDbContext.CreateTableIfNotExist();    
+            //    persistMessageDbContext.CreateTableIfNotExist();
             //}
 
             return persistMessageDbContext;

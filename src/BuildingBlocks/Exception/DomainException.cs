@@ -2,12 +2,9 @@
 
 namespace BuildingBlocks.Exception;
 
-public class DomainException : CustomException
+public class DomainException : AppException
 {
-    public DomainException(
-        string message,
-        HttpStatusCode statusCode = HttpStatusCode.BadRequest) 
-        : base(message, statusCode)
+    public DomainException(string message, HttpStatusCode statusCode = HttpStatusCode.BadRequest, int? code = null) : base(message, statusCode, code)
     {
     }
 }

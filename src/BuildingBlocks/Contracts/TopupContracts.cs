@@ -1,6 +1,6 @@
 ﻿
+using BuildingBlocks.Core.Event;
+
 namespace BuildingBlocks.Contracts;
 
-public class TopupContracts
-{
-}
+public record TopupCreated(int id) : IIntegrationEvent;

@@ -1,6 +1,4 @@
-﻿
-namespace Identity;
-
+﻿namespace Identity;
 public class IdentityRoot
 {
 }

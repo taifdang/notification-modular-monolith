@@ -36,8 +36,6 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddSingleton<ISignalrHub, SignalrHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
 
-
-
         builder.Services.AddHangfireStorageMssql();
 
         builder.Services.AddMasstransitCustom(AppDomain.CurrentDomain.GetAssemblies());

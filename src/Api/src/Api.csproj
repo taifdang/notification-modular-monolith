@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\src\Identity.csproj" />
+    <ProjectReference Include="..\..\Modules\Topup\src\Topup.csproj" />
   </ItemGroup>
 
 </Project>

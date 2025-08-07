@@ -5,16 +5,9 @@ using FluentValidation;
 using Identity.Configurations;
 using Identity.Data;
 using Identity.Data.Seeds;
-using Identity.Identity.Models;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using OpenIddict.Abstractions;
-using OpenIddict.Server.AspNetCore;
-using System.Security.Claims;
 
 namespace Identity.Extensions.Infrastructure;
 
@@ -28,7 +21,6 @@ public static class InfrastructureExtensions
 
         builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
 
-        builder.Services.AddScoped<UserValidator>();
         //same 1 database
         //builder.Services.AddMssql<IdentityContext>();
         builder.Services.AddIdentityContextCustom();
