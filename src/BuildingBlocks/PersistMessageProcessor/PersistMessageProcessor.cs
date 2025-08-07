@@ -42,7 +42,7 @@ public class PersistMessageProcessor : IPersistMessageProcessor
     {
         var processes = await _persistMessageDbContext.PersistMessage
             .Where(x => x.MessageStatus != MessageStatus.Processed)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         foreach (var process in processes)
         {

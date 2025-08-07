@@ -102,8 +102,8 @@ namespace BuildingBlocks.PersistMessageProcessor
                         Data NVARCHAR(MAX),
                         Created DATETIME2 NOT NULL DEFAULT GETDATE(),
                         RetryCount INT NOT NULL DEFAULT 0,
-                        MessageStatus TINYINT NOT NULL DEFAULT 1,
-                        DeliveryType TINYINT NOT NULL DEFAULT 1,
+                        MessageStatus INT NOT NULL DEFAULT 1,
+                        DeliveryType INT NOT NULL DEFAULT 1,
                         Version BIGINT NOT NULL DEFAULT -1,
                     );
                 END
