@@ -21,7 +21,7 @@ public static class DbContextExtensions
             options.UseOpenIddict();
         });
 
-        services.AddScoped<ISeedManager, SeedManager>();
+        //services.AddScoped<ISeedManager, SeedManager>();
 
         return services;
     }

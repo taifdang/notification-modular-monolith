@@ -16,7 +16,9 @@ public static class Extensions
         var options = services.GetOptions<MssqlOptions>("mssql");
 
         services.AddDbContext<T>(x => x.UseSqlServer(options.ConnectionString));
-     
+
+        services.AddScoped<ISeedManager, SeedManager>();
+
         return services;
     }
 

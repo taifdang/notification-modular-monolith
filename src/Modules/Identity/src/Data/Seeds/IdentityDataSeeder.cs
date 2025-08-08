@@ -1,7 +1,5 @@
 ﻿
 using BuildingBlocks.Constants;
-using BuildingBlocks.Contracts;
-using BuildingBlocks.Core;
 using BuildingBlocks.EFCore;
 using Identity.Identity.Models;
 using Microsoft.AspNetCore.Identity;

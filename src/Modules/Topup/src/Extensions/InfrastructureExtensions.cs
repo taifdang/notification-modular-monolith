@@ -2,7 +2,9 @@
 using BuildingBlocks.Mapster;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Topup.Data;
+using Topup.Data.Seed;
 
 namespace Topup.Extensions;
 public static class InfrastructureExtensions
@@ -14,6 +16,7 @@ public static class InfrastructureExtensions
         builder.Services.AddMediatRCustom();
 
         builder.Services.AddMssql<TopupDbContext>();
+        builder.Services.AddScoped<IDataSeeder, TopupDataSeeder>();
         return builder;
     }
 
