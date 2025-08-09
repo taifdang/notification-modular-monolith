@@ -1,6 +1,0 @@
-@Hookpay.Bootstrapper_HostAddress = http://localhost:7001
-
-GET {{Hookpay.Bootstrapper_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

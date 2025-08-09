@@ -1,8 +1,0 @@
-﻿{
-  "notifications": {
-    "module": {
-      "name": "Notifications",
-      "enabled": true
-    }
-  }
-}
