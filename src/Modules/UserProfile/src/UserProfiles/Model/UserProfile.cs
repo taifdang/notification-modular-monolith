@@ -13,7 +13,7 @@ public record UserProfile : Aggregate<UserProfileId>
     public GenderType GenderType { get; private set; }
     public Age? Age { get; private set; }
 
-    public UserProfile Create(UserProfileId userProfileId,UserId userId, Name name, bool isDeleted = false)
+    public static UserProfile Create(UserProfileId userProfileId,UserId userId, Name name, bool isDeleted = false)
     {
         var userProfile = new UserProfile
         {

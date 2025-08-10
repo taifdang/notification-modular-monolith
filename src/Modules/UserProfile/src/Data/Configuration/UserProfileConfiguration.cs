@@ -14,6 +14,8 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfiles.Mo
         builder.Property(x => x.Id).ValueGeneratedNever()
             .HasConversion<Guid>(userProfile => userProfile.Value, id => UserProfileId.Of(id));
 
+        builder.Property(x => x.Version).IsConcurrencyToken();
+
         builder.OwnsOne(
             x => x.UserId,
             a =>

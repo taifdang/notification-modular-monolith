@@ -2,7 +2,6 @@
 using BuildingBlocks.Mapster;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using UserProfile.Data;
 
 namespace UserProfile.Extensions;
@@ -20,9 +19,8 @@ public static class InfrastructureExtensions
         return builder;
     }
 
-    public static ApplicationBuilder UseUserProfileModules(this ApplicationBuilder app)
+    public static WebApplication UseUserProfileModules(this WebApplication app)
     {
-
         return app;
     }
 }

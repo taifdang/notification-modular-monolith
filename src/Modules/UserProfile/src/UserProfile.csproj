@@ -14,7 +14,6 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Data\Seed\" />
     <Folder Include="Configurations\" />
-    <Folder Include="NotificationSettings\" />
   </ItemGroup>
 
 </Project>

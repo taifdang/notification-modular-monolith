@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace UserProfile.Data;
 
+using UserProfile.NotificationSettings.Model;
 using UserProfile.UserProfiles.Model;
 
 public class UserProfileDbContext : AppDbContextBase
@@ -15,7 +16,8 @@ public class UserProfileDbContext : AppDbContextBase
     {
     }
 
-    public DbSet<UserProfiles.Model.UserProfile> UserProfiles => Set<UserProfiles.Model.UserProfile>();
+    public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
+    public DbSet<NotificationSetting> NotificationSettings => Set<NotificationSetting>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

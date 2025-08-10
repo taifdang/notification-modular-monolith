@@ -13,34 +13,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Identity.Features.RegisteringNewUser;
 
-public record RegisterNewUser(
-    string FirstName, 
-    string LastName,
-    string UserName,
-    string Email,
-    string Password,
-    string ConfirmPassword)
+public record RegisterNewUser(string FirstName, string LastName,string UserName,string Email,string Password,string ConfirmPassword)
     : ICommand<RegisterNewUserResult>;
 
-public record RegisterNewUserResult(
-    Guid Id,
-    string FirstName,
-    string LastName,
-    string UserName);
+public record RegisterNewUserResult(Guid Id,string FirstName,string LastName,string UserName);
 
-public record RegisterNewUserRequestDto(
-    string FirstName,
-    string LastName,
-    string UserName,
-    string Email,
-    string Password,
-    string ConfirmPassword);
+public record RegisterNewUserRequestDto(string FirstName,string LastName,string UserName,string Email,string Password,string ConfirmPassword);
 
-public record RegisterNewUserResponseDto(
-    Guid Id,
-    string FirstName,
-    string LastName,
-    string UserName);
+public record RegisterNewUserResponseDto( Guid Id,string FirstName,string LastName,string UserName);
 
 [ApiController]
 [Route("api/identity")]

@@ -8,6 +8,7 @@ using UserProfile.UserProfiles.ValueObjects;
 
 namespace UserProfile.UserProfiles.Features.CompletingRegisterUserProfile;
 
+//Read Db
 public record CompleteRegisterUserProfileMonoCommand(Guid Id, Guid UserId, string Name,
     Enums.GenderType GenderType, int Age, bool IsDeleted = false) : InternalCommand;
 
