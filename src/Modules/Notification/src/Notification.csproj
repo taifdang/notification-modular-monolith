@@ -6,4 +6,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Configurations\" />
+    <Folder Include="Notifications\Features\" />
+    <Folder Include="Notifications\Exceptions\" />
+    <Folder Include="Notifications\Dtos\" />
+  </ItemGroup>
+
 </Project>

@@ -1,17 +1,17 @@
 ﻿using BuildingBlocks.Core.Model;
-using UserProfile.NotificationSettings.Features.CompletingNotificationSetting;
-using UserProfile.NotificationSettings.ValueObject;
+using UserProfile.UserPreferences.Features.CompletingUserPreference;
+using UserProfile.UserPreferences.ValueObject;
 
-namespace UserProfile.NotificationSettings.Model;
-public record NotificationSetting : Aggregate<NotificationSettingId>
+namespace UserProfile.UserPreferences.Model;
+public record UserPreference : Aggregate<UserPreferenceId>
 {
     public UserId UserId { get; set; } = default!;
     public Preference Preference { get; private set; } = default!;
 
-    public static NotificationSetting Create(NotificationSettingId notificationSettingId, UserId userId,
+    public static UserPreference Create(UserPreferenceId notificationSettingId, UserId userId,
         Preference preference, bool isDelete = false)
     {
-        var notificationSetting = new NotificationSetting()
+        var notificationSetting = new UserPreference()
         {
             Id = notificationSettingId,
             UserId = userId,
@@ -20,7 +20,7 @@ public record NotificationSetting : Aggregate<NotificationSettingId>
         };
 
         //create
-        //var @event = new NotificationSettingRegistrationCompletedDomainEvent(notificationSetting.Id,notificationSetting.UserId,
+        //var @event = new UserPreferenceRegistrationCompletedDomainEvent(notificationSetting.Id,notificationSetting.UserId,
         //    notificationSetting.Preference, notificationSetting.IsDeleted);
 
         //notificationSetting.AddDomainEvent(@event);
@@ -28,7 +28,7 @@ public record NotificationSetting : Aggregate<NotificationSettingId>
         return notificationSetting;
     } 
 
-    public void CompletedRegisterNotificationSetting(NotificationSettingId notificationSettingId, UserId userId,
+    public void CompletedRegisterNotificationSetting(UserPreferenceId notificationSettingId, UserId userId,
         Preference preference, bool isDelete = false)
     {
         this.Id = notificationSettingId;
@@ -36,7 +36,7 @@ public record NotificationSetting : Aggregate<NotificationSettingId>
         this.Preference = preference;
         this.IsDeleted = isDelete;
 
-        var @event = new NotificationSettingRegistrationCompletedDomainEvent(this.Id, this.UserId, this.Preference, this.IsDeleted);
+        var @event = new UserPreferenceRegistrationCompletedDomainEvent(this.Id, this.UserId, this.Preference, this.IsDeleted);
 
         this.AddDomainEvent(@event);
     }

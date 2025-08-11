@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Exception;
-using System.Net;
 
-namespace UserProfile.NotificationSettings.Exceptions;
+namespace UserProfile.UserPreferences.Exceptions;
 
 public class InvalidUserIdException : AppException
 {

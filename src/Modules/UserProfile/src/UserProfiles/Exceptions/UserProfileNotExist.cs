@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Exception;
-using System.Net;
 
 namespace UserProfile.UserProfiles.Exceptions;
 public class UserProfileNotExist : AppException

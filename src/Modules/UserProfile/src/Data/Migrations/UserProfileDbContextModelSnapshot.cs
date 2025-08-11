@@ -22,7 +22,7 @@ namespace UserProfile.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("UserProfile.NotificationSettings.Model.NotificationSetting", b =>
+            modelBuilder.Entity("UserProfile.UserPreferences.Model.UserPreference", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -48,7 +48,7 @@ namespace UserProfile.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NotificationSetting", (string)null);
+                    b.ToTable("UserPreference", (string)null);
                 });
 
             modelBuilder.Entity("UserProfile.UserProfiles.Model.UserProfile", b =>
@@ -86,11 +86,11 @@ namespace UserProfile.Data.Migrations
                     b.ToTable("UserProfile", (string)null);
                 });
 
-            modelBuilder.Entity("UserProfile.NotificationSettings.Model.NotificationSetting", b =>
+            modelBuilder.Entity("UserProfile.UserPreferences.Model.UserPreference", b =>
                 {
-                    b.OwnsOne("UserProfile.NotificationSettings.ValueObject.Preference", "Preference", b1 =>
+                    b.OwnsOne("UserProfile.UserPreferences.ValueObject.Preference", "Preference", b1 =>
                         {
-                            b1.Property<Guid>("NotificationSettingId")
+                            b1.Property<Guid>("UserPreferenceId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
@@ -98,32 +98,32 @@ namespace UserProfile.Data.Migrations
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Preference");
 
-                            b1.HasKey("NotificationSettingId");
+                            b1.HasKey("UserPreferenceId");
 
-                            b1.ToTable("NotificationSetting");
+                            b1.ToTable("UserPreference");
 
                             b1.WithOwner()
-                                .HasForeignKey("NotificationSettingId");
+                                .HasForeignKey("UserPreferenceId");
                         });
 
-                    b.OwnsOne("UserProfile.NotificationSettings.ValueObject.UserId", "UserId", b1 =>
+                    b.OwnsOne("UserProfile.UserPreferences.ValueObject.UserId", "UserId", b1 =>
                         {
-                            b1.Property<Guid>("NotificationSettingId")
+                            b1.Property<Guid>("UserPreferenceId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<Guid>("Value")
                                 .HasColumnType("uniqueidentifier")
                                 .HasColumnName("UserId");
 
-                            b1.HasKey("NotificationSettingId");
+                            b1.HasKey("UserPreferenceId");
 
                             b1.HasIndex("Value")
                                 .IsUnique();
 
-                            b1.ToTable("NotificationSetting");
+                            b1.ToTable("UserPreference");
 
                             b1.WithOwner()
-                                .HasForeignKey("NotificationSettingId");
+                                .HasForeignKey("UserPreferenceId");
                         });
 
                     b.Navigation("Preference")

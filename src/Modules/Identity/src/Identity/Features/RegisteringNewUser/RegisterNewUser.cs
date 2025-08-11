@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Constants;
+using BuildingBlocks.Contracts;
 using BuildingBlocks.Core;
 using BuildingBlocks.Core.CQRS;
 using FluentValidation;
@@ -111,17 +112,12 @@ internal class RegisterNewUserHandler : ICommandHandler<RegisterNewUser, Registe
             throw new RegisterIdenttiyUserException(string.Join(',', roleResult.Errors.Select(x => x.Description)));
         }
 
-        //await _eventDispatcher.SendAsync(
-        //    new UserCreated(
-        //        applicationUser.Id,
-        //        applicationUser.FirstName + " " + applicationUser.LastName),
-        //    cancellationToken: cancellationToken);
+        await _eventDispatcher.SendAsync(
+            new UserCreated(applicationUser.Id,applicationUser.FirstName + " " + applicationUser.LastName),
+            cancellationToken: cancellationToken);
 
-        return new RegisterNewUserResult(
-            applicationUser.Id,
-            applicationUser.FirstName,
-            applicationUser.LastName,
-            applicationUser.UserName);
+        return new RegisterNewUserResult(applicationUser.Id,applicationUser.FirstName,
+            applicationUser.LastName,applicationUser.UserName);
 
     }
 }

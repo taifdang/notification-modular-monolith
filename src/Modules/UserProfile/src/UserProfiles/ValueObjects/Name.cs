@@ -1,5 +1,4 @@
-﻿
-using UserProfile.UserProfiles.Exceptions;
+﻿using UserProfile.UserProfiles.Exceptions;
 
 namespace UserProfile.UserProfiles.ValueObjects;
 

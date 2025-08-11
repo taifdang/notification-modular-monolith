@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Exception;
 
-namespace UserProfile.NotificationSettings.Exceptions;
+namespace UserProfile.UserPreferences.Exceptions;
 
 public class InvalidPreferenceException : AppException
 {

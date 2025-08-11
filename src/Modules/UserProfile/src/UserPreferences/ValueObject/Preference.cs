@@ -1,6 +1,6 @@
-﻿using UserProfile.NotificationSettings.Exceptions;
+﻿using UserProfile.UserPreferences.Exceptions;
 
-namespace UserProfile.NotificationSettings.ValueObject;
+namespace UserProfile.UserPreferences.ValueObject;
 
 public class Preference
 {

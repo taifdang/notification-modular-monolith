@@ -12,7 +12,7 @@ namespace UserProfile.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "NotificationSetting",
+                name: "UserPreference",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -27,7 +27,7 @@ namespace UserProfile.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NotificationSetting", x => x.Id);
+                    table.PrimaryKey("PK_UserPreference", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,8 +52,8 @@ namespace UserProfile.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotificationSetting_UserId",
-                table: "NotificationSetting",
+                name: "IX_UserPreference_UserId",
+                table: "UserPreference",
                 column: "UserId",
                 unique: true);
 
@@ -68,7 +68,7 @@ namespace UserProfile.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "NotificationSetting");
+                name: "UserPreference");
 
             migrationBuilder.DropTable(
                 name: "UserProfile");

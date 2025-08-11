@@ -1,8 +1,6 @@
-﻿
+﻿using UserProfile.UserPreferences.Exceptions;
 
-using UserProfile.NotificationSettings.Exceptions;
-
-namespace UserProfile.NotificationSettings.ValueObject;
+namespace UserProfile.UserPreferences.ValueObject;
 
 public class UserId
 {

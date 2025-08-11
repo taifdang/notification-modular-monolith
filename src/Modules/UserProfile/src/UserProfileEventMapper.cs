@@ -4,7 +4,7 @@ using BuildingBlocks.Core;
 using BuildingBlocks.Core.Event;
 using System.Text.Json;
 using UserProfile.Identity.Consumers.RegisterNewUser;
-using UserProfile.NotificationSettings.Features.CompletingNotificationSetting;
+using UserProfile.UserPreferences.Features.CompletingUserPreference;
 using UserProfile.UserProfiles.Features.CompletingRegisterUserProfile;
 
 namespace UserProfile;
@@ -25,7 +25,7 @@ public class UserProfileEventMapper : IEventMapper
     {
         return @event switch
         {
-            UserProfileCreatedDomainEvent e => new CompletedNotificationSettingMonoCommand(
+            UserProfileCreatedDomainEvent e => new CompletedUserPreferenceMonoCommand(
                 e.Id, e.UserId, JsonSerializer.Serialize(NotificationConstant.PreferencesSeed)),
             _ => null
         };

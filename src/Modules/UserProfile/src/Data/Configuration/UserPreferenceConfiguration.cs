@@ -1,20 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using UserProfile.NotificationSettings.Model;
-using UserProfile.NotificationSettings.ValueObject;
+using UserProfile.UserPreferences.Model;
+using UserProfile.UserPreferences.ValueObject;
 
 namespace UserProfile.Data.Configuration;
 
 //ref: https://learn.microsoft.com/en-us/ef/core/modeling/
-public class NotificationSettingConfiguration : IEntityTypeConfiguration<NotificationSetting>
+public class UserPreferenceConfiguration : IEntityTypeConfiguration<UserPreference>
 {
-    public void Configure(EntityTypeBuilder<NotificationSetting> builder)
+    public void Configure(EntityTypeBuilder<UserPreference> builder)
     {
-        builder.ToTable(nameof(NotificationSetting));
+        builder.ToTable(nameof(UserPreference));
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedNever()
-            .HasConversion<Guid>(n => n.Value, id => NotificationSettingId.Of(id));
+            .HasConversion<Guid>(n => n.Value, id => UserPreferenceId.Of(id));
 
         builder.Property(x => x.Version).IsConcurrencyToken();
 

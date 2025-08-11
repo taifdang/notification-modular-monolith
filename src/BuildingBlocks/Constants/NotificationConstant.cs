@@ -3,20 +3,15 @@ public static class NotificationConstant
 {
     public class Preferences
     {
-        public ChannelSettings Channels { get; set; } = new();
-        public EventSettings Events { get; set; } = new();
+        public Dictionary<string, List<string>> channels { get; set; } = new();
+        public OptOutSetting optOut { get; set; } = new();    
     }
 
-    public class ChannelSettings
+    public class OptOutSetting
     {
-        public bool Email { get; set; } = true;
-        public bool Sms { get; set; } = false;
-        public bool Push { get; set; } = true;
-    }
-
-    public class EventSettings
-    {
-        public bool TopupCreated { get; set; } = true;
+        public bool email { get; set; } = false;
+        public bool sms { get; set; } = true;
+        public bool push { get; set; } = false;
     }
 
     public static Preferences PreferencesSeed { get; }
@@ -25,18 +20,31 @@ public static class NotificationConstant
     {
        PreferencesSeed = new Preferences()
        {
-           Channels = new ChannelSettings
+           optOut = new OptOutSetting
            {
-               Email = true,
-               Sms = false,
-               Push = true,
+               email = true,
+               sms = false,
+               push = true,
            },
 
-           Events = new EventSettings
+           channels = new Dictionary<string, List<string>>()
            {
-               TopupCreated = true,
+               {Events.Promotion,[Channels.Email, Channels.Sms, Channels.Push]},
+               {Events.TopupCreated,[Channels.Email, Channels.Push]}
            }
        };
+    }
+
+    public static class Channels
+    {
+        public const string Email = "email";
+        public const string Sms = "sms";
+        public const string Push = "push";
+    }
+    public static class Events
+    {
+        public const string Promotion = "promotion";
+        public const string TopupCreated = "topupCreated";
     }
 
 }
