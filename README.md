@@ -9,21 +9,27 @@
 </div>
 
 ## ⚙️ The goals of this project
-- ❇️ Using CQRS implementation with MediatR library.
+- ❇️ Using `Vertical Slice Architecture` for architecture level.
+- ❇️ Using `CQRS` implementation with `MediatR` library.
+- ❇️ Using `InMemory Broke`r on top of `Masstransit` for `Event Driven Architecture`.
+- ❇️ Using `OpenIDict` for authentication and authorization
+- ❇️ Using `Fluent Validation` for validate data
+- ❇️ Using `Mapster` for mapping data
+
 
 ## ⚙️ Technologies - Libraries
-- ✅ .Net 8
-- ✅ EF Core
-- ✅ MediatR
-- ✅ FluentValidation
-- ✅ Serilog
-- ✅ Polly
-- ✅ Mapster
-- ✅ Grpc-dotnet
-- ✅ Masstransit
-- ✅ OpenIdDict
-- ✅ Hangfire
-- ✅ SignalR
-
+- ✔️ [`.NET 8`](https://github.com/dotnet/aspnetcore)
+- ✔️ [`EF Core`]()
+- ✔️ [`MediatR`]()
+- ✔️ [`FluentValidation`]()
+- ✔️ [`Serilog`]()
+- ✔️ [`Polly`]()
+- ✔️ [`Mapster`]()
+- ✔️ [`Grpc-dotnet`]()
+- ✔️ [`Masstransit`]()
+- ✔️ [`OpenIdDict`]()
+- ✔️ [`Hangfire`]()
+- ✔️ [`SignalR`]()
+  
 ## 🔗 Refenrence
 ...
