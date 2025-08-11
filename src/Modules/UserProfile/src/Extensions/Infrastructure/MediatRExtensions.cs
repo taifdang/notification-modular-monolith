@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace UserProfile.Extensions;
+namespace UserProfile.Extensions.Infrastructure;
 public static class MediatRExtensions
 {
     public static IServiceCollection AddMediatRCustom(this IServiceCollection services)

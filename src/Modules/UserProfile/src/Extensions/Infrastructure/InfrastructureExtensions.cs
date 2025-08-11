@@ -4,7 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using UserProfile.Data;
 
-namespace UserProfile.Extensions;
+namespace UserProfile.Extensions.Infrastructure;
 
 public static class InfrastructureExtensions
 {

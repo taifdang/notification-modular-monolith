@@ -1,7 +1,7 @@
 using Api.Extensions;
 using Identity.Extensions.Infrastructure;
 using Topup.Extensions;
-using UserProfile.Extensions;
+using UserProfile.Extensions.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

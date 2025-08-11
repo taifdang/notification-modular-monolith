@@ -6,6 +6,6 @@ public class UserProfileMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        throw new NotImplementedException();
+        //
     }
 }
