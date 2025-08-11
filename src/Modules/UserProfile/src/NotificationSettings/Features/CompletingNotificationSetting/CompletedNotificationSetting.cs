@@ -47,13 +47,14 @@ public class CompleteNotificationSettingValidator : AbstractValidator<CompletedN
     public CompleteNotificationSettingValidator()
     {
         RuleFor(x => x.UserId).NotEmpty().WithMessage("Please enter UserId");
-        RuleFor(x => x).Custom((x, context) =>
-        {
-            if (ValidateJsonObject.IsValidJson(x.Preference))
-            {
-                context.AddFailure(nameof(x.Preference), "Preference is invalid json format");
-            }
-        });
+        RuleFor(x => x.Preference).NotEmpty().WithMessage("Please enter Preference");
+        //RuleFor(x => x).Custom((x, context) =>
+        //{
+        //    if (ValidateJsonObject.IsValidJson(x.Preference))
+        //    {
+        //        context.AddFailure(nameof(x.Preference), "Preference is invalid json format");
+        //    }
+        //});
     }
 }
 

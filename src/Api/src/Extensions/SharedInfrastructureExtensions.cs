@@ -11,6 +11,7 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using Identity;
 using Microsoft.AspNetCore.Authorization;
+using UserProfile;
 
 namespace Api.Extensions;
 
@@ -43,6 +44,7 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddMemoryCache();
 
         builder.Services.AddScoped<IEventMapper, IdentityEventMapper>();
+        builder.Services.AddScoped<IEventMapper, UserProfileEventMapper>();
 
 
         return builder;

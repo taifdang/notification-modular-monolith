@@ -18,7 +18,9 @@ public class NotificationMapping : IRegister
             .ConstructUsing(x => new NotificationSettingDto(x.Id, x.UserId, x.Preference));
 
         config.NewConfig<CompletedNotificationSettingMonoCommand, NotificationSetting>()
-            .Map(d => d.Id, s => NotificationSettingId.Of(s.Id));
+             .Map(d => d.Id, s => NotificationSettingId.Of(s.Id))
+                .Map(d => d.UserId, s => UserId.Of(s.UserId))
+                    .Map(d => d.Preference, s => Preference.Of(s.Preference));
 
     }
 }

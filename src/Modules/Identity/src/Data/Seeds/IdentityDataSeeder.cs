@@ -1,5 +1,7 @@
 ﻿
 using BuildingBlocks.Constants;
+using BuildingBlocks.Contracts;
+using BuildingBlocks.Core;
 using BuildingBlocks.EFCore;
 using Identity.Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -11,19 +13,15 @@ public class IdentityDataSeeder : IDataSeeder
 {
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
-    //private readonly IEventDispatcher _eventDispatcher;
+    private readonly IEventDispatcher _eventDispatcher;
     private readonly IdentityContext _identityContext;
 
-    public IdentityDataSeeder(
-       UserManager<User> userManager,
-       RoleManager<Role> roleManager,
-       //IEventDispatcher eventDispatcher,
-       IdentityContext identityContext
-   )
+    public IdentityDataSeeder(UserManager<User> userManager,RoleManager<Role> roleManager,
+        IEventDispatcher eventDispatcher,IdentityContext identityContext)
     {
         _userManager = userManager;
         _roleManager = roleManager;
-        //_eventDispatcher = eventDispatcher;
+        _eventDispatcher = eventDispatcher;
         _identityContext = identityContext;
     }
 
@@ -66,13 +64,12 @@ public class IdentityDataSeeder : IDataSeeder
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.First(), IdentityConstant.Role.Admin);
 
-                    //await _eventDispatcher.SendAsync(
-                    //    new UserCreated(
-                    //        InitialData.Users.First().Id,
-                    //        InitialData.Users.First().FirstName +
-                    //        " " +
-                    //        InitialData.Users.First().LastName,
-                    //        InitialData.Users.First().PassPortNumber));
+                    await _eventDispatcher.SendAsync(
+                        new UserCreated(
+                            InitialData.Users.First().Id,
+                            InitialData.Users.First().FirstName +
+                            " " +
+                            InitialData.Users.First().LastName));
                 }
             }
 
@@ -84,13 +81,12 @@ public class IdentityDataSeeder : IDataSeeder
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.Last(), IdentityConstant.Role.User);
 
-                    //await _eventDispatcher.SendAsync(
-                    //    new UserCreated(
-                    //        InitialData.Users.Last().Id,
-                    //        InitialData.Users.Last().FirstName +
-                    //        " " +
-                    //        InitialData.Users.Last().LastName,
-                    //        InitialData.Users.Last().PassPortNumber));
+                    await _eventDispatcher.SendAsync(
+                          new UserCreated(
+                              InitialData.Users.Last().Id,
+                              InitialData.Users.Last().FirstName +
+                              " " +
+                              InitialData.Users.Last().LastName));
                 }
             }
         }

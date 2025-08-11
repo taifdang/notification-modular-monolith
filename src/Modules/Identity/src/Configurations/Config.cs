@@ -32,7 +32,7 @@ public static class Config
             ClientType = ClientTypes.Confidential,
             RedirectUris =
             {
-               new Uri("https://localhost:7265/token")
+               new Uri("https://localhost:7265/connect/token")
             },
             Permissions =
             {

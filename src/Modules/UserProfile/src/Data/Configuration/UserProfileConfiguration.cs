@@ -23,6 +23,8 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfiles.Mo
                 a.Property(x => x.Value)
                     .HasColumnName(nameof(UserId))
                     .IsRequired();
+
+                a.HasIndex(x => x.Value).IsUnique();
             }
         );
 

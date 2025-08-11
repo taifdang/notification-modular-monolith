@@ -17,34 +17,16 @@ using Topup.Topups.ValueObjects;
 
 namespace Topup.Topups.Features.CreateTopup;
 
-public record CreateTopup(
-    string Gateway,
-    string TransactionDate,
-    string AccountNumber,
-    string? SubAccount,
-    string? Code,
-    string Content,
-    string TransferType,
-    string Description,
-    decimal TransferAmount,
-    int Accumulated,
-    int Id)
+public record CreateTopup(string Gateway,string TransactionDate,string AccountNumber,string? SubAccount,string? Code,
+    string Content,string TransferType,string Description,decimal TransferAmount,int Accumulated,int Id)
     : ICommand<CreateTopupResult>
 {
     public Guid TopupId { get; init; } = NewId.NextGuid();
 };
 
-public record CreateTopupResult(
-    int TransactionId,
-    string AccountNumber,
-    string TransferType,
-    decimal TransferAmount);
+public record CreateTopupResult(int TransactionId,string AccountNumber,string TransferType,decimal TransferAmount);
 
-public record TopupCreatedDomainEvent(
-    int Id,
-    string CreateByName,
-    decimal TransferAmount)
-    : IHaveIntegrationEvent;
+public record TopupCreatedDomainEvent(int Id,string CreateByName,decimal TransferAmount): IHaveIntegrationEvent;
 
 [ApiController]
 public class CreateTopupEndpoint : ControllerBase
@@ -121,26 +103,16 @@ public class CreateTopupHandler : ICommandHandler<CreateTopup, CreateTopupResult
         }
  
         //no domainEvent
-        var topupEntity = Models.Topup.Create(
-            TopupId.Of(request.TopupId),
-            TransactionId.Of(request.Id),
-            TransferAmount.Of(request.TransferAmount),
-            CreateByName.Of(username),
-            status);
+        var topupEntity = Models.Topup.Create(TopupId.Of(request.TopupId),TransactionId.Of(request.Id),
+            TransferAmount.Of(request.TransferAmount),CreateByName.Of(username),status);
 
-        await _dispatcher.SendAsync(
-            new TopupCreated(topupEntity.TransactionId),
-            cancellationToken: cancellationToken);
+        await _dispatcher.SendAsync(new TopupCreated(topupEntity.TransactionId),cancellationToken: cancellationToken);
 
         await _topupDbContext.AddAsync(topupEntity, cancellationToken);
 
         await _topupDbContext.SaveChangesAsync(cancellationToken);
 
-        return new CreateTopupResult(
-            request.Id,
-            request.AccountNumber,
-            request.TransferType,
-            request.TransferAmount);
+        return new CreateTopupResult(request.Id,request.AccountNumber,request.TransferType,request.TransferAmount);
     }
 }
 

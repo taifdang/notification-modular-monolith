@@ -2,9 +2,10 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserProfile.NotificationSettings.Model;
 using UserProfile.NotificationSettings.ValueObject;
-using UserProfile.UserProfiles.ValueObjects;
 
 namespace UserProfile.Data.Configuration;
+
+//ref: https://learn.microsoft.com/en-us/ef/core/modeling/
 public class NotificationSettingConfiguration : IEntityTypeConfiguration<NotificationSetting>
 {
     public void Configure(EntityTypeBuilder<NotificationSetting> builder)
@@ -22,11 +23,13 @@ public class NotificationSettingConfiguration : IEntityTypeConfiguration<Notific
             a =>
             {
                 a.Property(x => x.Value)
-                    .HasColumnName(nameof(NotificationSettings.ValueObject.UserId))
+                    .HasColumnName(nameof(UserId))                     
                     .IsRequired();
+
+                a.HasIndex(x => x.Value).IsUnique();
             }
         );
-
+      
         builder.OwnsOne(
            x => x.Preference,
            a =>
@@ -35,6 +38,6 @@ public class NotificationSettingConfiguration : IEntityTypeConfiguration<Notific
                    .HasColumnName(nameof(Preference))
                    .IsRequired();
            }
-       );
+       );    
     }
 }
