@@ -13,6 +13,7 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Configurations\" />
+    <Folder Include="UserPreferences\Features\GetUserPreferenceById\" />
   </ItemGroup>
 
 </Project>

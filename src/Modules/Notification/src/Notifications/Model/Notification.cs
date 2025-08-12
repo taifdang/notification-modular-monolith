@@ -1,13 +1,17 @@
-﻿namespace Notification.Notifications.Model;
+﻿using BuildingBlocks.Contracts;
+
+namespace Notification.Notifications.Model;
 
 public record Notification 
 {
-    public Guid requestId { get; set; }
-    public string notificationType { get; set; }
-    public List<string> channels { get; set; }
-    public object recipient { get; set; }
-    public string message {  get; set; }
+    public Guid Id { get; set; }
+    public Guid RequestId { get; set; }
+    public NotificationType NotificationType { get; set; }
+    public string? MessageContent { get; set; } // root message
+    public NotificationPriority Priority { get; set; }
+    public string? SentBy { get; set; }
     public DateTime ScheduleAt { get; set; }
-    public Dictionary<string, object> metadata { get; set; }
-
+    public int Retries { get; set; }
+    public Enums.NotificationStatus Status { get; set; }
 }
+    
