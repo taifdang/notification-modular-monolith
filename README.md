@@ -1,6 +1,7 @@
 <div align="center">
   <img width="277" height="249" alt="image" src="https://github.com/user-attachments/assets/aeb1531e-7966-4e2d-be63-fc96f90afe5e" />
 </div>
+<br>
 
 >🤖 ***Practical Modular Monolith, built with .Net 8,Vertical Slice Architecture, CQRS, Event-Driven Architecture and the latest technologies.***
 
