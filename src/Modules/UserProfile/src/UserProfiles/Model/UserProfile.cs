@@ -43,8 +43,17 @@ public record UserProfile : Aggregate<UserProfileId>
 
         this.AddDomainEvent(@event);
     }
-    public void Deposit(Balance balance)
+    public void Update(UserProfileId userProfileId, UserId userId, UserName userName, Name name,
+        GenderType genderType, Age age, Balance balance, bool isDeleted = false)
     {
+        this.Id = userProfileId;
+        this.UserId = userId;
+        this.UserName = userName;
+        this.Name = name;
+        this.GenderType = genderType;
+        this.Age = age;
         this.Balance = balance;
+        this.IsDeleted = isDeleted;
+     
     }
 }

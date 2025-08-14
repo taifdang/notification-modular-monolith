@@ -1,29 +1,12 @@
 ﻿using BuildingBlocks.Core.Event;
+using MassTransit;
 
 namespace BuildingBlocks.Contracts;
 
-public record NotificationCreated(NotificationEvent? message) 
-    : IIntegrationEvent;
-
-public record NotificationEvent
+public record NotificationCreated(NotificationType NotificationType,Guid UserId, Dictionary<string, object?> Payload, NotificationPriority Priority) 
+    : IIntegrationEvent
 {
-    public Guid requestId { get; set; }
-    public NotificationType notificationType { get; set; }
-    public RecipientEvent recipient { get; set; } = new();
-    public Dictionary<string,object?>? payload { get; set; }
-    public MetadataEvent metadata { get; set; } = new();
-}
-
-public record RecipientEvent
-{
-    public Guid userId { get; set; }
-    public string? email { get; set; }
-}
-
-public record MetadataEvent
-{
-    public NotificationPriority priority { get; set; }
-    public int retries {  get; set; }
+    public Guid RequestId { get; init; } = NewId.NextGuid();
 }
 
 public enum NotificationType
@@ -47,9 +30,4 @@ public enum NotificationPriority
     Low = 0,
     Medium = 1,
     High = 2
-}
-public enum EventType
-{
-    TopupCreated = 0,
-    Promotion
 }

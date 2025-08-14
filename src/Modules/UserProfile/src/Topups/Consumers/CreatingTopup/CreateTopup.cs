@@ -1,8 +1,11 @@
 ﻿using BuildingBlocks.Contracts;
 using BuildingBlocks.Core;
+using BuildingBlocks.Utils;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 using UserProfile.Data;
 using UserProfile.UserProfiles.Exceptions;
 using UserProfile.UserProfiles.ValueObjects;
@@ -27,43 +30,28 @@ public class CreateTopup : IConsumer<TopupCreated>
 
         if (context.Message is null)
             return;
-        var listUser = await _userProfileDbContext.UserProfiles.ToListAsync();
 
         var user = await _userProfileDbContext.UserProfiles.FirstOrDefaultAsync(x => x.UserName.Value == context.Message.username);
         if(user is null)
         {
             throw new UserProfileNotExist();
         }
-        var currentBalance = user.Balance?.Value ?? 0m;
 
-        // Tính toán số dư mới
-        var newBalance = Balance.Of(currentBalance + context.Message.transferAmount);
+        user.Update(user.Id,user.UserId,user.UserName,user.Name,user.GenderType,user.Age, 
+            Balance.Of(user.Balance.Value + context.Message.transferAmount));
 
-        // Gán lại cho entity
-        user.Balance = newBalance;
-
+        _userProfileDbContext.UserProfiles.Update(user);
         await _userProfileDbContext.SaveChangesAsync();
 
-        var @event = new NotificationEvent()
-        {
-            requestId = NewId.NextGuid(),
-            notificationType = NotificationType.Topup,
-            recipient = new RecipientEvent
-            {
-                userId = user.Id,
-            },
-            payload = new Dictionary<string, object?>
-            {
-                {"topupId",context.Message.id},
-                {"transferAmount",context.Message.transferAmount}
-            },
-            metadata = new MetadataEvent
-            {
-                priority = NotificationPriority.High,
-                retries = 3
-            }          
-        };
+        //ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/value-tuples
+        var @event = new NotificationCreated(NotificationType.Topup,user.UserId,
+            DictionaryExtensions.SetPayloads
+            (
+                ("topupId", context.Message.id),
+                ("transferAmount", context.Message.transferAmount)
+            ),
+            NotificationPriority.High);
 
-        await _eventDispatcher.SendAsync(new NotificationCreated(@event));
+        await _eventDispatcher.SendAsync(@event);
     }
 }
