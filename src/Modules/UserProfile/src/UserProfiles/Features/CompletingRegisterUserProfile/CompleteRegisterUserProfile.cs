@@ -15,13 +15,13 @@ using UserProfile.UserProfiles.ValueObjects;
 
 namespace UserProfile.UserProfiles.Features.CompletingRegisterUserProfile;
 
-public record CompleteRegisterUserProfile(Guid UserId, GenderType GenderType, int Age)
+public record CompleteRegisterUserProfile(Guid UserId, GenderType GenderType, int Age, decimal Balance)
     : ICommand<CompleteRegisterUserProfileResult>, IInternalCommand;
-public record UserProfileRegistrationCompletedDomainEvent(Guid Id, Guid UserId, string Name,
-        GenderType GenderType, int Age, bool IsDeleted = false) : IDomainEvent;
+public record UserProfileRegistrationCompletedDomainEvent(Guid Id, Guid UserId,string UserName ,string Name,
+        GenderType GenderType, int Age,decimal Balance, bool IsDeleted = false) : IDomainEvent;
 
 public record CompleteRegisterUserProfileResult(UserProfileDto UserProfileDto);
-public record CompleteRegisterUserProfileRequestDto(Guid UserId, GenderType GenderType, int Age);
+public record CompleteRegisterUserProfileRequestDto(Guid UserId, GenderType GenderType, int Age, decimal Balance);
 public record CompleteRegisterUserProfileResponseDto(UserProfileDto UserProfileDto);
 
 [ApiController]
@@ -78,8 +78,8 @@ public class CompleteRegisterUserProfileHanlder : ICommandHandler<CompleteRegist
             throw new UserProfileNotExist();
         }
 
-        userProfile.CompleteRegistrationUserProfile(userProfile.Id, userProfile.UserId, userProfile.Name,
-            request.GenderType, Age.Of(request.Age));
+        userProfile.CompleteRegistrationUserProfile(userProfile.Id, userProfile.UserId,userProfile.UserName, userProfile.Name,
+            request.GenderType, Age.Of(request.Age), Balance.Of(request.Balance));
 
         var updateUserProfile = _userProfileDbContext.UserProfiles.Update(userProfile).Entity;
 

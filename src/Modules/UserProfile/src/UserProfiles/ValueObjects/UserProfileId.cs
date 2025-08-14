@@ -2,7 +2,7 @@
 
 namespace UserProfile.UserProfiles.ValueObjects;
 
-public class UserProfileId
+public record UserProfileId
 {
     public Guid Value { get; }
     private UserProfileId(Guid value)

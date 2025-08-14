@@ -5,7 +5,7 @@ using UserProfile.UserPreferences.ValueObject;
 namespace UserProfile.UserPreferences.Model;
 public record UserPreference : Aggregate<UserPreferenceId>
 {
-    public UserId UserId { get; set; } = default!;
+    public UserId UserId { get; private set; } = default!;
     public Preference Preference { get; private set; } = default!;
 
     public static UserPreference Create(UserPreferenceId notificationSettingId, UserId userId,

@@ -2,7 +2,7 @@
 
 namespace UserProfile.UserProfiles.ValueObjects;
 
-public class Age
+public record Age
 {
     public int Value { get; }
     private Age(int value)

@@ -21,13 +21,13 @@ public class PersistMessage : IVersion
         DeliveryType = deliveryType;
     }
 
-    public Guid Id { get; set; }
-    public string DataType { get; set; }    
-    public string Data { get; set; }
-    public DateTime Created {  get; set; }
-    public int RetryCount { get; set; } 
-    public MessageStatus MessageStatus { get; set; }
-    public MessageDeliveryType DeliveryType { get; set; }
+    public Guid Id { get; private set; }
+    public string DataType { get; private set; }
+    public string Data { get; private set; }
+    public DateTime Created { get; private set; }
+    public int RetryCount { get; private set; }
+    public MessageStatus MessageStatus { get; private set; }
+    public MessageDeliveryType DeliveryType { get; private set; }
     public long Version { get; set; }
 
     public void ChangeState(MessageStatus status)

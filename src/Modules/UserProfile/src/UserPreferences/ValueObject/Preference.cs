@@ -2,7 +2,7 @@
 
 namespace UserProfile.UserPreferences.ValueObject;
 
-public class Preference
+public record Preference
 {
     public string Value { get; }
     private Preference(string value)
@@ -11,7 +11,7 @@ public class Preference
     }
     public static Preference Of(string value)
     {
-        if (value == string.Empty)
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new InvalidPreferenceException();
         }

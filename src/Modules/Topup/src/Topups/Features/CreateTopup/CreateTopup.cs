@@ -106,7 +106,8 @@ public class CreateTopupHandler : ICommandHandler<CreateTopup, CreateTopupResult
         var topupEntity = Models.Topup.Create(TopupId.Of(request.TopupId),TransactionId.Of(request.Id),
             TransferAmount.Of(request.TransferAmount),CreateByName.Of(username),status);
 
-        await _dispatcher.SendAsync(new TopupCreated(topupEntity.TransactionId),cancellationToken: cancellationToken);
+        await _dispatcher.SendAsync(new TopupCreated(topupEntity.TransactionId,topupEntity.CreateByName,topupEntity.TransferAmount),
+            cancellationToken: cancellationToken);
 
         await _topupDbContext.AddAsync(topupEntity, cancellationToken);
 

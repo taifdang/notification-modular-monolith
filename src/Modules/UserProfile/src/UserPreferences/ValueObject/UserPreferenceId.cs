@@ -1,9 +1,8 @@
-﻿
-using UserProfile.UserPreferences.Exceptions;
+﻿using UserProfile.UserPreferences.Exceptions;
 
 namespace UserProfile.UserPreferences.ValueObject;
 
-public class UserPreferenceId
+public record UserPreferenceId
 {
     public Guid Value { get; }
     private UserPreferenceId(Guid value)
@@ -18,8 +17,8 @@ public class UserPreferenceId
         }
         return new UserPreferenceId(value);
     }
-    public static implicit operator Guid(UserPreferenceId notificationSettingId)
+    public static implicit operator Guid(UserPreferenceId userPreferenceId)
     {
-        return notificationSettingId.Value;
+        return userPreferenceId.Value;
     }
 }

@@ -1,16 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using UserProfile.UserPreferences.Model;
 using UserProfile.UserPreferences.ValueObject;
 
 namespace UserProfile.Data.Configuration;
 
 //ref: https://learn.microsoft.com/en-us/ef/core/modeling/
-public class UserPreferenceConfiguration : IEntityTypeConfiguration<UserPreference>
+public class UserPreferenceConfiguration : IEntityTypeConfiguration<UserPreferences.Model.UserPreference>
 {
-    public void Configure(EntityTypeBuilder<UserPreference> builder)
+    public void Configure(EntityTypeBuilder<UserPreferences.Model.UserPreference> builder)
     {
-        builder.ToTable(nameof(UserPreference));
+        builder.ToTable(nameof(UserPreferences.Model.UserPreference));
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedNever()
@@ -23,7 +22,7 @@ public class UserPreferenceConfiguration : IEntityTypeConfiguration<UserPreferen
             a =>
             {
                 a.Property(x => x.Value)
-                    .HasColumnName(nameof(UserId))                     
+                    .HasColumnName(nameof(UserPreferences.Model.UserPreference.UserId))                     
                     .IsRequired();
 
                 a.HasIndex(x => x.Value).IsUnique();
@@ -35,7 +34,7 @@ public class UserPreferenceConfiguration : IEntityTypeConfiguration<UserPreferen
            a =>
            {
                a.Property(x => x.Value)
-                   .HasColumnName(nameof(Preference))
+                   .HasColumnName(nameof(UserPreferences.Model.UserPreference.Preference))
                    .IsRequired();
            }
        );    

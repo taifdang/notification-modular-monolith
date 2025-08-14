@@ -2,7 +2,7 @@
 
 namespace UserProfile.UserProfiles.ValueObjects;
 
-public class Name
+public record Name
 {
     public string Value { get; }
     private Name(string value)

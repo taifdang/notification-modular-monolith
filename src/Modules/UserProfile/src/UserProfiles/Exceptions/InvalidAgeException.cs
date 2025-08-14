@@ -4,7 +4,7 @@ namespace UserProfile.UserProfiles.Exceptions;
 
 public class InvalidAgeException : AppException
 {
-    public InvalidAgeException() : base("Name is not empty")
+    public InvalidAgeException() : base("Age is not a negative value")
     {
     }
 }

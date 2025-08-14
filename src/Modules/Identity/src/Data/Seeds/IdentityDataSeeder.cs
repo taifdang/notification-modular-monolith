@@ -67,6 +67,7 @@ public class IdentityDataSeeder : IDataSeeder
                     await _eventDispatcher.SendAsync(
                         new UserCreated(
                             InitialData.Users.First().Id,
+                            InitialData.Users.First().UserName!,
                             InitialData.Users.First().FirstName +
                             " " +
                             InitialData.Users.First().LastName));
@@ -84,6 +85,7 @@ public class IdentityDataSeeder : IDataSeeder
                     await _eventDispatcher.SendAsync(
                           new UserCreated(
                               InitialData.Users.Last().Id,
+                              InitialData.Users.Last().UserName!,
                               InitialData.Users.Last().FirstName +
                               " " +
                               InitialData.Users.Last().LastName));

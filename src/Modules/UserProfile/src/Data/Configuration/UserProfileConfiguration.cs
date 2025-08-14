@@ -21,19 +21,28 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfiles.Mo
             a =>
             {
                 a.Property(x => x.Value)
-                    .HasColumnName(nameof(UserId))
+                    .HasColumnName(nameof(UserProfiles.Model.UserProfile.UserId))
                     .IsRequired();
 
                 a.HasIndex(x => x.Value).IsUnique();
             }
         );
+        builder.OwnsOne(
+          x => x.UserName,
+          a =>
+          {
+              a.Property(x => x.Value)
+                  .HasColumnName(nameof(UserProfiles.Model.UserProfile.UserName))                
+                  .IsRequired();
+          }
+      );
 
         builder.OwnsOne(
            x => x.Name,
            a =>
            {
                a.Property(x => x.Value)
-                   .HasColumnName(nameof(Name))
+                   .HasColumnName(nameof(UserProfiles.Model.UserProfile.Name))
                    .IsRequired();
            }
        );
@@ -49,9 +58,22 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfiles.Mo
            a =>
            {
                a.Property(x => x.Value)
-                   .HasColumnName(nameof(Age))
+                   .HasColumnName(nameof(UserProfiles.Model.UserProfile.Age))
                    .IsRequired();
            }
        );
+
+        builder.OwnsOne(
+           x => x.Balance,
+           a =>
+           {
+               a.Property(x => x.Value)
+                   .HasColumnName(nameof(UserProfiles.Model.UserProfile.Balance))
+                   .HasDefaultValue(0)
+                   .HasPrecision(18,2)
+                   .IsRequired();
+           }
+       );
+       
     }
 }

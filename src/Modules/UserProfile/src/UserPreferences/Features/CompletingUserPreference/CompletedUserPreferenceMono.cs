@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Core.CQRS;
 using BuildingBlocks.Core.Event;
+using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

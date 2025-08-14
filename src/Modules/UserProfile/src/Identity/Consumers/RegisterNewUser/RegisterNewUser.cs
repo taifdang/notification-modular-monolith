@@ -34,14 +34,14 @@ public class RegisterNewUser : IConsumer<UserCreated>
             return;
 
         var userProfile = UserProfiles.Model.UserProfile.Create(UserProfileId.Of(NewId.NextGuid()),
-            UserId.Of(context.Message.Id), Name.Of(context.Message.Name));
+            UserId.Of(context.Message.Id),UserName.Of(context.Message.UserName), Name.Of(context.Message.Name));
 
         await _userProfileDbContext.UserProfiles.AddAsync(userProfile);
 
         await _userProfileDbContext.SaveChangesAsync();
 
         await _eventDispatcher.SendAsync(
-            new UserProfileCreatedDomainEvent(userProfile.Id, userProfile.UserId, userProfile.Name),
+            new UserProfileCreatedDomainEvent(userProfile.Id, userProfile.UserId,userProfile.UserName, userProfile.Name),
             typeof(IInternalCommand));
     }
 }
