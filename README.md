@@ -1,13 +1,14 @@
 <div align="center">
   <img width="277" height="249" alt="image" src="https://github.com/user-attachments/assets/aeb1531e-7966-4e2d-be63-fc96f90afe5e" />
 </div>
+<br>
 
 >🤖 ***Practical Modular Monolith, built with .Net 8,Vertical Slice Architecture, CQRS, Event-Driven Architecture and the latest technologies.***
 
 ## The goals of this project
 - ❇️ Using `Vertical Slice Architecture` for architecture level.
 - ❇️ Using `CQRS` implementation with `MediatR` library.
-- ❇️ Using `InMemory Broke`r on top of `Masstransit` for `Event Driven Architecture`.
+- ❇️ Using `InMemory Broker`on top of `Masstransit` for `Event Driven Architecture`.
 - ❇️ Using `OpenIDict` for authentication and authorization
 - ❇️ Using `Fluent Validation` for validate data
 - ❇️ Using `Mapster` for mapping data
