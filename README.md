@@ -8,7 +8,7 @@
 ## The goals of this project
 - ❇️ Using `Vertical Slice Architecture` for architecture level.
 - ❇️ Using `CQRS` implementation with `MediatR` library.
-- ❇️ Using `InMemory Broke`r on top of `Masstransit` for `Event Driven Architecture`.
+- ❇️ Using `InMemory Broker`on top of `Masstransit` for `Event Driven Architecture`.
 - ❇️ Using `OpenIDict` for authentication and authorization
 - ❇️ Using `Fluent Validation` for validate data
 - ❇️ Using `Mapster` for mapping data
