@@ -47,6 +47,16 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfiles.Mo
            }
        );
 
+        builder.OwnsOne(
+          x => x.Email,
+          a =>
+          {
+              a.Property(x => x.Value)
+                  .HasColumnName(nameof(UserProfiles.Model.UserProfile.Email))
+                  .IsRequired();
+          }
+      );
+
         builder.Property(x => x.GenderType)
             .HasDefaultValue(UserProfiles.Enums.GenderType.Unknown)
             .HasConversion(

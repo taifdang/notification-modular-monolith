@@ -113,8 +113,8 @@ internal class RegisterNewUserHandler : ICommandHandler<RegisterNewUser, Registe
         }
 
         await _eventDispatcher.SendAsync(
-            new UserCreated(applicationUser.Id,applicationUser.UserName,applicationUser.FirstName + " " + applicationUser.LastName),
-            cancellationToken: cancellationToken);
+            new UserCreated(applicationUser.Id,applicationUser.UserName,applicationUser.FirstName + " " + applicationUser.LastName,
+                applicationUser.Email),cancellationToken: cancellationToken);
 
         return new RegisterNewUserResult(applicationUser.Id,applicationUser.FirstName,
             applicationUser.LastName,applicationUser.UserName);

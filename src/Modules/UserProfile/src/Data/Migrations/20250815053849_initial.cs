@@ -38,6 +38,7 @@ namespace UserProfile.Data.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GenderType = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Unknown"),
                     Age = table.Column<int>(type: "int", nullable: true),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false, defaultValue: 0m),

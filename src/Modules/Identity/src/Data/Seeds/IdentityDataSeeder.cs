@@ -70,7 +70,8 @@ public class IdentityDataSeeder : IDataSeeder
                             InitialData.Users.First().UserName!,
                             InitialData.Users.First().FirstName +
                             " " +
-                            InitialData.Users.First().LastName));
+                            InitialData.Users.First().LastName,
+                            InitialData.Users.First().Email!));
                 }
             }
 
@@ -88,7 +89,8 @@ public class IdentityDataSeeder : IDataSeeder
                               InitialData.Users.Last().UserName!,
                               InitialData.Users.Last().FirstName +
                               " " +
-                              InitialData.Users.Last().LastName));
+                              InitialData.Users.Last().LastName,
+                              InitialData.Users.Last().Email!));
                 }
             }
         }

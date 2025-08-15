@@ -37,14 +37,16 @@ public class CreateTopup : IConsumer<TopupCreated>
             throw new UserProfileNotExist();
         }
 
-        user.Update(user.Id,user.UserId,user.UserName,user.Name,user.GenderType,user.Age, 
+        user.Update(user.Id,user.UserId,user.UserName,user.Name,user.Email,user.GenderType,user.Age, 
             Balance.Of(user.Balance.Value + context.Message.transferAmount));
 
         _userProfileDbContext.UserProfiles.Update(user);
         await _userProfileDbContext.SaveChangesAsync();
 
         //ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/value-tuples
-        var @event = new NotificationCreated(NotificationType.Topup,user.UserId,
+        var @event = new NotificationCreated(
+            NotificationType.Topup,
+            new Recipient(user.Id,user.Email),
             DictionaryExtensions.SetPayloads
             (
                 ("topupId", context.Message.id),

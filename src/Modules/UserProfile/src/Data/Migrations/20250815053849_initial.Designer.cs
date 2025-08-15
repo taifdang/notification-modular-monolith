@@ -12,7 +12,7 @@ using UserProfile.Data;
 namespace UserProfile.Data.Migrations
 {
     [DbContext(typeof(UserProfileDbContext))]
-    [Migration("20250814155542_initial")]
+    [Migration("20250815053849_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -175,6 +175,24 @@ namespace UserProfile.Data.Migrations
                                 .HasForeignKey("UserProfileId");
                         });
 
+                    b.OwnsOne("UserProfile.UserProfiles.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("UserProfileId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Email");
+
+                            b1.HasKey("UserProfileId");
+
+                            b1.ToTable("UserProfile");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserProfileId");
+                        });
+
                     b.OwnsOne("UserProfile.UserProfiles.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("UserProfileId")
@@ -234,6 +252,9 @@ namespace UserProfile.Data.Migrations
                     b.Navigation("Age");
 
                     b.Navigation("Balance")
+                        .IsRequired();
+
+                    b.Navigation("Email")
                         .IsRequired();
 
                     b.Navigation("Name")

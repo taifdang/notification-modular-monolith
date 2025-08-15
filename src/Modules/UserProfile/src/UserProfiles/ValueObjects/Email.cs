@@ -1,24 +1,23 @@
 ﻿using UserProfile.UserProfiles.Exceptions;
 
 namespace UserProfile.UserProfiles.ValueObjects;
-
-public record Name
+public record Email
 {
     public string Value { get; }
-    private Name(string value)
+    private Email(string value)
     {
         Value = value;
     }
-    public static Name Of(string value)
+    public static Email Of(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new InvalidNameExeption();
         }
-        return new Name(value);
+        return new Email(value);
     }
-    public static implicit operator string(Name name)
+    public static implicit operator string(Email email)
     {
-        return name.Value;
+        return email.Value;
     }
 }

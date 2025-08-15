@@ -33,15 +33,15 @@ public class RegisterNewUser : IConsumer<UserCreated>
         if (userProfileExist)
             return;
 
-        var userProfile = UserProfiles.Model.UserProfile.Create(UserProfileId.Of(NewId.NextGuid()),
-            UserId.Of(context.Message.Id),UserName.Of(context.Message.UserName), Name.Of(context.Message.Name));
+        var userProfile = UserProfiles.Model.UserProfile.Create(UserProfileId.Of(NewId.NextGuid()),UserId.Of(context.Message.Id),
+            UserName.Of(context.Message.UserName),Name.Of(context.Message.Name),Email.Of(context.Message.Email));
 
         await _userProfileDbContext.UserProfiles.AddAsync(userProfile);
 
         await _userProfileDbContext.SaveChangesAsync();
 
         await _eventDispatcher.SendAsync(
-            new UserProfileCreatedDomainEvent(userProfile.Id, userProfile.UserId,userProfile.UserName, userProfile.Name),
+            new UserProfileCreatedDomainEvent(userProfile.Id,userProfile.UserId,userProfile.UserName,userProfile.Name,userProfile.Email),
             typeof(IInternalCommand));
     }
 }
