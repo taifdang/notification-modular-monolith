@@ -1,13 +1,18 @@
-﻿using BuildingBlocks.Contracts;
-
-namespace Notification.Messages.Model;
+﻿namespace Notification.Messages.Model;
 public class Message
 {
+    public Message(Guid id, Guid notificationId, string key, string value)
+    {
+        Id = id;
+        NotificationId = notificationId;
+        Key = key;
+        Value = value;
+    }
+
     public Guid Id { get; set; }
     public Guid NotificationId { get; set; } //FK
-    public ChannelType ChannelType { get; set; }
-    public string? Subject {  get; set; }
-    public string Body { get; set; } = default!;
-    public string? Attachments { get; set; }
-    public string? Extra { get; set; }  
+    public string Key { get; set; }
+    public string Value { get; set; }
+
+    
 }

@@ -9,5 +9,6 @@ public class UserFeed
     public ChannelType ChannelType { get; set; }
     public string? MessageContent {  get; set; }
     public DateTime SentAt {  get; set; }
+    public bool IsHidden { get; set; }  
 
 }

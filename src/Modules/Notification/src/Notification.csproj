@@ -11,11 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
     <Folder Include="Configurations\" />
-    <Folder Include="Notifications\Features\" />
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="Integration\Background\" />
     <Folder Include="Notifications\Exceptions\" />
     <Folder Include="Notifications\Dtos\" />
+    <Folder Include="Templates\Features\" />
   </ItemGroup>
 
 </Project>

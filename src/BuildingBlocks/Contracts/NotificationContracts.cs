@@ -3,11 +3,17 @@ using MassTransit;
 
 namespace BuildingBlocks.Contracts;
 
-public record NotificationCreated(NotificationType NotificationType,Recipient Recipient, Dictionary<string, object?> Payload,
+public record PersonalNotificationCreated(NotificationType NotificationType,Recipient Recipient, Dictionary<string, object?> Payload, 
     NotificationPriority Priority) : IIntegrationEvent
 {
     public Guid RequestId { get; init; } = NewId.NextGuid();
 }
+public record BroadcastNotificationCreated(NotificationType NotificationType,Dictionary<string, object?> Payload, NotificationPriority Priority)
+    : IIntegrationEvent
+{
+    public Guid RequestId { get; init; } = NewId.NextGuid();
+}
+
 public record Recipient(Guid UserId,string? Email);
 
 public enum NotificationType
@@ -18,6 +24,7 @@ public enum NotificationType
     Order,
     Transactional
 }
+[Flags]
 public enum ChannelType
 {
     None = 0,

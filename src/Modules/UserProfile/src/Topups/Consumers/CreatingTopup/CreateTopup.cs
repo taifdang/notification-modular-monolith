@@ -44,13 +44,13 @@ public class CreateTopup : IConsumer<TopupCreated>
         await _userProfileDbContext.SaveChangesAsync();
 
         //ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/value-tuples
-        var @event = new NotificationCreated(
+        var @event = new PersonalNotificationCreated(
             NotificationType.Topup,
             new Recipient(user.Id,user.Email),
             DictionaryExtensions.SetPayloads
             (
-                ("topupId", context.Message.id),
-                ("transferAmount", context.Message.transferAmount)
+                ("TopupId", context.Message.id),
+                ("TransferAmount", context.Message.transferAmount)
             ),
             NotificationPriority.High);
 
