@@ -13,6 +13,4 @@ public class Message
     public Guid NotificationId { get; set; } //FK
     public string Key { get; set; }
     public string Value { get; set; }
-
-    
 }

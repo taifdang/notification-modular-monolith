@@ -1,0 +1,15 @@
+﻿[
+  {
+    "WorkflowName": "Discount",
+    "Rules": [
+      {
+        "RuleName": "",
+        "SuccessEvent": "",
+        "ErrorMessage": "",
+        "ErrorType": "",
+        "RuleExpressionType": "",
+        "Expression": ""
+      }      
+    ]
+  }
+]

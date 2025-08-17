@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+package userPreference;
+
+service UserPreferenceGrpcService{
+	rpc GetById(GetByIdRequest) returns (GetUserPreferenceByIdResult);
+}
+
+message GetByIdRequest{
+	string Id = 1;
+}
+message GetUserPreferenceByIdResult{
+	UserPreferenceResponse UserPreferenceDto = 1;
+}
+message UserPreferenceResponse{
+	string UserId = 1;
+	string Preference = 2;
+}
