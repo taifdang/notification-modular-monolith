@@ -13,6 +13,7 @@ message GetUserPreferenceByIdResult{
 	UserPreferenceResponse UserPreferenceDto = 1;
 }
 message UserPreferenceResponse{
-	string UserId = 1;
-	string Preference = 2;
+	string Id = 1;
+	string UserId = 2;
+	string Preference = 3;
 }

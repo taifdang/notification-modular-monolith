@@ -26,7 +26,7 @@ public record CompletedUserPreferenceMonoHandler : ICommandHandler<CompletedUser
 
     public async Task<Unit> Handle(CompletedUserPreferenceMonoCommand request, CancellationToken cancellationToken)
     {
-        var userPreferenceRequest = _mapper.Map<UserPreference>(request);
+        var userPreferenceRequest = _mapper.Map<Model.UserPreference>(request);
 
         var userPreference = await _userProfileDbContext.UserPreferences.AsQueryable()
            .FirstOrDefaultAsync(x => x.UserId.Value == request.UserId, cancellationToken);

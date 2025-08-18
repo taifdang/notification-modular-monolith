@@ -54,6 +54,37 @@ namespace Notification.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NotificationDelivery",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NotificationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NotificationType = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "UnKnown"),
+                    ChannelType = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "None"),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "None"),
+                    Priority = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Low"),
+                    RetryCount = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    Version = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotificationDelivery", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NotificationDelivery_Notification_NotificationId",
+                        column: x => x.NotificationId,
+                        principalTable: "Notification",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipient",
                 columns: table => new
                 {
@@ -79,6 +110,11 @@ namespace Notification.Data.Migrations
                 column: "NotificationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NotificationDelivery_NotificationId",
+                table: "NotificationDelivery",
+                column: "NotificationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Recipient_NotificationId",
                 table: "Recipient",
                 column: "NotificationId");
@@ -89,6 +125,9 @@ namespace Notification.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Message");
+
+            migrationBuilder.DropTable(
+                name: "NotificationDelivery");
 
             migrationBuilder.DropTable(
                 name: "Recipient");

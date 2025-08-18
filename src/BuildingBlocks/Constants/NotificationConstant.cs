@@ -46,5 +46,4 @@ public static class NotificationConstant
         public const string Promotion = "promotion";
         public const string TopupCreated = "topupCreated";
     }
-
 }

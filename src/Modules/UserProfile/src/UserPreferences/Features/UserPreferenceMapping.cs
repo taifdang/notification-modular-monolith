@@ -1,7 +1,6 @@
 ﻿using Mapster;
 using UserProfile.UserPreferences.Dtos;
 using UserProfile.UserPreferences.Features.CompletingUserPreference;
-using UserProfile.UserPreferences.Model;
 using UserProfile.UserPreferences.ValueObject;
 
 namespace UserProfile.UserPreferences.Features;
@@ -14,7 +13,7 @@ public class UserPreferenceMapping : IRegister
         config.NewConfig<CompleteUserPreferenceResquestDto, CompletedUserPreference>()
             .ConstructUsing(x => new CompletedUserPreference(x.UserId, x.Preference));
 
-        config.NewConfig<UserPreference, UserPreferenceDto>()
+        config.NewConfig<Model.UserPreference, UserPreferenceDto>()
             .ConstructUsing(x => new UserPreferenceDto(x.Id, x.UserId, x.Preference));
 
         /* class valueobject
@@ -32,9 +31,12 @@ public class UserPreferenceMapping : IRegister
         TypeAdapterConfig<string, Preference>.NewConfig()
             .MapWith(src => Preference.Of(src));
 
-        config.NewConfig<CompletedUserPreferenceMonoCommand, UserPreference>()
+        config.NewConfig<CompletedUserPreferenceMonoCommand, Model.UserPreference>()
             .Map(d => d.Id, s => s.Id)
             .Map(d => d.UserId, s => s.UserId)
             .Map(d => d.Preference, s => s.Preference);
+
+        config.NewConfig<Model.UserPreference, UserPreferenceDto>()
+           .ConstructUsing(x => new UserPreferenceDto(x.Id, x.UserId, x.Preference));
     }
 }

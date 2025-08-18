@@ -19,7 +19,7 @@ update-database -Context NotificationDbContext
 
  # push
  {
-     "title": "Order Confirmed",
+      "title": "Order Confirmed",
       "body": "Your order #{{entityId}} has been confirmed. Check your email for details.",
       "icon": "https://example.com/icon.png",
       "action": 

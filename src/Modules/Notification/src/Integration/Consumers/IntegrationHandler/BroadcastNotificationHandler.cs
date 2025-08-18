@@ -2,9 +2,9 @@
 using MassTransit;
 
 namespace Notification.Integration.Consumers.IntegrationHandler;
-public class BroadcastNotificationHandler : IConsumer<BroadcastNotificationCreated>
+public class BroadcastNotificationHandler : IConsumer<BroadcastNotificationRequested>
 {
-    public Task Consume(ConsumeContext<BroadcastNotificationCreated> context)
+    public Task Consume(ConsumeContext<BroadcastNotificationRequested> context)
     {
         throw new NotImplementedException();
     }

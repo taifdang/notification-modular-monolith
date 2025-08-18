@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Core;
 using BuildingBlocks.Core.Event;
+using Notification.Notifications.Features.CreatingNotification;
 
 namespace Notification;
 public class NotificationEventMapper : IEventMapper
@@ -16,6 +17,7 @@ public class NotificationEventMapper : IEventMapper
     {
         return @event switch
         {
+            PersonalNotificationCreatedDomainEvent e => new CreatePersonalNotification(e.Id),
             _ => null
         };
     }

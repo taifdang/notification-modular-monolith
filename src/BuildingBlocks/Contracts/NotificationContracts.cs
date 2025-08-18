@@ -3,12 +3,12 @@ using MassTransit;
 
 namespace BuildingBlocks.Contracts;
 
-public record PersonalNotificationCreated(NotificationType NotificationType,Recipient Recipient, Dictionary<string, object?> Payload, 
+public record PersonalNotificationRequested(NotificationType NotificationType,Recipient Recipient, Dictionary<string, object?> Payload, 
     NotificationPriority Priority) : IIntegrationEvent
 {
     public Guid RequestId { get; init; } = NewId.NextGuid();
 }
-public record BroadcastNotificationCreated(NotificationType NotificationType,Dictionary<string, object?> Payload, NotificationPriority Priority)
+public record BroadcastNotificationRequested(NotificationType NotificationType,Dictionary<string, object?> Payload, NotificationPriority Priority)
     : IIntegrationEvent
 {
     public Guid RequestId { get; init; } = NewId.NextGuid();
