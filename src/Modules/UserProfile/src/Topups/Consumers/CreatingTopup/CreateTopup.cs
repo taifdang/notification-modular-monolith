@@ -46,7 +46,7 @@ public class CreateTopup : IConsumer<TopupCreated>
         //ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/value-tuples
         var @event = new PersonalNotificationRequested(
             NotificationType.Topup,
-            new Recipient(user.Id,user.Email),
+            new Recipient(user.UserId,user.Email),
             DictionaryExtensions.SetPayloads
             (
                 ("TopupId", context.Message.id),

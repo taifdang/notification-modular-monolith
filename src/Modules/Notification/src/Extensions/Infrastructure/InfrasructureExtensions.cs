@@ -15,10 +15,9 @@ public static class InfrasructureExtensions
         builder.Services.AddMapsterCustom(typeof(NotificationRoot).Assembly);
         builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssembly(typeof(NotificationRoot).Assembly));
 
-        builder.Services.AddGrpc();
-        builder.Services.AddGrpcClientCustom();
-
         builder.Services.AddMssql<NotificationDbContext>();
+
+        builder.Services.AddGrpcClientCustom();
 
         return builder;
     }

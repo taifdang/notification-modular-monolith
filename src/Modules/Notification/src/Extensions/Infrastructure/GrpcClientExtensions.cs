@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using UserPreference;
 
 namespace Notification.Extensions.Infrastructure;
 public static class GrpcClientExtensions
@@ -7,9 +8,9 @@ public static class GrpcClientExtensions
     {
         //*not config: grpc service = lifetime scoped
         //*config: grpc client = lifetime transient
-        services.AddGrpcClient<UserPreference.UserPreferenceGrpcService.UserPreferenceGrpcServiceClient>(o =>
+        services.AddGrpcClient<UserPreferenceGrpcService.UserPreferenceGrpcServiceClient>(o =>
         {
-            o.Address = new Uri("https://localhost:7001");
+            o.Address = new Uri("https://localhost:7265");
         });
         return services;
     }

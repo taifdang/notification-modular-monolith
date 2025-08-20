@@ -32,7 +32,7 @@ public static class InfrastructureExtensions
             options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
         });
 
-        builder.Services.AddHostedService<ClientAppSeeder>();
+        //builder.Services.AddHostedService<ClientAppSeeder>();
 
         return builder;
     }

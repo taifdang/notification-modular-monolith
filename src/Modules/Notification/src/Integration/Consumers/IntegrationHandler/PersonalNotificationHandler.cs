@@ -53,9 +53,8 @@ public class PersonalNotificationHandler : IConsumer<PersonalNotificationRequest
         await _notificationDbContext.SaveChangesAsync();
 
         //internalcommand
-        await _eventDispatcher.SendAsync(new PersonalNotificationCreatedDomainEvent(notificationEntity.Id), 
-            typeof(IInternalCommand));
-
+        await _eventDispatcher.SendAsync(new PersonalNotificationCreatedDomainEvent(
+            notificationEntity.Id, @event.Recipient.UserId), typeof(IInternalCommand));
     }
 }
 

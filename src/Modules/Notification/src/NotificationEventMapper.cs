@@ -17,7 +17,7 @@ public class NotificationEventMapper : IEventMapper
     {
         return @event switch
         {
-            PersonalNotificationCreatedDomainEvent e => new CreatePersonalNotification(e.Id),
+            PersonalNotificationCreatedDomainEvent e => new CreatePersonalNotification(e.Id,e.UserId),
             _ => null
         };
     }

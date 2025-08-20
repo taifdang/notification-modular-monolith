@@ -6,6 +6,7 @@ using BuildingBlocks.Masstransit;
 using BuildingBlocks.OpenApi;
 using BuildingBlocks.PersistMessageProcessor;
 using BuildingBlocks.Signalr;
+using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
 using FluentValidation.AspNetCore;
 using Hangfire;
@@ -42,6 +43,9 @@ public static class SharedInfrastructureExtensions
 
         builder.Services.AddMasstransitCustom(AppDomain.CurrentDomain.GetAssemblies());
 
+        builder.Services.AddSingleton<ITemplateMessage,TemplateMessage>();
+
+
         builder.Services.AddMemoryCache();
 
         builder.Services.AddScoped<IEventMapper, IdentityEventMapper>();
@@ -68,7 +72,7 @@ public static class SharedInfrastructureExtensions
             app.UseSwaggerUI();
         }
 
-        //app.UseCorrelationId();
+        app.UseCorrelationId();
 
         app.MapControllers();
 

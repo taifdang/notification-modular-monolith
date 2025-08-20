@@ -7,13 +7,13 @@ using UserProfile.UserPreferences.Exceptions;
 
 namespace UserProfile.UserPreferences.Features.GettingUserPreferenceById;
 
-public record GetUserPreferenceById(Guid UserId) : IQuery<GetUserPreferenceByIdResult>;
+public record GetUserPreferenceById(Guid Id) : IQuery<GetUserPreferenceByIdResult>;
 
 public record GetUserPreferenceByIdResult(UserPreferenceDto UserPreferenceDto);
 
 public record GetUserPreferenceByIdResponse(UserPreferenceDto UserPreferenceDto);
 
-public class GetUserPreferenceByIdHanler : IQueryHandler<GetUserPreferenceById, GetUserPreferenceByIdResult>
+internal class GetUserPreferenceByIdHanler : IQueryHandler<GetUserPreferenceById, GetUserPreferenceByIdResult>
 {
     private readonly UserProfileDbContext _userProfileDbContext;
     private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ public class GetUserPreferenceByIdHanler : IQueryHandler<GetUserPreferenceById, 
     public async Task<GetUserPreferenceByIdResult> Handle(GetUserPreferenceById request, CancellationToken cancellationToken)
     {
         var userPreference = await _userProfileDbContext.UserPreferences.AsQueryable()
-            .SingleOrDefaultAsync(x => x.UserId == request.UserId &&
+            .SingleOrDefaultAsync(x => x.UserId.Value == request.Id &&
                 !x.IsDeleted, cancellationToken);
 
         if(userPreference is null)
