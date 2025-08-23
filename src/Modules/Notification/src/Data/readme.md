@@ -33,3 +33,31 @@ update-database -Context NotificationDbContext
  {
     "smsText": "Thank you for your order! Order #{{OrderId}} confirmed."
  }
+
+ # genneral
+ {
+  "messageId": "msg12345",
+  "channel": "email",
+  "recipient": {
+    "userId": "user789",
+    "email": "user@example.com"
+  },
+  "messageContent": {
+    "subject": "Order Confirmation - Order #123456",
+    "body": {
+      "html": "<p>Thank you for your order #123456!</p>",
+      "plainText": "Thank you for your order #123456!"
+    },
+    "attachments": [
+      {
+        "url": "https://example.com/invoice123456.pdf",
+        "fileName": "invoice123456.pdf"
+      }
+    ]
+  },
+  "metadata": {
+    "priority": "high",
+    "templateId": "orderConfirmationTemplate",
+    "requestId": "req9876"
+  }
+}

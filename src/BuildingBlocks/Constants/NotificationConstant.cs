@@ -9,9 +9,9 @@ public static class NotificationConstant
 
     public class OptOutSetting
     {
-        public bool email { get; set; } = false;
-        public bool sms { get; set; } = true;
-        public bool push { get; set; } = false;
+        public bool email { get; set; }
+        public bool sms { get; set; }
+        public bool push { get; set; }
     }
 
     public static Preferences PreferencesSeed { get; }

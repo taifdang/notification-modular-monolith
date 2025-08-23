@@ -6,6 +6,6 @@ public interface IPersistNotificationProcessor
 {
     Task ProcessAllAsync(CancellationToken cancellationToken = default);
     Task ProcessAsync(Guid Id, ChannelType channelType, CancellationToken cancellationToken = default);
-    Task ChangePersistNotificationAsync(NotificationDelivery notificationDelivery,
+    Task ChangeNotificationStatusAsync(NotificationDelivery notificationDelivery,
         CancellationToken cancellationToken = default);
 }

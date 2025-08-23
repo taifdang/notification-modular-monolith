@@ -2,8 +2,9 @@
 
 namespace Notification.Data.Configurations;
 
+using BuildingBlocks.Contracts;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Notification.Messages.Model;
+using Notification.Notifications.Enums;
 using Notification.Notifications.Model;
 
 public class MessageConfiguration : IEntityTypeConfiguration<Message>
@@ -15,8 +16,19 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
         builder.HasKey(x => x.Id);
         builder.Property(r => r.Id).ValueGeneratedNever();
 
-        builder.Property(r => r.Key).IsRequired();
-        builder.Property(r => r.Value).IsRequired();
+        builder.Property(x => x.Channel)
+        .HasDefaultValue(ChannelType.None)
+        .HasConversion(
+            x => x.ToString(),
+            x => (ChannelType)Enum.Parse(typeof(ChannelType), x));
+
+        builder.Property(r => r.Body).IsRequired();
+
+        builder.Property(x => x.Status)
+       .HasDefaultValue(MessageStatus.None)
+       .HasConversion(
+           x => x.ToString(),
+           x => (MessageStatus)Enum.Parse(typeof(MessageStatus), x));
 
         builder
             .HasOne<Notification>()

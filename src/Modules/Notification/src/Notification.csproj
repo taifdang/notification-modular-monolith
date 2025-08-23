@@ -15,12 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\RenderMessage\" />
-    <Folder Include="Configurations\RulesEngine\" />
+    <Folder Include="ChannelProcessors\EmailChannelProcessor\" />
+    <Folder Include="ChannelProcessors\InappChannelProcessor\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Notifications\Exceptions\" />
     <Folder Include="Notifications\Dtos\" />
-    <Folder Include="Templates\Features\CreatingTemplates\" />
+    <Folder Include="PersistNotificationProcessor\Consumers\DispatchingNotification\" />
+    <Folder Include="Templates\Features\CreatingTemplate\" />
+    <Folder Include="Templates\Features\GettingTemplateByType\" />
+    <Folder Include="Templates\Features\DeletingTemplate\" />
+    <Folder Include="Templates\Features\UpdatingTemplate\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,7 +20,7 @@ public class PersistNotificationProcessor : IPersistNotificationProcessor
         _publisherEndpoint = publishEndpoint;
     }
 
-    public async Task ChangePersistNotificationAsync(NotificationDelivery notificationDelivery,
+    public async Task ChangeNotificationStatusAsync(NotificationDelivery notificationDelivery,
         CancellationToken cancellationToken = default)
     {
         notificationDelivery.ChangeState(Enums.DeliveryStatus.Processed);
@@ -50,15 +50,30 @@ public class PersistNotificationProcessor : IPersistNotificationProcessor
             return;
 
         //check rule
+        var rules = false;
+        if (!rules)
+        {
+            //save in UserFeed
+        }
 
-        
-
-        switch(channelType)
+        switch (channelType)
         {
             case ChannelType.InApp:
-                var sentInappChannel = await ProcessInappAsync(); 
+                var sentInappChannel = await ProcessInappAsync(notification, cancellationToken); 
                 if (sentInappChannel)
                 {
+                    await ChangeNotificationStatusAsync(notification, cancellationToken);
+                    break;
+                }
+                else
+                {
+                    return;
+                }
+            case ChannelType.Email:
+                var sentEmailChannel = await ProcessEmailAsync(notification, cancellationToken);
+                if (sentEmailChannel)
+                {
+                    await ChangeNotificationStatusAsync(notification, cancellationToken);
                     break;
                 }
                 else
@@ -66,14 +81,19 @@ public class PersistNotificationProcessor : IPersistNotificationProcessor
                     return;
                 }
         }
-
-        //await _publisherEndpoint.Publish(notification.Message,cancellationToken);
-        //await ChangePersistNotificationAsync(notification,cancellationToken);
-
     }
 
-    private async Task<bool> ProcessInappAsync()
+    private async Task<bool> ProcessEmailAsync(NotificationDelivery notificationDelivery,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        //save message in UserFeed
+        return true;
+    }
+
+    private async Task<bool> ProcessInappAsync(NotificationDelivery notificationDelivery,
+        CancellationToken cancellationToken = default)
+    {      
+        //save message in UserFeed
+        return true;
     }
 }

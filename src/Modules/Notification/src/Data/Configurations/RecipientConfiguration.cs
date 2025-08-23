@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Notification.Recipients.Model;
+using Notification.Notifications.Model;
 
 namespace Notification.Data.Configurations;
 
@@ -12,6 +12,8 @@ public class RecipientConfiguration : IEntityTypeConfiguration<Recipient>
 
         builder.HasKey(x => x.Id);
         builder.Property(r => r.Id).ValueGeneratedNever();
+
+        builder.Property(r => r.UserId).IsRequired();   
 
         builder
             .HasOne<Notifications.Model.Notification>()

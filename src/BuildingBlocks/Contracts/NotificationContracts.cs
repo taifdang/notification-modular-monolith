@@ -14,7 +14,16 @@ public record BroadcastNotificationRequested(NotificationType NotificationType,D
     public Guid RequestId { get; init; } = NewId.NextGuid();
 }
 
-public record Recipient(Guid UserId,string? Email);
+public record NotificationMessage(Guid MessageId,NotificationType NotificationType,ChannelType Channel,Recipient Recipient,
+    Dictionary<string,object?> MessageContent, Dictionary<string,object?> Metadata);
+
+public record Recipient(Guid UserId, string? Email);
+
+
+public record NotificationCreated(Guid Id, Guid UserId) : IIntegrationEvent;
+public record NotificationReadyToRender(Guid Id, List<string> channel);
+public record NotificationRendered(Guid Id);
+
 
 public enum NotificationType
 {
@@ -22,7 +31,8 @@ public enum NotificationType
     Promotion,
     Topup,
     Order,
-    Transactional
+    Transactional,
+    ChangePassword
 }
 [Flags]
 public enum ChannelType

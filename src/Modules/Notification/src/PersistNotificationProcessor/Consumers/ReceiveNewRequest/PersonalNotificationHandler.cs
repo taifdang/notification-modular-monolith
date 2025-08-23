@@ -1,15 +1,14 @@
 ﻿using BuildingBlocks.Contracts;
 using BuildingBlocks.Core;
-using BuildingBlocks.Core.Event;
 using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Notification.Data;
-using Notification.Notifications.Features.CreatingNotification;
+using Notification.Notifications.Features.GettingNotificationById;
 using System.Text.Json;
 
-namespace Notification.Integration.Consumers.IntegrationHandler;
+namespace Notification.PersistNotificationProcessor.Consumers.ReceiveNewRequest;
 public class PersonalNotificationHandler : IConsumer<PersonalNotificationRequested>
 {
     private readonly NotificationDbContext _notificationDbContext;
@@ -37,24 +36,18 @@ public class PersonalNotificationHandler : IConsumer<PersonalNotificationRequest
         //notification
         var notificationEntity = 
             Notifications.Model.Notification.Create(NewId.NextGuid(),@event.RequestId,@event.NotificationType,
-                JsonSerializer.Serialize(@event.Payload),@event.Priority);
+                JsonSerializer.Serialize(@event),@event.Priority);
 
         _notificationDbContext.Notifications.Add(notificationEntity);
 
         //recipient
-        _notificationDbContext.Recipients.Add(new Recipients.Model.Recipient(NewId.NextGuid(),notificationEntity.Id,
-            @event.Recipient.UserId,@event.Recipient.Email));
-
-        //message
-        foreach(var item in @event.Payload)
-            _notificationDbContext.Messages.Add(new Messages.Model.Message(NewId.NextGuid(),notificationEntity.Id,item.Key,
-                JsonSerializer.Serialize(item.Value)));
+        _notificationDbContext.Recipients.Add(new Notifications.Model.Recipient(NewId.NextGuid(), notificationEntity.Id,
+            @event.Recipient.UserId, @event.Recipient.Email));
 
         await _notificationDbContext.SaveChangesAsync();
 
-        //internalcommand
         await _eventDispatcher.SendAsync(new PersonalNotificationCreatedDomainEvent(
-            notificationEntity.Id, @event.Recipient.UserId), typeof(IInternalCommand));
+            notificationEntity.Id, @event.Recipient.UserId));
     }
 }
 
