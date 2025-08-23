@@ -12,7 +12,7 @@
 - ❇️ Using `OpenIDict` for authentication and authorization
 - ❇️ Using `Fluent Validation` for validate data
 - ❇️ Using `Mapster` for mapping data
-
+- ❇️ Using `HandlebarsDotNet` for render message
 
 ## Technologies - Libraries
 - ✔️ [`.NET 8`](https://github.com/dotnet/aspnetcore)
@@ -27,6 +27,7 @@
 - ✔️ [`OpenIdDict`]()
 - ✔️ [`Hangfire`]()
 - ✔️ [`SignalR`]()
+- ✔️ [`HandlebarsDotNet`]()
 
 ## Structure of Project
 ### 🧱 Modular Monolith
