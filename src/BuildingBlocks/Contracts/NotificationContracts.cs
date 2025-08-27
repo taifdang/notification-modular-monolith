@@ -14,8 +14,7 @@ public record BroadcastNotificationRequested(NotificationType NotificationType,D
     public Guid RequestId { get; init; } = NewId.NextGuid();
 }
 
-public record NotificationMessage(Guid MessageId,NotificationType NotificationType,ChannelType Channel,Recipient Recipient,
-    Dictionary<string,object?> MessageContent, Dictionary<string,object?> Metadata);
+public record NotificationMessage(ChannelType ChannelType);
 
 public record Recipient(Guid UserId, string? Email);
 

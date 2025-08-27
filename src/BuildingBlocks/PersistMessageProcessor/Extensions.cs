@@ -33,7 +33,7 @@ public static class Extensions
 
         services.AddScoped<IPersistMessageProcessor, PersistMessageProcessor>();
    
-        services.AddHostedService<PersistMessageBackgroundService>();
+       // services.AddHostedService<PersistMessageBackgroundService>();
 
         return services;
     }

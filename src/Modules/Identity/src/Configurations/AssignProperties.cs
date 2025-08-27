@@ -10,7 +10,7 @@ public class AssignProperties : IOpenIddictServerHandler<OpenIddictServerEvents.
     {
         var properties = context.Transaction?.GetProperty<AuthenticationProperties>(
                            typeof(AuthenticationProperties).FullName);
-
+      
         context.Response["language"] = properties?.GetString("language");
         context.Response["last_update_at"] = properties?.GetString("lastLoginDateTime");
 

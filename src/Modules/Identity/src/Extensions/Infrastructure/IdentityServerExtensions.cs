@@ -71,7 +71,8 @@ public static class IdentityServerExtensions
 
                 //add certificate
                 options.AddDevelopmentEncryptionCertificate()
-                        .AddDevelopmentSigningCertificate();
+                        .AddDevelopmentSigningCertificate()
+                        .DisableAccessTokenEncryption();
 
                 options.AddEventHandler<ValidateTokenRequestContext>(builder =>
                     builder.UseScopedHandler<ValidateGrantType>());
@@ -81,7 +82,6 @@ public static class IdentityServerExtensions
                     builder.UseScopedHandler<AssignProperties>();
                 });
 
-                options.DisableAccessTokenEncryption();
 
                 //register host
                 options.UseAspNetCore()

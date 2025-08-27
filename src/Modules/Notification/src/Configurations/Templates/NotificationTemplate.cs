@@ -6,8 +6,9 @@ namespace Notification.Configurations.Templates;
 public class NotificationTemplate
 {
     public static string filePath = $"{AppDomain.CurrentDomain.BaseDirectory}\\template.json";
-    private static Dictionary<string, string> _template;
-    NotificationTemplate()
+    public static Dictionary<string, string>? _template;
+
+    public NotificationTemplate()
     {
         var json = ReadAllFile(filePath);
         _template = GetNotificationTemplate(json);

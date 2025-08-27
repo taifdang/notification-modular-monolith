@@ -3,7 +3,6 @@ using BuildingBlocks.Mapster;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Notification.Configurations.Templates;
 using Notification.Data;
 
 namespace Notification.Extensions.Infrastructure;
@@ -20,13 +19,16 @@ public static class InfrasructureExtensions
 
         builder.Services.AddGrpcClientCustom();
 
-        builder.Services.AddSingleton<NotificationTemplate>();
-
         return builder;
     }
 
     public static WebApplication UseNotificationModules(this WebApplication app)
     {
+        app.MapGet("/test/hello", () =>
+        {
+            return (new { message = "Hello, token is valid " });
+        }).RequireAuthorization("ApiScope");
+
         return app;
     }
 }

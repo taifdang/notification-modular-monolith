@@ -44,7 +44,7 @@ public  class UserValidator : ControllerBase
         if (!principal.HasClaim(c => c.Type == Claims.Subject))
         {
             var identity = (ClaimsIdentity)principal.Identity!;
-            identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));
+            identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));            
         }
 
         foreach (var claim in principal.Claims)
@@ -56,7 +56,7 @@ public  class UserValidator : ControllerBase
     
         var scope = new[]
         {         
-            Scopes.Profile,
+            Scopes.Profile,          
             //Scopes.OpenId,           
             //Scopes.OfflineAccess,
         };

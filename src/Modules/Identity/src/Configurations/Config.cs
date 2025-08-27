@@ -60,7 +60,9 @@ public static class Config
                 Permissions.Prefixes.Scope + Constants.StandardScope.TopupApi,
                 Permissions.Prefixes.Scope + Constants.StandardScope.ProfileApi,
                 Permissions.Prefixes.Scope + Constants.StandardScope.NotificationApi,
-                Permissions.Prefixes.Scope + Constants.StandardScope.NotificationModularMonolith
+                Permissions.Prefixes.Scope + Constants.StandardScope.NotificationModularMonolith,
+                //??
+                Constants.StandardScope.NotificationModularMonolith
             },
         };
 }

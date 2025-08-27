@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Contracts;
 using MassTransit;
+using Notification.Data;
 
 namespace Notification.PersistNotificationProcessor.Consumers.ReceiveNewRequest;
 public class BroadcastNotificationHandler : IConsumer<BroadcastNotificationRequested>

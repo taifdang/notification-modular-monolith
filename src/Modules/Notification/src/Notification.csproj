@@ -15,12 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ChannelProcessors\EmailChannelProcessor\" />
-    <Folder Include="ChannelProcessors\InappChannelProcessor\" />
     <Folder Include="Data\Migrations\" />
     <Folder Include="Notifications\Exceptions\" />
     <Folder Include="Notifications\Dtos\" />
-    <Folder Include="PersistNotificationProcessor\Consumers\DispatchingNotification\" />
     <Folder Include="Templates\Features\CreatingTemplate\" />
     <Folder Include="Templates\Features\GettingTemplateByType\" />
     <Folder Include="Templates\Features\DeletingTemplate\" />

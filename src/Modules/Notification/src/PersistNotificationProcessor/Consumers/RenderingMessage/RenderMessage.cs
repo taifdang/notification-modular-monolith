@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Notification.Configurations.Templates;
 using Notification.Data;
 using Notification.Notifications.Model;
+using Notification.Templates.Model;
 
 namespace Notification.PersistNotificationProcessor.Consumers.RenderingMessage;
 public class RenderMessage : IConsumer<NotificationReadyToRender>
@@ -33,7 +34,7 @@ public class RenderMessage : IConsumer<NotificationReadyToRender>
             //temp***
             var message = Message.Create(NewId.NextGuid(),notification.Id, channel,Guid.NewGuid(),
                 nameof(notification.NotificationType),notificationMessage,string.Empty,string.Empty);
-            await _notificationDbContext.AddAsync(message);
+            await _notificationDbContext.Messages.AddAsync(message);
         }
         await _notificationDbContext.SaveChangesAsync();
 

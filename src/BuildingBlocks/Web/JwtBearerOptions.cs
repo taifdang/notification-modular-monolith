@@ -1,7 +1,7 @@
 ﻿
 namespace BuildingBlocks.Web;
 
-public class JwtBearerOptions
+public class JwtBearerOptionCustom
 {
     public string Key { get; set; }
 }

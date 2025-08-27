@@ -1,12 +1,10 @@
 ﻿using BuildingBlocks.Core;
 using BuildingBlocks.Hangfire;
 using BuildingBlocks.Jwt;
-using BuildingBlocks.Mapster;
 using BuildingBlocks.Masstransit;
 using BuildingBlocks.OpenApi;
 using BuildingBlocks.PersistMessageProcessor;
 using BuildingBlocks.Signalr;
-using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
 using FluentValidation.AspNetCore;
 using Hangfire;
@@ -22,7 +20,7 @@ public static class SharedInfrastructureExtensions
     public static WebApplicationBuilder AddSharedInfrastructure(this WebApplicationBuilder builder)
     {
         builder.Services.AddSignalR();
-        builder.Services.AddJwt();
+        builder.Services.AddJwt();      
 
         //persistMessage
         builder.Services.AddPersistMessageProcessor();
@@ -41,7 +39,9 @@ public static class SharedInfrastructureExtensions
 
         builder.Services.AddHangfireStorageMssql();
 
-        builder.Services.AddMasstransitCustom(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddCustomMasstransit(
+            TransportType.InMemory,
+            AppDomain.CurrentDomain.GetAssemblies());
 
         builder.Services.AddMemoryCache();
 
