@@ -2,12 +2,13 @@
 using BuildingBlocks.Contracts;
 using BuildingBlocks.Core;
 using BuildingBlocks.Core.CQRS;
+using BuildingBlocks.Jwt;
 using FluentValidation;
 using Identity.Identity.Exceptions;
 using Identity.Identity.Models;
-using Mapster;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,13 @@ public class RegisterNewUserEndpoint(
         //var response = result.Adapt<RegisterNewUserResponseDto>();
 
         return Ok(result);
+    }
+
+    [Authorize(nameof(ApiScope))]
+    [HttpGet("test")]
+    public string Get()
+    {
+        return "Hello, token is valid ";
     }
 }
 

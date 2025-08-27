@@ -1,9 +1,12 @@
-﻿using Identity.Identity.Models;
+﻿using Identity.Identity.Constants;
+using Identity.Identity.Models;
+using MassTransit.Internals;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using System.Security.Claims;
@@ -15,13 +18,16 @@ public  class UserValidator : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly IOpenIddictScopeManager _scopeManager;
 
     public UserValidator(
         UserManager<User> userManager,
-        SignInManager<User> signInManager)
+        SignInManager<User> signInManager,
+        IOpenIddictScopeManager scopeManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _scopeManager = scopeManager;
     }
 
     [HttpPost("/connect/token")]
@@ -30,45 +36,49 @@ public  class UserValidator : ControllerBase
         var request = HttpContext.GetOpenIddictServerRequest() ??
                 throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-        var user = await _userManager.FindByNameAsync(request.Username!);
-        if (user == null || await _userManager.IsLockedOutAsync(user))
-            return NotFound("Invalid credentials!");
-
-        var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password!, false, lockoutOnFailure: false);
-
-        if (!result.Succeeded)
-            return BadRequest("Bad request!");
-
-        var principal = await _signInManager.CreateUserPrincipalAsync(user);
-
-        if (!principal.HasClaim(c => c.Type == Claims.Subject))
+        try
         {
-            var identity = (ClaimsIdentity)principal.Identity!;
-            identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));            
-        }
+            var user = await _userManager.FindByNameAsync(request.Username!);
+            if (user == null || await _userManager.IsLockedOutAsync(user))
+                return NotFound("Invalid credentials!");
 
-        foreach (var claim in principal.Claims)
+            var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password!, 
+                false, lockoutOnFailure: false);
+
+            if (!result.Succeeded)
+                return BadRequest("Bad request!");
+
+            var userId = user!.Id.ToString();
+
+            //create claim-based
+            var identity = new ClaimsIdentity(TokenValidationParameters.DefaultAuthenticationType, 
+                Claims.Name, Claims.Role);
+
+            //add the claims
+            identity.SetClaim(Claims.Subject, userId)
+                    .SetClaim(Claims.Name, user.UserName)
+                    .SetClaim(Claims.Audience, Constants.StandardScope.NotificationModularMonolith)
+                    .SetClaim(Claims.Scope, Constants.StandardScope.NotificationModularMonolith);
+
+            //set resource
+            identity.SetResources(await _scopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
+
+            identity.SetDestinations(GetDestinations);
+
+            //extra properties
+            var props = new AuthenticationProperties(new Dictionary<string, string?>
+            {
+                    {"language", "en"},
+                    {"lastLoginDateTime", DateTime.Now.ToString()},
+            });
+
+            return SignIn(new ClaimsPrincipal(identity), props,
+                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+        catch
         {
-            claim.SetDestinations(Destinations.AccessToken);
+            throw new NotImplementedException("The specified grant type is not implemented.");
         }
-
-        principal.SetAccessTokenLifetime(TimeSpan.FromMinutes(60));
-    
-        var scope = new[]
-        {         
-            Scopes.Profile,          
-            //Scopes.OpenId,           
-            //Scopes.OfflineAccess,
-        };
-
-        principal.SetScopes(scope);
-
-        var props = new AuthenticationProperties(new Dictionary<string, string?>
-        {            
-                {"language", "en"},
-                {"lastLoginDateTime", DateTime.Now.ToString()},               
-        });
-        return SignIn(principal, props, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);      
     }
     public static IEnumerable<string> GetDestinations(Claim claim)
     {
@@ -85,22 +95,4 @@ public  class UserValidator : ControllerBase
             _ => new[] { Destinations.AccessToken },
         };
     }
-
-    #region version sample
-    //var identity = new ClaimsIdentity(
-    //        OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-    //        Claims.Name,
-    //        Claims.Role);
-
-    //identity.SetScopes(request.GetScopes());
-
-    //identity.SetResources(await _scopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
-
-    //identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));
-    //identity.AddClaim(new Claim(Claims.Name, user.UserName));
-
-    //identity.SetDestinations(_ => new[] { Destinations.AccessToken });
-
-    //return SignIn(new ClaimsPrincipal(identity), props, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-    #endregion
 }

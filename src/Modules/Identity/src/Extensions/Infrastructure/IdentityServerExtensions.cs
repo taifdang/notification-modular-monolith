@@ -1,14 +1,11 @@
 ﻿
 using Identity.Configurations;
 using Identity.Data;
-using Identity.Identity.Constants;
 using Identity.Identity.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Server.OpenIddictServerEvents;
 
 namespace Identity.Extensions.Infrastructure;
@@ -28,13 +25,13 @@ public static class IdentityServerExtensions
 
         builder.Services.Configure<IdentityOptions>(options =>
         {
-            // Password settings
+            //password settings
             options.Password.RequireDigit = false;
             options.Password.RequiredLength = 10;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
 
-            // Lockout settings
+            //lockout settings
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
             options.Lockout.MaxFailedAccessAttempts = 10;
             options.Lockout.AllowedForNewUsers = true;
@@ -53,50 +50,36 @@ public static class IdentityServerExtensions
                 options.SetTokenEndpointUris("/connect/token");
 
                 //set scope for server can be check
-                options.RegisterScopes(
-                    Scopes.Roles,
-                    Scopes.Email,
-                    Scopes.Profile,
-                    Permissions.Prefixes.Scope + "openid",
-                    Permissions.Prefixes.Scope + Constants.StandardScope.TopupApi,
-                    Permissions.Prefixes.Scope + Constants.StandardScope.ProfileApi,
-                    Permissions.Prefixes.Scope + Constants.StandardScope.NotificationApi,
-                    Permissions.Prefixes.Scope + Constants.StandardScope.NotificationModularMonolith);
+                options.RegisterScopes(Config.ApiScopes);
 
                 //register flow 
                 options.AllowPasswordFlow();
-                options.AllowRefreshTokenFlow();
 
+                //accept anonymous clients(i.e clients that don't send a client_id).
                 options.AcceptAnonymousClients();
 
-                //add certificate
+                //add extra config
                 options.AddDevelopmentEncryptionCertificate()
-                        .AddDevelopmentSigningCertificate()
-                        .DisableAccessTokenEncryption();
+                       .AddDevelopmentSigningCertificate()
+                       .DisableAccessTokenEncryption();
 
+                //register host
+                options.UseAspNetCore()
+                       .EnableTokenEndpointPassthrough();
+
+                //add middleware, case: create token
                 options.AddEventHandler<ValidateTokenRequestContext>(builder =>
                     builder.UseScopedHandler<ValidateGrantType>());
 
                 options.AddEventHandler<ProcessSignInContext>(builder =>
-                {
-                    builder.UseScopedHandler<AssignProperties>();
-                });
+                     builder.UseScopedHandler<AssignProperties>());
 
-
-                //register host
-                options.UseAspNetCore()
-                       .EnableStatusCodePagesIntegration()
-                       .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
-                       .EnableTokenEndpointPassthrough()
-                       .EnableUserinfoEndpointPassthrough()
-                       .EnableVerificationEndpointPassthrough()
-                       .DisableTransportSecurityRequirement();
             })
             .AddValidation(options =>
             {
                 options.UseLocalServer();
                 options.UseAspNetCore();
+                
             });
 
         builder.Services.ConfigureApplicationCookie(options =>
@@ -113,7 +96,6 @@ public static class IdentityServerExtensions
                 return Task.CompletedTask;
             };
         });
-
 
         return builder; 
     }

@@ -21,14 +21,8 @@ public static class InfrasructureExtensions
 
         return builder;
     }
-
     public static WebApplication UseNotificationModules(this WebApplication app)
     {
-        app.MapGet("/test/hello", () =>
-        {
-            return (new { message = "Hello, token is valid " });
-        }).RequireAuthorization("ApiScope");
-
         return app;
     }
 }

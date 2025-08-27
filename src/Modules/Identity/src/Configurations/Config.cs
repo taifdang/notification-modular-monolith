@@ -6,22 +6,18 @@ namespace Identity.Configurations;
 
 public static class Config
 {
-    public static IEnumerable<string> ApiScopes =>
-        new List<string>
+    public static string[] ApiScopes =>
+        new string[]
         {
+            new(Scopes.OpenId),
+            new(Scopes.Email),
+            new(Scopes.Profile),
             new(Constants.StandardScope.TopupApi),
             new(Constants.StandardScope.NotificationApi),
             new(Constants.StandardScope.ProfileApi),
             new(Constants.StandardScope.IdentityApi),
             new(Constants.StandardScope.NotificationModularMonolith),
-            new(OpenIddictConstants.Scopes.OfflineAccess)
-        };
-
-    public static IEnumerable<string> IdentityResources =>
-        new List<string>
-        {
-            new(OpenIddictConstants.Permissions.Scopes.Email),
-            new(OpenIddictConstants.Permissions.Scopes.Profile)
+            new(Scopes.Roles),
         };
 
     public static OpenIddictApplicationDescriptor GetClientSeeder =>
@@ -56,13 +52,13 @@ public static class Config
                 Permissions.Scopes.Profile,
 
                 //custom scope
+                //user get id_token
                 Permissions.Prefixes.Scope + "openid",
                 Permissions.Prefixes.Scope + Constants.StandardScope.TopupApi,
                 Permissions.Prefixes.Scope + Constants.StandardScope.ProfileApi,
                 Permissions.Prefixes.Scope + Constants.StandardScope.NotificationApi,
                 Permissions.Prefixes.Scope + Constants.StandardScope.NotificationModularMonolith,
-                //??
-                Constants.StandardScope.NotificationModularMonolith
+
             },
         };
 }

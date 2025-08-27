@@ -9,6 +9,7 @@ using BuildingBlocks.Web;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Notification;
 using UserProfile;
@@ -20,12 +21,15 @@ public static class SharedInfrastructureExtensions
     public static WebApplicationBuilder AddSharedInfrastructure(this WebApplicationBuilder builder)
     {
         builder.Services.AddSignalR();
-        builder.Services.AddJwt();      
+        //builder.Services.AddJwt();
+        builder.Services.AddJwtAuth();
 
         //persistMessage
         builder.Services.AddPersistMessageProcessor();
 
         builder.Services.AddControllers();
+
+        builder.Services.AddAuthentication("Identity.Application").AddCookie();
 
         //validation
         builder.Services.AddFluentValidation();
@@ -55,11 +59,7 @@ public static class SharedInfrastructureExtensions
 
     public static WebApplication UseSharedInfrastructure(this WebApplication app)
     {
-        app.MapHub<SignalrHub>("/hubs")
-            .RequireAuthorization(new AuthorizeAttribute
-            {
-                AuthenticationSchemes = nameof(TokenSchema)
-            });
+        app.MapHub<SignalrHub>("/hubs");
 
         app.MapHangfireDashboard("/hangfire");
 

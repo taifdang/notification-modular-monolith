@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace BuildingBlocks.Signalr;
 
-[Authorize(Policy = nameof(TokenSchema))]
+//[Authorize(Policy = nameof(SignalrSchema))]
 public class SignalrHub(
     ILogger<SignalrHub> logger,
     IHubContext<SignalrHub> hubContext)
@@ -57,7 +57,7 @@ public class SignalrHub(
         {
             var userId = Context.UserIdentifier ?? string.Empty;
 
-            logger.LogInformation(
+            logger.LogWarning(
                 "User with id: {UserId} connected at {DateTime}",
                 userId,
                 DateTime.Now.ToString());
