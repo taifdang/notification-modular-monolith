@@ -22,15 +22,18 @@ public static class JwtAuthExtensions
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuers = [jwtOptions.Authority],
+                ValidIssuers = [jwtOptions.Authority, "https://localhost:7265/"],
                 ValidateAudience = true,
                 ValidAudiences = [jwtOptions.Audience],
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.FromSeconds(2),                                                  
-                ValidateIssuerSigningKey = true,            
+                ValidateIssuerSigningKey = true,
+                NameClaimType = "name", // Map "name" claim to User.Identity.Name
+                RoleClaimType = "role", // Map "role" claim to User.IsInRole()
             };
             options.MapInboundClaims = false;
 
+            //signalr check token
             options.Events = new JwtBearerEvents
             {
                 OnMessageReceived = (context) =>
@@ -39,7 +42,7 @@ public static class JwtAuthExtensions
 
                     if (path.StartsWithSegments("/hubs"))
                     {
-                        var token = context.Request.Query["Token"];
+                        var token = context.Request.Query["token"];
 
                         if (!string.IsNullOrWhiteSpace(token))
                         {

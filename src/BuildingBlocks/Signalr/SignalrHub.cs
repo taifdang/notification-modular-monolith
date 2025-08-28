@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace BuildingBlocks.Signalr;
 
-//[Authorize(Policy = nameof(SignalrSchema))]
+[Authorize(Policy = nameof(SignalrSchema))]
 public class SignalrHub(
     ILogger<SignalrHub> logger,
     IHubContext<SignalrHub> hubContext)
@@ -50,7 +50,7 @@ public class SignalrHub(
             throw new System.Exception("Occur fail when send message personal, please try again", ex);
         }
     }
-
+    
     public override Task OnConnectedAsync()
     {
         if (Context?.User?.Identity?.IsAuthenticated == true)
@@ -63,7 +63,7 @@ public class SignalrHub(
                 DateTime.Now.ToString());
 
             return base.OnConnectedAsync();
-        } 
+        }
         return Task.CompletedTask;
     }
 

@@ -29,7 +29,7 @@ public static class SharedInfrastructureExtensions
 
         builder.Services.AddControllers();
 
-        builder.Services.AddAuthentication("Identity.Application").AddCookie();
+        //builder.Services.AddAuthentication("Identity.Application").AddCookie();
 
         //validation
         builder.Services.AddFluentValidation();
@@ -69,7 +69,7 @@ public static class SharedInfrastructureExtensions
             app.UseSwaggerUI();
         }
 
-        app.UseCorrelationId();
+        //app.UseCorrelationId();
 
         app.MapControllers();
 

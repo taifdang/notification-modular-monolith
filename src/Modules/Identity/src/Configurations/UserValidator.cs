@@ -56,6 +56,7 @@ public  class UserValidator : ControllerBase
 
             //add the claims
             identity.SetClaim(Claims.Subject, userId)
+                    .SetClaim(ClaimTypes.NameIdentifier, userId)
                     .SetClaim(Claims.Name, user.UserName)
                     .SetClaim(Claims.Audience, Constants.StandardScope.NotificationModularMonolith)
                     .SetClaim(Claims.Scope, Constants.StandardScope.NotificationModularMonolith);
