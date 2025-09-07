@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Notification.Notifications.Model;
 
 namespace Notification.Data.Configurations;
 
-public class RecipientConfiguration : IEntityTypeConfiguration<Recipient>
+public class RecipientConfiguration : IEntityTypeConfiguration<Recipents.Model.Recipient>
 {
-    public void Configure(EntityTypeBuilder<Recipient> builder)
+    public void Configure(EntityTypeBuilder<Recipents.Model.Recipient> builder)
     {
-        builder.ToTable(nameof(Recipient));
+        builder.ToTable(nameof(Recipents.Model.Recipient));
 
         builder.HasKey(x => x.Id);
         builder.Property(r => r.Id).ValueGeneratedNever();
@@ -20,5 +19,11 @@ public class RecipientConfiguration : IEntityTypeConfiguration<Recipient>
             .WithMany()
             .HasForeignKey(x => x.NotificationId)
             .IsRequired();
+
+        builder.Property(x => x.Channel)
+            .HasDefaultValue(BuildingBlocks.Contracts.ChannelType.InApp)
+            .HasConversion(
+                x => x.ToString(),
+                x => (BuildingBlocks.Contracts.ChannelType)Enum.Parse(typeof(BuildingBlocks.Contracts.ChannelType), x));
     }
 }

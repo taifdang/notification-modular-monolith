@@ -1,11 +1,12 @@
 ﻿using BuildingBlocks.Contracts;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Notification.Configurations.Templates;
 using Notification.Data;
-using Notification.Notifications.Model;
-using Notification.Templates.Model;
+using HandlebarsDotNet;
+using System.Text.Json;
 
+//ref: https://www.csharptutorial.net/csharp-linq
+//case: for personal notiication, we can check if user change preference after notification created -> if change, we will skip send notification
 namespace Notification.PersistNotificationProcessor.Consumers.RenderingMessage;
 public class RenderMessage : IConsumer<NotificationReadyToRender>
 {
@@ -19,25 +20,59 @@ public class RenderMessage : IConsumer<NotificationReadyToRender>
 
     public async Task Consume(ConsumeContext<NotificationReadyToRender> context)
     {
-        var notification =
-            await _notificationDbContext.Notifications.FirstOrDefaultAsync(x => x.Id == context.Message.Id);
+        var @event = context.Message;
 
-        if (notification is null)
+        var recipient =
+            await _notificationDbContext.Recipients
+                .Where(x => 
+                    x.NotificationId == @event.Id && 
+                    x.UserId == @event.UserId)
+                .ToListAsync();
+
+        if (!recipient.Any())
             return;
 
-        //temp***
-        var notificationMessage = NotificationTemplate.RenderMessage(notification);
+        var existingChannels = recipient.Select(x => x.Channel);
+        if (!existingChannels.OrderBy(x => x).SequenceEqual(@event.channel.OrderBy(x => x)))
+            return;
 
-        foreach(var item in context.Message.channel)
+        foreach (var r in recipient)
         {
-            var channel = (ChannelType)Enum.Parse(typeof(ChannelType), item);
-            //temp***
-            var message = Message.Create(NewId.NextGuid(),notification.Id, channel,Guid.NewGuid(),
-                nameof(notification.NotificationType),notificationMessage,string.Empty,string.Empty);
-            await _notificationDbContext.Messages.AddAsync(message);
-        }
-        await _notificationDbContext.SaveChangesAsync();
+            //get template from db
+            //case: more event type, one channel -> more template -> need to select template base on event type and channel
+            //currently: one event type = notification type, one channel -> one template
+            var template = await _notificationDbContext.Templates
+                .SingleOrDefaultAsync(x => x.NotificationType == @event.Type && x.Channel == r.Channel);
 
-        await _publishEndpoint.Publish(new NotificationRendered(context.Message.Id));
+            //check input template
+            if (template is null)
+                throw new Exception($"Not found template for notification type {@event.Type} and channel {r.Channel}");
+            
+            //render message with handlebars
+            
+            //map data to template
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(@event.DataSchema);
+            var compiledTemplate = Handlebars.Compile(template.Content);
+            var messageContent = compiledTemplate(data);
+
+            //render message base on template with json template file
+            //var messageContent = NotificationTemplate.RenderMessage(@event.Type, @event.DataSchema);
+
+            //create object message
+            var notificationMessage = new NotificationMessage(
+                MessageId: Guid.NewGuid(),
+                NotificationType: @event.Type,
+                Channel: r.Channel,
+                Recipient: new Recipient(@event.UserId, r.Target),         
+                MessageContent: messageContent,
+                MetaData: new Dictionary<string, object?>
+                {
+                    { "Priority", @event.Priority.ToString() },
+                    { "Template", template.Name },
+                    { "RequestId", @event.RequestId.ToString() }
+                });
+
+            await _publishEndpoint.Publish(new NotificationRendered(@event.Id, notificationMessage));
+        }   
     }
 }

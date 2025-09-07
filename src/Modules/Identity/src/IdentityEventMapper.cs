@@ -4,7 +4,7 @@ using BuildingBlocks.Core.Event;
 
 namespace Identity;
 
-public class IdentityEventMapper : IEventMapper
+public sealed class IdentityEventMapper : IEventMapper
 {
     public IIntegrationEvent? MapToIntegrationEvent(IDomainEvent @event)
     {

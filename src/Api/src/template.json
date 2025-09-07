@@ -1,4 +1,0 @@
-﻿{
-  "Topup": "HD#{{TopupId}},payment successful {{TransferAmount}} VND.",
-  "ChangePassword": "Your OTP is: {{OtpCode}} "
-}

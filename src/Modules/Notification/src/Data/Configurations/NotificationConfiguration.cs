@@ -26,10 +26,10 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notifications.
                x => x.ToString(),
                x => (NotificationPriority)Enum.Parse(typeof(NotificationPriority), x));
 
-        builder.Property(x => x.Status)
-           .HasDefaultValue(NotificationStatus.None)
-           .HasConversion(
-               x => x.ToString(),
-               x => (NotificationStatus)Enum.Parse(typeof(NotificationStatus), x));
+        //builder.Property(x => x.Status)
+        //   .HasDefaultValue(NotificationStatus.None)
+        //   .HasConversion(
+        //       x => x.ToString(),
+        //       x => (NotificationStatus)Enum.Parse(typeof(NotificationStatus), x));
     }
 }

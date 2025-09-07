@@ -1,19 +1,20 @@
 ﻿using BuildingBlocks.Contracts;
-using BuildingBlocks.Core.Model;
-using Notification.Notifications.Enums;
 
 namespace Notification.Notifications.Model;
 
-public record Notification : Aggregate<Guid>
+public record Notification
 {
+    public Guid Id { get; set; }
     public Guid RequestId { get; set; }
     public NotificationType NotificationType { get; set; }
-    public string? MessageContent { get; set; } // root message
+    public string MessageContent { get; set; }
+    public string? DataSchema { get; set; }
     public NotificationPriority Priority { get; set; }
-    public NotificationStatus Status { get; set; }
+    public DateTime CreatedAt { get; set; }
+    //public NotificationStatus Status { get; set; }
 
     public static Notification Create(Guid Id, Guid RequestId, NotificationType NotificationType,string MessageContent,
-        NotificationPriority Priority,bool isDeleted = false)
+        string DataSchema,NotificationPriority Priority)
     {
         var notification = new Notification
         {
@@ -21,9 +22,10 @@ public record Notification : Aggregate<Guid>
             RequestId = RequestId,
             NotificationType = NotificationType,
             MessageContent = MessageContent,
+            DataSchema = DataSchema,
             Priority = Priority,
-            Status = NotificationStatus.InProgress,
-            IsDeleted = isDeleted
+            CreatedAt = DateTime.UtcNow,
+            //Status = NotificationStatus.InProgress,
         };
 
         return notification;

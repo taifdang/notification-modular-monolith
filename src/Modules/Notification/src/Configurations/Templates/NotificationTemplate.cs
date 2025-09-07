@@ -1,8 +1,10 @@
-﻿using HandlebarsDotNet;
+﻿using BuildingBlocks.Contracts;
+using HandlebarsDotNet;
 using System.Text;
 using System.Text.Json;
 
 namespace Notification.Configurations.Templates;
+//ref: defalut file template.json
 public class NotificationTemplate
 {
     public static string filePath = $"{AppDomain.CurrentDomain.BaseDirectory}\\template.json";
@@ -47,9 +49,9 @@ public class NotificationTemplate
 
         return template;
     }
-    public static string RenderMessage(Notifications.Model.Notification notification)
+    public static string RenderMessage(NotificationType notificationType, string dataSchema)
     {
-        var source = LoadingTemplate(notification.NotificationType.ToString());
+        var source = LoadingTemplate(notificationType.ToString());
         //?
         if (string.IsNullOrEmpty(source))
         {
@@ -57,7 +59,7 @@ public class NotificationTemplate
             //use template default
         }
 
-        var data = JsonSerializer.Deserialize<Dictionary<string, object>>(notification.MessageContent);
+        var data = JsonSerializer.Deserialize<Dictionary<string, object>>(dataSchema);
         var template = Handlebars.Compile(source);
 
         return template(data);

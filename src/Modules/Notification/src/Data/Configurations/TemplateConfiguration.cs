@@ -15,14 +15,14 @@ public class TemplateConfiguration : IEntityTypeConfiguration<Template>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedNever();
 
-        builder.Property(x => x.Language)
-           .HasDefaultValue(LanguageType.EN)
-           .HasConversion(
-               x => x.ToString(),
-               x => (LanguageType)Enum.Parse(typeof(LanguageType), x));
+        //builder.Property(x => x.Language)
+        //   .HasDefaultValue(LanguageType.EN)
+        //   .HasConversion(
+        //       x => x.ToString(),
+        //       x => (LanguageType)Enum.Parse(typeof(LanguageType), x));
 
         builder.Property(x => x.Channel)
-           .HasDefaultValue(ChannelType.None)
+           .HasDefaultValue(ChannelType.InApp)
            .HasConversion(
                x => x.ToString(),
                x => (ChannelType)Enum.Parse(typeof(ChannelType), x));

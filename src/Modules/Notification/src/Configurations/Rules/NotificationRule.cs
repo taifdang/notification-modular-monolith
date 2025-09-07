@@ -1,42 +1,21 @@
 ﻿namespace Notification.Configurations.Rules;
 
-using BuildingBlocks.Constants;
 using BuildingBlocks.Contracts;
 using Notification.Notifications.Model;
 public class NotificationRule
 {
-    public static List<string> SelectChannels(Notification notification, 
-        NotificationConstant.Preferences userPreferenre)
+
+    public static List<ChannelType> GetChannels(Notification notification, List<PreferenceDto> preferences)
     {
+        //default channel and list channel base on rule
         return notification.NotificationType switch
         {
-            NotificationType.Topup => new List<string> { nameof( ChannelType.InApp ) },
-            NotificationType.ChangePassword => new List<string> { nameof(ChannelType.Email) },
-            _ => SelectUserPreferenceOptout(notification, userPreferenre)
+            NotificationType.Topup => new List<ChannelType> { ChannelType.InApp },
+            NotificationType.ChangePassword => new List<ChannelType> { ChannelType.Email },
+            _ => FilterRule(preferences)
         };
     }
-    internal static List<string> SelectUserPreferenceOptout(Notification notification,
-        NotificationConstant.Preferences userPreferenre)
-    {
-        var channels = new List<string>();
+    public static List<ChannelType> FilterRule(List<PreferenceDto> preferences)
+        => preferences.Where(p => !p.IsOptOut).Select(x => x.Channel).ToList();
 
-        var optOut = userPreferenre.optOut;
-
-        try
-        {
-            //ref:https://www.codepractice.io/convert-object-to-list-in-csharp
-            foreach (var item in optOut.GetType().GetProperties())
-            {
-                if ((bool)item.GetValue(optOut)!)
-                {
-                    channels.Add(item.Name);
-                }
-            }
-        }
-        catch (Exception ex) 
-        {
-            throw new Exception("Occur error when selete user preference opt-out",ex);
-        } 
-        return channels;
-    }
 }

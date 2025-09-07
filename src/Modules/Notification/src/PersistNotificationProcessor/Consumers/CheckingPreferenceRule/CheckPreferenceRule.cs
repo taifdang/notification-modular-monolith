@@ -11,7 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using UserPreference;
 
-
+//note: this consumer check user preference and select channel base on rule
 public class CheckPreferenceRule : IConsumer<NotificationCreated>
 {
     private readonly NotificationDbContext _notificationDbContext;
@@ -29,25 +29,49 @@ public class CheckPreferenceRule : IConsumer<NotificationCreated>
 
     public async Task Consume(ConsumeContext<NotificationCreated> context)
     {
+        var @event = context.Message;
+
+        //check notification exist
         var notification = 
-            await _notificationDbContext.Notifications.FirstOrDefaultAsync(x => x.Id == context.Message.Id);
+            await _notificationDbContext.Notifications.FirstOrDefaultAsync(x => x.Id == @event.Id);
 
         if (notification is null)
             return;
 
-        //get user reference
-        var userReference = _grpcClient.GetById(new GetByIdRequest { Id = context.Message.UserId.ToString()});
+        var userId = @event.UserId.ToString();
+
+        //call grpc to get user preference
+        var userReference = _grpcClient.GetById(new GetByIdRequest { Id = userId });
 
         if (userReference is null)
             return;
 
-        var preference = JsonSerializer.Deserialize<NotificationConstant.Preferences>(userReference.UserPreferenceDto.Preference);
-        //check rule
-        var seletedChannel = NotificationRule.SelectChannels(notification, preference!);
+        //var preference = JsonSerializer.Deserialize<NotificationConstant.Preferences>(userReference.UserPreferenceDto.Preference);
 
-        //***
-        await _publishEndpoint.Publish(new NotificationReadyToRender(context.Message.Id, seletedChannel));
-        
-        
+        var preference = userReference.UserPreferenceDto.Preference
+            .Select(p => 
+                new PreferenceDto(
+                    (BuildingBlocks.Contracts.ChannelType)p.Channel,
+                    p.IsOptOut))
+            .ToList();
+
+        //select channel base on rule and user preference
+        var seletedChannels = NotificationRule.GetChannels(notification, preference);
+
+        if (!seletedChannels.Any())
+            throw new Exception("Occur error when get channels from user preference");
+
+        //save recipient with channel
+        foreach (var channel in seletedChannels)
+        {
+            var recipient = Recipents.Model.Recipient.Create(NewId.NextGuid(), notification.Id,
+                 channel, @event.UserId, @event.Email);
+
+            await _notificationDbContext.Recipients.AddAsync(recipient);
+        }
+        await _notificationDbContext.SaveChangesAsync();
+   
+        await _publishEndpoint.Publish(new NotificationReadyToRender(@event.Id, Guid.Parse(userReference.UserPreferenceDto.UserId),
+            notification.RequestId, notification.NotificationType, notification.Priority,notification.DataSchema, seletedChannels));   
     }
 }

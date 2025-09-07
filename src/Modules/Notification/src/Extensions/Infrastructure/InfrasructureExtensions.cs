@@ -11,6 +11,7 @@ public static class InfrasructureExtensions
     public static WebApplicationBuilder AddNotificationModules(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<NotificationEventMapper>();
+
         builder.Services.AddMediatRCustom();
         builder.Services.AddMapsterCustom(typeof(NotificationRoot).Assembly);
         builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssembly(typeof(NotificationRoot).Assembly));

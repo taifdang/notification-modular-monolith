@@ -1,6 +1,6 @@
 ﻿using Mapster;
 
-namespace Notification.Notifications;
+namespace Notification.Notifications.Features;
 
 public class NotificationMapping : IRegister
 {

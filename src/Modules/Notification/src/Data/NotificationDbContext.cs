@@ -2,9 +2,8 @@
 using BuildingBlocks.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Notification.NotificationDeliveries.Model;
-using Notification.Notifications.Model;
 using Notification.Templates.Model;
+using Notification.NotificationLogs.Model;
 
 namespace Notification.Data;
 public class NotificationDbContext : AppDbContextBase
@@ -14,11 +13,13 @@ public class NotificationDbContext : AppDbContextBase
     {
     }
 
-    public DbSet<Notifications.Model.Notification> Notifications => Set<Notifications.Model.Notification>();
-    public DbSet<Message> Messages => Set<Message>();
-    public DbSet<Recipient> Recipients => Set<Recipient>();
-    public DbSet<NotificationDelivery> NotificationDeliveries => Set<NotificationDelivery>();
+    public DbSet<Notifications.Model.Notification> Notifications => Set<Notifications.Model.Notification>();    
+    public DbSet<Recipents.Model.Recipient> Recipients => Set<Recipents.Model.Recipient>();
     public DbSet<Template> Templates => Set<Template>();
+    public DbSet<NotificationLog> NotificationLogs => Set<NotificationLog>();
+
+    //public DbSet<NotificationDelivery> NotificationDeliveries => Set<NotificationDelivery>();
+    //public DbSet<Message> Messages => Set<Message>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

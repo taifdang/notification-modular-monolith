@@ -17,7 +17,8 @@ namespace UserProfile.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Preference = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Channel = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "InApp"),
+                    IsOptOut = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -53,12 +54,6 @@ namespace UserProfile.Data.Migrations
                 {
                     table.PrimaryKey("PK_UserProfile", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserPreference_UserId",
-                table: "UserPreference",
-                column: "UserId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserProfile_UserId",

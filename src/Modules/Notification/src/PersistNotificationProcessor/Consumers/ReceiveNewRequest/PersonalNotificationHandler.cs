@@ -36,18 +36,18 @@ public class PersonalNotificationHandler : IConsumer<PersonalNotificationRequest
         //notification
         var notificationEntity = 
             Notifications.Model.Notification.Create(NewId.NextGuid(),@event.RequestId,@event.NotificationType,
-                JsonSerializer.Serialize(@event),@event.Priority);
+                JsonSerializer.Serialize(@event),JsonSerializer.Serialize(@event.Payload),@event.Priority);
 
-        _notificationDbContext.Notifications.Add(notificationEntity);
+        await _notificationDbContext.Notifications.AddAsync(notificationEntity);
 
         //recipient
-        _notificationDbContext.Recipients.Add(new Notifications.Model.Recipient(NewId.NextGuid(), notificationEntity.Id,
-            @event.Recipient.UserId, @event.Recipient.Email));
+        //_notificationDbContext.Recipients.Add(new Notifications.Model.Recipient(NewId.NextGuid(), notificationEntity.Id,
+        //    @event.Recipient.UserId, @event.Recipient.Email));
 
         await _notificationDbContext.SaveChangesAsync();
 
         await _eventDispatcher.SendAsync(new PersonalNotificationCreatedDomainEvent(
-            notificationEntity.Id, @event.Recipient.UserId));
+            notificationEntity.Id, @event.Recipient.UserId, @event.Recipient.Email));
     }
 }
 

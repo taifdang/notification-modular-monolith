@@ -9,8 +9,6 @@ using BuildingBlocks.Web;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Notification;
 using UserProfile;
 
@@ -49,10 +47,16 @@ public static class SharedInfrastructureExtensions
 
         builder.Services.AddMemoryCache();
 
-        builder.Services.AddScoped<IEventMapper, IdentityEventMapper>();
-        builder.Services.AddScoped<IEventMapper, UserProfileEventMapper>();
-        builder.Services.AddScoped<IEventMapper, NotificationEventMapper>();
-
+        builder.Services.AddScoped<IEventMapper>(sp =>
+        {
+            var mappers = new IEventMapper[]
+            {
+                sp.GetRequiredService<IdentityEventMapper>(),
+                sp.GetRequiredService<UserProfileEventMapper>(),
+                sp.GetRequiredService<NotificationEventMapper>()
+            };
+            return new CompositEventMapper(mappers);
+        });
 
         return builder;
     }
@@ -72,9 +76,6 @@ public static class SharedInfrastructureExtensions
         //app.UseCorrelationId();
 
         app.MapControllers();
-
-        
-
         return app;
     }
 }

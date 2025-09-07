@@ -13,6 +13,7 @@ public static class InfrastructureExtensions
     public static WebApplicationBuilder AddUserProfileModules(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<UserProfileEventMapper>();
+
         builder.Services.AddMapsterCustom(typeof(UserProfileRoot).Assembly);
         builder.Services.AddValidatorsFromAssembly(typeof(UserProfileRoot).Assembly);
         builder.Services.AddMediatRCustom();

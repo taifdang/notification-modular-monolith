@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Core.Model;
+﻿using BuildingBlocks.Contracts;
+using BuildingBlocks.Core.Model;
 using UserProfile.UserPreferences.Features.CompletingUserPreference;
 using UserProfile.UserPreferences.ValueObject;
 
@@ -6,38 +7,47 @@ namespace UserProfile.UserPreferences.Model;
 public record UserPreference : Aggregate<UserPreferenceId>
 {
     public UserId UserId { get; private set; } = default!;
-    public Preference Preference { get; private set; } = default!;
+    //public Preference Preference { get; private set; } = default!;
+    public ChannelType Channel { get; private set; }
+    public bool IsOptOut { get; private set; }
 
-    public static UserPreference Create(UserPreferenceId notificationSettingId, UserId userId,
-        Preference preference, bool isDelete = false)
+    public static UserPreference Create(UserPreferenceId notificationSettingId, UserId userId, ChannelType channel,
+        bool isOptOut, bool isDelete = false)
     {
         var notificationSetting = new UserPreference()
         {
             Id = notificationSettingId,
             UserId = userId,
-            Preference = preference,
-            IsDeleted = isDelete
+            Channel = channel,
+            IsOptOut = isOptOut,
+            IsDeleted = isDelete,
         };
-
-        //create
-        //var @event = new UserPreferenceRegistrationCompletedDomainEvent(notificationSetting.Id,notificationSetting.UserId,
-        //    notificationSetting.Preference, notificationSetting.IsDeleted);
-
-        //notificationSetting.AddDomainEvent(@event);
 
         return notificationSetting;
     } 
 
     public void CompletedRegisterNotificationSetting(UserPreferenceId notificationSettingId, UserId userId,
-        Preference preference, bool isDelete = false)
+        ChannelType channel, bool isOptOut, bool isDelete = false)
     {
         this.Id = notificationSettingId;
         this.UserId = userId;
-        this.Preference = preference;
+        this.Channel = channel;
+        this.IsOptOut = isOptOut;
         this.IsDeleted = isDelete;
 
-        var @event = new UserPreferenceRegistrationCompletedDomainEvent(this.Id, this.UserId, this.Preference, this.IsDeleted);
+        var @event = new UserPreferenceRegistrationCompletedDomainEvent(this.Id, this.UserId, this.Channel, this.IsOptOut, this.IsDeleted);
 
         this.AddDomainEvent(@event);
+    }
+
+    public void UpdateOptOut(bool isOptOut)
+    {
+        if (this.IsOptOut != isOptOut)
+        {
+            this.IsOptOut = isOptOut;
+            this.UpdatedAt = DateTime.UtcNow;
+
+            //domain event
+        }
     }
 }

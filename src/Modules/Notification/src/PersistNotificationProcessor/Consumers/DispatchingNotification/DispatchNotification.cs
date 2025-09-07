@@ -1,6 +1,5 @@
 ﻿using BuildingBlocks.Contracts;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
 using Notification.Data;
 
 namespace Notification.PersistNotificationProcessor.Consumers.DispatchingNotification;
@@ -18,20 +17,24 @@ public class DispatchNotification : IConsumer<NotificationRendered>
 
     public async Task Consume(ConsumeContext<NotificationRendered> context)
     {
-        var messages =
-            await _notificationDbContext.Messages.Where(x => x.Id == context.Message.Id).ToListAsync();
+        var @event = context.Message.NotificationMessage;
 
-        if (messages is null || messages.Count() == 0)
+        if(@event is null)
             return;
 
+        //save log to db if required
+        var notificationLog = NotificationLogs.Model.NotificationLog.Create(
+            Guid.NewGuid(), context.Message.Id, @event.Channel);
+
+        await _notificationDbContext.NotificationLogs.AddAsync(notificationLog);
+
+        await _notificationDbContext.SaveChangesAsync();
+
         //only for rabbitmq, with inmemory is skip -> filter in consumer
-        foreach (var item in messages)
+        await _publishEndpoint.Publish(@event, ctx =>
         {
-            await _publishEndpoint.Publish(new NotificationMessage(item.Channel), ctx =>
-            {              
-                ctx.SetRoutingKey(item.Channel.ToString());
-            });
-        }
+            ctx.SetRoutingKey(@event.Channel.ToString());
+        });
 
     }
 }

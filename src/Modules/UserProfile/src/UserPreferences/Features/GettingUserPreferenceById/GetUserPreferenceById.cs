@@ -26,17 +26,27 @@ internal class GetUserPreferenceByIdHanler : IQueryHandler<GetUserPreferenceById
 
     public async Task<GetUserPreferenceByIdResult> Handle(GetUserPreferenceById request, CancellationToken cancellationToken)
     {
-        var userPreference = await _userProfileDbContext.UserPreferences.AsQueryable()
-            .SingleOrDefaultAsync(x => x.UserId.Value == request.Id &&
-                !x.IsDeleted, cancellationToken);
+        //var userPreference = await _userProfileDbContext.UserPreferences.AsQueryable()
+        //    .SingleOrDefaultAsync(x => x.UserId.Value == request.Id &&
+        //        !x.IsDeleted, cancellationToken);
 
-        if(userPreference is null)
-        {
+        //if(userPreference is null)
+        //{
+        //    throw new UserPreferenceNotFound();
+        //}
+
+        //var userPreferenceDto = _mapper.Map<UserPreferenceDto>(userPreference);
+
+        //return new GetUserPreferenceByIdResult(userPreferenceDto);
+
+        var preferences = await _userProfileDbContext.UserPreferences
+            .Where(x => x.UserId.Value == request.Id && !x.IsDeleted)
+            .ToListAsync(cancellationToken);
+
+        if (!preferences.Any())
             throw new UserPreferenceNotFound();
-        }
 
-        var userPreferenceDto = _mapper.Map<UserPreferenceDto>(userPreference);
-
+        var userPreferenceDto = _mapper.Map<UserPreferenceDto>(preferences);
         return new GetUserPreferenceByIdResult(userPreferenceDto);
     }
 }

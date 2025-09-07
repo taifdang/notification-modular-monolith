@@ -1,14 +1,15 @@
 ﻿using BuildingBlocks.Contracts;
-using BuildingBlocks.Core.Model;
-using Notification.Templates.Enums;
 
 namespace Notification.Templates.Model;
 
-public record Template : Aggregate<Guid>
+public record Template
 {
-    public LanguageType Language { get; set; } = default!;
-    public ChannelType Channel {  get; set; }
+    public Guid Id { get; set; }
     public NotificationType NotificationType { get; set; } = default!;
-    public string Content { get; set; } = default!;
-    public bool IsActive { get; set; }  
+    public ChannelType Channel {  get; set; }
+    public string Name { get; set; }
+    public string Content { get; set; } = default!; 
+    public bool IsActive { get; set; }
+    //public string? Variables { get; set; }
+    //public LanguageType Language { get; set; } = default!;
 }

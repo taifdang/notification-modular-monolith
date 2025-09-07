@@ -3,6 +3,7 @@ using BuildingBlocks.Contracts;
 using BuildingBlocks.Signalr;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace Notification.ChannelProcessors.Consumers;
 
@@ -21,11 +22,13 @@ public class InappChannelProcessor : IConsumer<NotificationMessage>
     {
         try
         {
-            if (context.Message.ChannelType != ChannelType.InApp) 
+            var @event = context.Message;
+
+            if (@event.Channel != ChannelType.InApp)
                 return;
-    
-            //?
-            await _signalrHub.ProcessAsync(context.Message.ToString(), context.Message.ChannelType.ToString());
+
+            
+            await _signalrHub.ProcessAsync(@event.Recipient.UserId.ToString(), @event.MessageContent.ToString());
 
             _logger.LogInformation($"Message is processed");
 

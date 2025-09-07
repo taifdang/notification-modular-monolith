@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BuildingBlocks.Contracts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserProfile.UserPreferences.ValueObject;
 
@@ -22,21 +23,27 @@ public class UserPreferenceConfiguration : IEntityTypeConfiguration<UserPreferen
             a =>
             {
                 a.Property(x => x.Value)
-                    .HasColumnName(nameof(UserPreferences.Model.UserPreference.UserId))                     
+                    .HasColumnName(nameof(UserPreferences.Model.UserPreference.UserId))
                     .IsRequired();
 
-                a.HasIndex(x => x.Value).IsUnique();
+                //a.HasIndex(x => x.Value).IsUnique();
             }
         );
-      
-        builder.OwnsOne(
-           x => x.Preference,
-           a =>
-           {
-               a.Property(x => x.Value)
-                   .HasColumnName(nameof(UserPreferences.Model.UserPreference.Preference))
-                   .IsRequired();
-           }
-       );    
+
+        builder.Property(x => x.Channel)
+            .HasDefaultValue(ChannelType.InApp)
+            .HasConversion(
+                x => x.ToString(),
+                x => (ChannelType)Enum.Parse(typeof(ChannelType), x));
+
+        // builder.OwnsOne(
+        //    x => x.Preference,
+        //    a =>
+        //    {
+        //        a.Property(x => x.Value)
+        //            .HasColumnName(nameof(UserPreferences.Model.UserPreference.Preference))
+        //            .IsRequired();
+        //    }
+        //);    
     }
 }

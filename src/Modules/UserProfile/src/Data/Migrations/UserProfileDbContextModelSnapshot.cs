@@ -27,6 +27,12 @@ namespace UserProfile.Data.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Channel")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("InApp");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -34,6 +40,9 @@ namespace UserProfile.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOptOut")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -88,24 +97,6 @@ namespace UserProfile.Data.Migrations
 
             modelBuilder.Entity("UserProfile.UserPreferences.Model.UserPreference", b =>
                 {
-                    b.OwnsOne("UserProfile.UserPreferences.ValueObject.Preference", "Preference", b1 =>
-                        {
-                            b1.Property<Guid>("UserPreferenceId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Preference");
-
-                            b1.HasKey("UserPreferenceId");
-
-                            b1.ToTable("UserPreference");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserPreferenceId");
-                        });
-
                     b.OwnsOne("UserProfile.UserPreferences.ValueObject.UserId", "UserId", b1 =>
                         {
                             b1.Property<Guid>("UserPreferenceId")
@@ -117,17 +108,11 @@ namespace UserProfile.Data.Migrations
 
                             b1.HasKey("UserPreferenceId");
 
-                            b1.HasIndex("Value")
-                                .IsUnique();
-
                             b1.ToTable("UserPreference");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserPreferenceId");
                         });
-
-                    b.Navigation("Preference")
-                        .IsRequired();
 
                     b.Navigation("UserId")
                         .IsRequired();

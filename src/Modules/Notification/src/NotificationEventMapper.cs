@@ -5,13 +5,13 @@ using Notification.Notifications.Features.GettingNotificationById;
 
 
 namespace Notification;
-public class NotificationEventMapper : IEventMapper
+public sealed class NotificationEventMapper : IEventMapper
 {
     public IIntegrationEvent? MapToIntegrationEvent(IDomainEvent @event)
     {
         return @event switch
         {
-            PersonalNotificationCreatedDomainEvent e => new NotificationCreated(e.Id, e.UserId),
+            PersonalNotificationCreatedDomainEvent e => new NotificationCreated(e.Id, e.UserId, e.email),
             _ => null
         };
     }

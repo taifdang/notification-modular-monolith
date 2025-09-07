@@ -1,16 +1,16 @@
-﻿using BuildingBlocks.Core.CQRS;
+﻿using BuildingBlocks.Contracts;
+using BuildingBlocks.Core.CQRS;
 using BuildingBlocks.Core.Event;
-using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UserProfile.Data;
-using UserProfile.UserPreferences.Model;
+using UserProfile.Data.Seeds;
 using UserProfile.UserPreferences.ValueObject;
 
 namespace UserProfile.UserPreferences.Features.CompletingUserPreference;
 
-public record CompletedUserPreferenceMonoCommand(Guid Id, Guid UserId, string Preference, bool IsDeleted = false)
+public record CompletedUserPreferenceMonoCommand(Guid Id, Guid UserId, bool IsDeleted = false)
     : InternalCommand;
 
 public record CompletedUserPreferenceMonoHandler : ICommandHandler<CompletedUserPreferenceMonoCommand>
@@ -26,28 +26,51 @@ public record CompletedUserPreferenceMonoHandler : ICommandHandler<CompletedUser
 
     public async Task<Unit> Handle(CompletedUserPreferenceMonoCommand request, CancellationToken cancellationToken)
     {
-        var userPreferenceRequest = _mapper.Map<Model.UserPreference>(request);
+        //var userPreferenceRequest = _mapper.Map<Model.UserPreference>(request);
 
-        var userPreference = await _userProfileDbContext.UserPreferences.AsQueryable()
-           .FirstOrDefaultAsync(x => x.UserId.Value == request.UserId, cancellationToken);
+        //var userPreference = await _userProfileDbContext.UserPreferences.AsQueryable()
+        //   .FirstOrDefaultAsync(x => x.UserId.Value == request.UserId, cancellationToken);
 
-        if (userPreference is not null)
+        //if (userPreference is not null)
+        //{
+        //    await _userProfileDbContext.UserPreferences
+        //        .Where(x => x.Id.Value == UserPreferenceId.Of(request.Id))
+        //        .ExecuteUpdateAsync(x => x
+        //            .SetProperty(a => a.Id, UserPreferenceId.Of(request.Id))
+        //            .SetProperty(a => a.UserId, request.UserId)
+        //            .SetProperty(a => a.Channel, request.ch)
+        //            .SetProperty(a => a.IsOptOut, request.Preference)
+        //            .SetProperty(a => a.IsDeleted, request.IsDeleted),
+        //            cancellationToken: cancellationToken);
+        //}
+        //else
+        //{
+        //    await _userProfileDbContext.UserPreferences.AddAsync(userPreferenceRequest, cancellationToken);
+
+        //    await _userProfileDbContext.SaveChangesAsync(cancellationToken);
+        //}
+        //var existingPreferences = await _userProfileDbContext.UserPreferences
+        //    .Where(x => x.UserId.Value == request.UserId)
+        //    .ToListAsync(cancellationToken);
+
+        var preferences = UserPreferenceSeeder.CreateDefaultPreference(request.UserId);
+
+        foreach(var pref in preferences)
         {
-            await _userProfileDbContext.UserPreferences
-                .Where(x => x.Id.Value == UserPreferenceId.Of(request.Id))
-                .ExecuteUpdateAsync(x => x
-                    .SetProperty(a => a.Id, UserPreferenceId.Of(request.Id))
-                    .SetProperty(a => a.UserId, request.UserId)
-                    .SetProperty(a => a.Preference, request.Preference)
-                    .SetProperty(a => a.IsDeleted, request.IsDeleted),
-                    cancellationToken: cancellationToken);
+            //var @record = existingPreferences.FirstOrDefault(x => x.Channel == pref.Channel);
+            //if (@record is null)
+            //{
+            //    _userProfileDbContext.UserPreferences.Add(pref);
+            //}
+            //else
+            //{
+            //    @record.UpdateOptOut(pref.IsOptOut);
+            //}
+            await _userProfileDbContext.UserPreferences.AddAsync(pref,cancellationToken);
         }
-        else
-        {
-            await _userProfileDbContext.UserPreferences.AddAsync(userPreferenceRequest, cancellationToken);
+        //await _userProfileDbContext.UserPreferences.AddRangeAsync(preferences, cancellationToken);
 
-            await _userProfileDbContext.SaveChangesAsync(cancellationToken);
-        }
+        await _userProfileDbContext.SaveChangesAsync(cancellationToken);     
 
         return Unit.Value;
     }
