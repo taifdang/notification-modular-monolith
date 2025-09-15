@@ -1,6 +1,6 @@
 
 import { css } from '@emotion/css'
-export default function RegisterPage(){
+export default function SignUpPage(){
     const wrapper = css`
       display: flex;    
       flex-direction: column;
@@ -38,8 +38,7 @@ export default function RegisterPage(){
                       //  className="left__wrapper"
                        >
                           <div                          
-                          className="left__subwrapper "
-                          >
+                          className="left__subwrapper ">
                              <div 
                               // style={{fontSize:'3em'}}
                               className="text-color__header text-content__header ">

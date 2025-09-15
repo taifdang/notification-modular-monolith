@@ -1,4 +1,4 @@
-import AvatarDefault from '../../assets/images/anonymous2.jpg';
+import AvatarDefault from '#assets/images/anonymous2.jpg';
 
 export default function LeftSide(){
     return(

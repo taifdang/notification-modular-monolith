@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-export default function RightBar(){
+export default function RightSide(){
     const [stepStatus] = useState([true, false, false]);
     return(
         <aside className="col-12 col-md-2 pt-4 px-3 d-none d-md-block">

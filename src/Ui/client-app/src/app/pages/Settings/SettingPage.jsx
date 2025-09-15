@@ -1,4 +1,4 @@
-import AvatarDefault from '../../assets/images/anonymous2.jpg';
+import AvatarDefault from '#assets/images/anonymous2.jpg';
 import { useNavigate } from "react-router-dom";
 export default function SettingPage(){
 

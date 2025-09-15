@@ -1,5 +1,5 @@
 import { useState } from "react"
-import QrCode from '../../../../assets/images/qrcode.jpg';
+import QrCode from '#assets/images/qrcode.jpg';
 
 export default function TopupPage(){
     const [activeTab, setActiveTab] = useState(1);

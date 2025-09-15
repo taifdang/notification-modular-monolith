@@ -1,8 +1,10 @@
 import { Outlet } from "react-router-dom";
-import Footer from "./Footer";
-import Header from "./Header";
-import LeftSide from "./LeftSide";
-import RightBar from "./RightBar";
+// import Footer from "./Footer";
+// import Header from "./Header";
+// import LeftSide from "./LeftSide";
+// import RightBar from "./RightBar";
+import RightSide from "#shared/components/Layout/RightSide"
+import LeftSide from "#shared/components/Layout/LeftSide"
 
 export default function Layout(){
     return(
@@ -18,7 +20,7 @@ export default function Layout(){
                             <Outlet />
                         </main>      
                          {/* Right Bar  */}
-                        <RightBar />
+                        <RightSide />
                     </div>
                 </div>
             </div>

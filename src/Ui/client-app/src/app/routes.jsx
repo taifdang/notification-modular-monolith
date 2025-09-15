@@ -1,11 +1,12 @@
-import Layout from "../shared/components/Layout";
-import LoginPage from "../features/identity/identities/pages/LoginPage";
-import TopupPage from "../features/topup/topups/pages/TopupPage";
-import PreferencePage from "../features/userProfile/userPreferences/pages/PreferencePage";
-import SettingPage from "../shared/pages/SettingPage";
-import NotificationPage from "../features/notification/notifications/pages/NotifcationPage";
-import RegisterPage from "../features/identity/identities/pages/RegisterPage";
-import NotFoundPage from "../shared/pages/NotFoundPage";
+// import Layout from "@shared/components/Layout";
+import Layout from "#shared/components/Layout/Layout";
+import LoginPage from "#features/identity/identities/pages/LoginPage";
+import TopupPage from "#features/topup/topups/pages/TopupPage";
+import PreferencePage from "#features/userProfile/userPreferences/pages/PreferencePage";
+import SettingPage from "#app/pages/Settings/SettingPage";
+import NotificationPage from "#features/notification/notifications/pages/NotifcationPage";
+import SignUpPage from "#features/identity/identities/pages/SignUpPage";
+import NotFoundPage from "#app/pages/NotFoundPage";
 export const routes = [
     {
         element: <Layout/>,
@@ -24,6 +25,6 @@ export const routes = [
     },
     {
         path: "/signup",
-        element: <RegisterPage/>
+        element: <SignUpPage/>
     }
 ]
