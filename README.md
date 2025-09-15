@@ -49,3 +49,4 @@ An event-driven architecture consists of `event producers` that generate a strea
 <div align="center">
   <img width="717" height="458" alt="image" src="https://github.com/user-attachments/assets/5e177781-0243-4e1a-8f20-055679bf6392" />
 </div>
+
