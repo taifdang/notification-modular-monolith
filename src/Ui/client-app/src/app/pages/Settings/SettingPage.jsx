@@ -34,7 +34,7 @@ export default function SettingPage(){
                 <hr />
                 {/* account */}
                 <a href="#">
-                <div className='d-flex gap-2 align-items-center py-3 px-2 card_effect'>
+                <div className='d-flex gap-2 align-items-center py-3 px-2 cardProfile'>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <g fill="none" stroke="currentColor" stroke-width="1.5">
@@ -53,7 +53,7 @@ export default function SettingPage(){
                 </a>
                 {/* privacy and security */}
                 <a href="#">
-                    <div className='d-flex gap-2 align-items-center py-3 px-2 card_effect'>
+                    <div className='d-flex gap-2 align-items-center py-3 px-2 cardProfile'>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <g fill="none" stroke="currentColor" stroke-width="1.5">
@@ -78,7 +78,7 @@ export default function SettingPage(){
                     navigate("/settings/notification");
                 }}
                 >
-                    <div className='d-flex gap-2 align-items-center py-3 px-2 card_effect'>
+                    <div className='d-flex gap-2 align-items-center py-3 px-2 cardProfile'>
                         <div>
                             <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -99,7 +99,7 @@ export default function SettingPage(){
                 </a>
                   {/* notification */}
                  <a href="#">
-                    <div className='d-flex gap-2 align-items-center py-3 px-2 card_effect'>
+                    <div className='d-flex gap-2 align-items-center py-3 px-2 cardProfile'>
                     <div>
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -122,7 +122,7 @@ export default function SettingPage(){
                 <hr />
                 <div
                 style={{'color':'red'}}
-                className='d-flex gap-2 align-items-center py-3 px-2 card_effect'>
+                className='d-flex gap-2 align-items-center py-3 px-2 cardProfile'>
                     Sign out
                 </div>
             </div>
