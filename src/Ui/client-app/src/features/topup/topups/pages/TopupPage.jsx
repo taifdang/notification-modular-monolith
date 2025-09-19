@@ -5,35 +5,6 @@ export default function TopupPage() {
   const [activeTab, setActiveTab] = useState(1);
   return (
     <div>
-      {/* tabs */}
-      {/* <div className="d-flex row nav-tabs" role="tablist">
-                <div 
-                role="tab" 
-                aria-selected="true" 
-                aria-controls="panel1" 
-                id="tab1" 
-                className="text-center col-6 tabs_effect tabs-item">
-                       <div 
-                       className={`tab ${activeTab === 1 ? "active" : ""}`}
-                       onClick={() => setActiveTab(1)}>
-                        Production
-                        <div className="underline"></div>
-                    </div>
-                </div>
-                <div 
-                role="tab" 
-                aria-selected="false" 
-                aria-controls="panel2" 
-                id="tab2" 
-                className="text-center col-6 tabs_effect tabs-item">           
-                    <div 
-                    className={`tab ${activeTab === 2 ? "active" : ""}`}
-                    onClick={() => setActiveTab(2)}>
-                        Testing
-                         <div className="underline"></div>
-                    </div>
-                </div>
-            </div> */}
       <div className="d-flex row nav-tabs" role="tablist">
         <div
           role="tab"
@@ -42,7 +13,7 @@ export default function TopupPage() {
           onClick={() => setActiveTab(1)}
         >
           <div className={`tab ${activeTab === 1 ? "active" : ""}`}>
-            Production
+            Topup
             <div className="underline"></div>
           </div>
         </div>
@@ -53,12 +24,12 @@ export default function TopupPage() {
           onClick={() => setActiveTab(2)}
         >
           <div className={`tab ${activeTab === 2 ? "active" : ""}`}>
-            Testing
+            History
             <div className="underline"></div>
           </div>
         </div>
       </div>
-      {/* description */}
+      {/* tab_detail*/}
       <div className="border rounded mt-2 p-2 d-flex gap-2 align-items-center">
         <div>
           <svg
@@ -109,12 +80,6 @@ export default function TopupPage() {
       <div className="tab-content pt-3">
         {activeTab === 1 && (
           <div id="panel1" role="tabpanel">
-            {/* topup-card */}
-            {/* <div 
-                    className="d-flex flex-column gap-1"
-                    style={{maxWidth: "300px",height:"400px", margin: "0 auto",backgroundColor: "#f8f9fa", padding: "20px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"}}>
-                        
-                    </div> */}
             <div className="d-flex justify-content-center align-items-center mt-2">
               <div
                 class="card text-center p-3 shadow-sm border-0"
@@ -166,7 +131,7 @@ export default function TopupPage() {
               </div>
             </div>
             {/* testing____________ */}
-             <div>
+            {/* <div>
               <div className="d-flex gap-1 align-items-center mb-1 mt-3">
                 <div>
                   <svg
@@ -221,68 +186,6 @@ export default function TopupPage() {
                   Send Request
                 </button>
               </div>
-            </div>
-            
-            {/* <div class="table-responsive">
-              <table class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Id</th>
-                    <th>Transfer</th>
-                    <th>Status</th>
-                    <th>CreateAt</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>nguyenvana@example.com</td>
-                    <td>0901234567</td>
-                    <td>123 Lê Lợi, Q.1</td>
-                    <td>18/09/2025</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div> */}
-            {/* table_____________ */}
-            {/* <div class="table-responsive mt-3">
-            <table class="table table-bordered table-striped text-nowrap">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Id</th>
-                  <th>Transfer</th>
-                  <th>Status</th>
-                  <th>CreateAt</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>HD1231231</td>
-                  <td>+ 25.000</td>
-                  <td>Success</td>
-                  <td>18/09/2025</td>
-                  <td>
-                    <div className="d-flex flex-column flex-grow-1 flex-shrink-1 align-items-strecth align-content-center">
-                      <button className="d-flex flex-column align-items-center border-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                          <g fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M19 15v-3.062A3.94 3.94 0 0 0 15.063 8H8.936A3.94 3.94 0 0 0 5 11.938V15a7 7 0 1 0 14 0Z" />
-                            <path d="M16.5 8.5v-1a4.5 4.5 0 1 0-9 0v1" />
-                            <path stroke-linecap="round" d="M19 14h3M5 14H2M14.5 3.5L17 2M9.5 3.5L7 2m13.5 18l-2-.8m2-11.2l-2 .8M3.5 20l2-.8M3.5 8l2 .8M12 21.5V15" />
-                          </g>
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>            
-              </tbody>
-            </table>
             </div> */}
           </div>
         )}
@@ -344,28 +247,73 @@ export default function TopupPage() {
                 </button>
               </div>
             </div> */}
-             <div class="table-responsive mt-3">
-            <table class="table table-bordered table-striped text-nowrap">
-              <thead>
+            <div class="table-responsive mt-3 ">
+            <table 
+            className="table text-nowrap border"
+            style={{fontFamily:'"Inter',fontSize:'13.125px'}}>
+              <thead className="table-light">
                 <tr>
-                  <th>#</th>
-                  <th>Id</th>
-                  <th>Transfer</th>
-                  <th>Status</th>
-                  <th>CreateAt</th>
-                  <th>Action</th>
+                  <th className="col">#</th>
+                  <th className="col-2">Id</th>
+                  <th className="col-3">Transfer</th>
+                  <th className="col-2">Status</th>
+                  <th className="col-3">CreateAt</th>
+                  <th className="col">Action</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
+                  {/* <td 
+                  className="text-center"
+                  colSpan={10}>
+                    <div className="d-flex align-items-center gap-2 justify-content-center">                
+                     <span style={{fontSize:'13.125px',fontFamily:"Inter",fontWeight:'600',color:'#42576c', lineHeight: '13.125px'}}>No Data Found</span>
+                    </div>
+                  </td> */}
+                </tr>
+                <tr>
                   <td>1</td>
                   <td>HD1231231</td>
-                  <td>+ 25.000</td>
-                  <td>Success</td>
-                  <td>18/09/2025</td>
+                  <td>+25.000.000</td>
+                  <td>
+                    <div className="badge bg-primary">
+                      Success
+                    </div>
+                  </td>
+                  <td>2024-01-15 10:30:25</td>
                   <td>
                     <div className="d-flex flex-column flex-grow-1 flex-shrink-1 align-items-strecth align-content-center">
-                      <button className="d-flex flex-column align-items-center border-0">
+                      <button 
+                      className="border-0"
+                      style={{backgroundColor:'#fff'}}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                          <g fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M19 15v-3.062A3.94 3.94 0 0 0 15.063 8H8.936A3.94 3.94 0 0 0 5 11.938V15a7 7 0 1 0 14 0Z" />
+                            <path d="M16.5 8.5v-1a4.5 4.5 0 1 0-9 0v1" />
+                            <path stroke-linecap="round" d="M19 14h3M5 14H2M14.5 3.5L17 2M9.5 3.5L7 2m13.5 18l-2-.8m2-11.2l-2 .8M3.5 20l2-.8M3.5 8l2 .8M12 21.5V15" />
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>       
+                <tr>
+                  <td>1</td>
+                  <td>HD1231231</td>
+                  <td>+25.000.000</td>
+                  <td>
+                    <div className="badge bg-danger">
+                      Fail
+                    </div>
+                  </td>
+                  <td>2024-01-15 10:30:25</td>
+                  <td>
+                    <div className="d-flex flex-column flex-grow-1 flex-shrink-1 align-items-strecth align-content-center">
+                      <button 
+                      className="border-0"
+                      style={{backgroundColor:'#fff'}}
+                      >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                           <g fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M19 15v-3.062A3.94 3.94 0 0 0 15.063 8H8.936A3.94 3.94 0 0 0 5 11.938V15a7 7 0 1 0 14 0Z" />
@@ -377,6 +325,33 @@ export default function TopupPage() {
                     </div>
                   </td>
                 </tr>            
+                <tr>
+                  <td>1</td>
+                  <td>HD1231231</td>
+                  <td>+25.000.000</td>
+                  <td>
+                    <div className="badge bg-warning">
+                      In Progress
+                    </div>
+                  </td>
+                  <td>2024-01-15 10:30:25</td>
+                  <td>
+                    <div className="d-flex flex-column flex-grow-1 flex-shrink-1 align-items-strecth align-content-center">
+                      <button 
+                      className="border-0"
+                      style={{backgroundColor:'#fff'}}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                          <g fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M19 15v-3.062A3.94 3.94 0 0 0 15.063 8H8.936A3.94 3.94 0 0 0 5 11.938V15a7 7 0 1 0 14 0Z" />
+                            <path d="M16.5 8.5v-1a4.5 4.5 0 1 0-9 0v1" />
+                            <path stroke-linecap="round" d="M19 14h3M5 14H2M14.5 3.5L17 2M9.5 3.5L7 2m13.5 18l-2-.8m2-11.2l-2 .8M3.5 20l2-.8M3.5 8l2 .8M12 21.5V15" />
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>     
               </tbody>
             </table>
             </div>

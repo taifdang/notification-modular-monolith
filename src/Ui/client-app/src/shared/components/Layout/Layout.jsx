@@ -1,8 +1,4 @@
 import { Outlet } from "react-router-dom";
-// import Footer from "./Footer";
-// import Header from "./Header";
-// import LeftSide from "./LeftSide";
-// import RightBar from "./RightBar";
 import RightSide from "#shared/components/Layout/RightSide"
 import LeftSide from "#shared/components/Layout/LeftSide"
 
@@ -12,7 +8,7 @@ export default function Layout(){
             {/* <Header /> */}
             <div className="flex-grow-1 d-flex justify-content-center">
                 <div className="container-fluid ">
-                    <div className="row">
+                    <div className="row p-0 m-0">
                         {/* Left Sidebar */}
                        <LeftSide />
                         {/* Main Content */}

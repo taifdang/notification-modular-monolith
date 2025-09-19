@@ -1,25 +1,27 @@
-#root{
-  margin: 0; 
+#root {
+  margin: 0;
   padding: 0;
 }
+
 :root {
   --circle-size: clamp(1rem, 5vw, 2.5rem);
   --spacing: clamp(0.25rem, 2vw, 0.5rem);
   --color-blue: #1083FE;
   --color-gray: gray;
 }
-*{  
-    font-family: "Roboto", "Arial", sans-serif;
+
+* {
+  font-family: "Roboto", "Arial", sans-serif;
 }
 
 /* tab*/
 .tab {
-  display: inline-block; 
+  display: inline-block;
   position: relative;
   cursor: pointer;
   font-weight: bold;
   font-size: 1em;
-  padding: 12px 8px;  
+  padding: 12px 8px;
 }
 
 .tab .underline {
@@ -27,7 +29,7 @@
   bottom: -2px;
   left: 0;
   height: 3px;
-  width: 100%; 
+  width: 100%;
   background-color: rgb(21, 154, 231);
   display: none;
   transition: transform 0.3s ease;
@@ -95,7 +97,7 @@
   height: var(--circle-size);
   border-radius: 50%;
   border: 1px solid lightgrey;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .stepper__item:not(:last-child)::after {
@@ -110,82 +112,97 @@
 }
 
 .stepper__title {
-  font-weight: 500;
+  /* font-weight: 500;
   font-size: clamp(0.4rem, 4vw, 0.6rem);
+  margin-bottom: clamp(0.2rem, 2vmax, 0.4rem); */
+  font-weight: 600;
+  font-size: clamp(0.8rem, 4vw, 1rem);
   margin-bottom: clamp(0.2rem, 2vmax, 0.4rem);
 }
 
 .stepper__desc {
-  font-weight: 600;
-  font-size: clamp(0.6rem, 2vmax, 0.8rem);
+  /* font-weight: 600;
+  font-size: clamp(0.6rem, 2vmax, 0.8rem); */
+  font-weight: 500;
+  font-size: clamp(0.6rem, 4vw, 0.8rem);
 }
 
 .stepper__content {
   max-width: 700px;
 }
+
 /* Global */
 /* ************* */
-    /* error page */
-    .error__card{
-      margin: 0 auto;  
-    }
-    /* layout_components */
-    .group__layout{
-      position: relative;
-      width: 100%;
-      max-width: 1196px;
-      margin: 0 auto;  
-    }
+/* error page */
+.error__card {
+  margin: 0 auto;
+}
 
-  /* Card */
-  .cardProfile:hover{
-    background-color: #f8f9fa;
-  }
-  /* Text */
-  .text-content__header{
-    font-family: "Inter", sans-serif;
-    font-weight: 800;
-    font-size: clamp(2em, 3vmax, 3em);
-  }
-  .text-content__title{
-    font-family: "Inter", sans-serif;
-    font-weight: 600;
-  }
-  .text-color__header{
-    color: var(--color-blue);
-  }
-  .text__custom{
-    display: flex;
-    justify-content: center; 
-    align-items: center;            
-  }
-  /* link__leftside */
-  .text-link__title{
-    padding: 12px;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: transparent;
-  }
+/* layout_components */
+.group__layout {
+  position: relative;
+  width: 100%;
+  max-width: 1196px;
+  margin: 0 auto;
+}
+
+/* Card */
+.cardProfile:hover {
+  background-color: #f8f9fa;
+}
+
+/* Text */
+.text-content__header {
+  font-family: "Inter", sans-serif;
+  font-weight: 800;
+  font-size: clamp(2em, 3vmax, 3em);
+}
+
+.text-content__title {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+}
+
+.text-color__header {
+  color: var(--color-blue);
+}
+
+.text__custom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* link__leftside */
+.text-link__title {
+  padding: 12px;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: transparent;
+}
 
 /*******************/
 input::placeholder {
-  color: rgb(111, 134, 159);    
+  color: rgb(111, 134, 159);
 }
+
 input:-webkit-autofill {
   -webkit-text-fill-color: black;
   /* -webkit-box-shadow: 0 0 0px 1000px transparent inset; */
   box-shadow: 0 0 0px 1000px rgb(241, 243, 245) inset;
 }
-.textField{
-  font-family:  sans-serif;
+
+.textField {
+  font-family: sans-serif;
   outline: none;
   background-color: rgb(241, 243, 245);
   padding-left: 4px;
   padding-right: 4px;
   z-index: 20;
 }
-.textField__container{
+
+.textField__container {
   display: flex;
   align-items: center;
   position: relative;
@@ -194,20 +211,25 @@ input:-webkit-autofill {
   background-color: rgb(241, 243, 245);
   padding-left: 12px;
   padding-right: 12px;
-  &:hover{
+
+  &:hover {
     outline: 2px solid rgb(111, 134, 159);
   }
-  &:focus-within{
+
+  &:focus-within {
     outline: 2px solid#0d6efd;
-    & .textField__icon{      
-      color:#0d6efd;     
+
+    & .textField__icon {
+      color: #0d6efd;
     }
-    & .button__wrapper{
-      background:  rgb(251, 251, 252);
+
+    & .button__wrapper {
+      background: rgb(251, 251, 252);
     }
   }
 }
-.textField__icon{
+
+.textField__icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -215,11 +237,107 @@ input:-webkit-autofill {
   padding-right: 4px;
   color: rgb(111, 134, 159);
 }
-.button__wrapper{
+
+.button__wrapper {
   display: flex;
-  border-radius:8px;
+  border-radius: 8px;
   position: relative;
   padding: 6px;
   font-size: 15px;
   line-height: 15px;
+}
+
+/* stepper*/
+/* Desktop - Vertical Layout */
+.step-connector-vertical {
+  width: 2px;
+  background: #dee2e6;
+  height: 25px;
+  margin: 8px 0;
+}
+
+.step-connector-vertical.active {
+  background: #198754;
+}
+
+/* Mobile - Horizontal Layout */
+.step-connector-horizontal {
+  height: 2px;
+  background: #dee2e6;
+  flex: 1;
+  margin: 0 8px;
+  align-self: center;
+}
+
+.step-connector-horizontal.active {
+  background: #198754;
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.error-section {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  /* box-shadow: 0 2px 6px rgba(0,0,0,0.1); */
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.step-icon.pending {
+  /* border: 1px solid #000; */
+  /* background-color: #6c757d; */
+  /* color: white; */
+  background-color: rgb(241, 243, 245);
+  color: #000;
+}
+
+.step-icon.active {
+  background-color: #0d6efd;
+  color: white;
+  transform: scale(1.1);
+}
+
+.step-icon.success {
+  background-color: #198754;
+  color: white;
+}
+
+.step-icon.error {
+  background-color: #dc3545;
+  color: white;
 }
