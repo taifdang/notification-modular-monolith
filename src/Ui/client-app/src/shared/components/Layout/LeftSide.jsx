@@ -1,4 +1,4 @@
-import AvatarDefault from '#assets/images/anonymous2.jpg';
+import AvatarDefault from '#assets/images/pigman.jpg';
 
 export default function LeftSide(){
     return(
@@ -7,7 +7,7 @@ export default function LeftSide(){
             <div className='mb-4 ps-3'>
                 <img 
                 src={AvatarDefault} 
-                class="rounded-circle border" 
+                className="rounded-circle border img-thumbnail" 
                 alt="avatar"
                 style={{'max-width': '64px', height: 'auto'}}
                 />  
@@ -55,7 +55,7 @@ export default function LeftSide(){
                 <div>Topup</div>
             </a>       
             {/* profile */} 
-            <a 
+            {/* <a 
                 href='/profile'
                 className='d-flex gap-2 align-items-center cardProfile text-link__title'>
                 <div>
@@ -68,7 +68,7 @@ export default function LeftSide(){
                     </svg>
                 </div>
                 <div>Profile</div>
-            </a>                
+            </a>                 */}
             {/* settings */}
             <a
             href='/settings'

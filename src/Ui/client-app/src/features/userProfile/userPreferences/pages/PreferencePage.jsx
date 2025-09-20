@@ -32,12 +32,12 @@ export default function PreferencePage(){
             </div>
             {/* group checkbox */}
            <div className="d-flex flex-column gap-2">
-                <div class="form-check ">
+                {/* <div class="form-check ">
                     <input class="form-check-input" type="checkbox" value="" id="push-notify"/>
                     <label class="form-check-label" for="push-notify">
                         Push notifications
                     </label>
-                </div>
+                </div> */}
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="inapp-notify" />
                     <label class="form-check-label" for="inapp-notify">

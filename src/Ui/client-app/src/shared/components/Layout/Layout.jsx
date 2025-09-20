@@ -9,18 +9,14 @@ export default function Layout(){
             <div className="flex-grow-1 d-flex justify-content-center">
                 <div className="container-fluid ">
                     <div className="row p-0 m-0">
-                        {/* Left Sidebar */}
                        <LeftSide />
-                        {/* Main Content */}
                         <main className="col-12 col-md-7 mb-3 mb-md-0 border-end border-start">
                             <Outlet />
                         </main>      
-                         {/* Right Bar  */}
                         <RightSide />
                     </div>
                 </div>
             </div>
-            {/* <Footer /> */}
         </div>
     )
 }
