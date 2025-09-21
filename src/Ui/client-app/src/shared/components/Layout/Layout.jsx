@@ -5,7 +5,6 @@ import LeftSide from "#shared/components/Layout/LeftSide"
 export default function Layout(){
     return(
         <div className="d-flex flex-column min-vh-100 pt-2 group__layout">
-            {/* <Header /> */}
             <div className="flex-grow-1 d-flex justify-content-center">
                 <div className="container-fluid ">
                     <div className="row p-0 m-0">

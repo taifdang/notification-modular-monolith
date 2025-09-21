@@ -8,8 +8,8 @@ export default function RightSide() {
       id: 1,
       title: "Topup Confirm",
       status: true,
-      error: null,
-      isActive: false,
+      error: "Couldn't connect database.",
+      isActive: null,
     },
     {
       id: 2,
@@ -26,7 +26,7 @@ export default function RightSide() {
       isActive: null,
     },
   ]);
-  
+
   const errorSteps = steps.filter(
     (step) => step.status === false && step.error
   );
@@ -48,7 +48,8 @@ export default function RightSide() {
   );
 }
 
-<ol class="stepper">
+{
+  /* <ol class="stepper">
   <li class="stepper__item">
     <div class="stepper__circle">
       <div class="spinner-border" role="status"></div>
@@ -72,4 +73,5 @@ export default function RightSide() {
       <p class="stepper__desc">Push Notification</p>
     </div>
   </li>
-</ol>;
+</ol>; */
+}

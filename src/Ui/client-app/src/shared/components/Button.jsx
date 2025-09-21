@@ -3,6 +3,9 @@ export function Button(){
         <button></button>
     )
 }
+export function ButtonIcon({children, style, ...rest}){
+
+}
 
 export function ButtonText({children, style, ...rest}){
 
