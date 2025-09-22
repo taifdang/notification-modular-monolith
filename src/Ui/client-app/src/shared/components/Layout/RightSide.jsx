@@ -14,15 +14,15 @@ export default function RightSide() {
     {
       id: 2,
       title: "Update Balance",
-      status: false,
+      status: true,
       error: "Couldn't connect database.",
       isActive: null,
     },
     {
       id: 3,
       title: "Push Notification",
-      status: null,
-      error: null,
+      status: false,
+      error: "Couldn't connect database.",
       isActive: null,
     },
   ]);

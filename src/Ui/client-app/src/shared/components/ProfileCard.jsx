@@ -14,12 +14,14 @@ export function Card({
 
 export function Link({
     href,
-    children
+    children,
+    ...rest
 }){
     return(
         <a 
         href={href}
-        className="d-flex gap-2 align-items-center cardProfile text-link__title">
+        className="d-flex gap-2 align-items-center cardProfile text-link__title"
+        {...rest}>
             {children}
         </a>
     )
@@ -34,7 +36,7 @@ export function Avatar({
        src={src}
        className={`rounded-circle border ${className}`}
        alt="avatar"
-       style={{ "max-width": "64px", height: "auto", marginBottom:"10px", ... style }}
+       style={{ "maxWidth": "64px", height: "auto", ... style }}
        />
     )
 }

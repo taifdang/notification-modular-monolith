@@ -1,0 +1,16 @@
+import { createSinglePathSVG } from "./Icon";
+
+export const ArrowLeftIcon = createSinglePathSVG({
+  children: (
+    <>
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M20 12H4m0 0l6-6m-6 6l6 6"
+      />
+    </>
+  ),
+});

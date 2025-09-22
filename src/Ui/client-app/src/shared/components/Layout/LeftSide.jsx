@@ -7,17 +7,20 @@ export default function LeftSide() {
   return (
     <nav className="col-12 col-md-2 mb-3 mb-md-0 pt-4 px-3">
       <div>
-        <Avatar src={AvatarDefault} className="img-thumbnail" />
+        <Avatar 
+        src={AvatarDefault} 
+        className="img-thumbnail" 
+        style={{marginBottom:"10px"}}/>
         <Card>
           <Link href="/">
             <HomeIcon size={24}/>
-            <Name text="Home" />
+            <Name text="Home" />       
           </Link>
         </Card>
         <Card>
           <Link href="/notifications">
             <BellIcon size={24}/>
-            <Name text="Notifications" />
+            <Name text="Notifications" />     
           </Link>
         </Card>
         <Card>
