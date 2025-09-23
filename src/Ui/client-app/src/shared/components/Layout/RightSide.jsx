@@ -48,30 +48,5 @@ export default function RightSide() {
   );
 }
 
-{
-  /* <ol class="stepper">
-  <li class="stepper__item">
-    <div class="stepper__circle">
-      <div class="spinner-border" role="status"></div>
-    </div>
-    <div class="stepper__content">
-      <h3 class="stepper__title">Topup Confirm</h3>
-      <p class="stepper__desc">In Progress</p>
-    </div>
-  </li>
-  <li class="stepper__item">
-    <div class="stepper__circle"></div>
-    <div class="stepper__content">
-      <h3 class="stepper__title">STEP 2</h3>
-      <p class="stepper__desc">Update Balance</p>
-    </div>
-  </li>
-  <li class="stepper__item">
-    <div class="stepper__circle"></div>
-    <div class="stepper__content">
-      <h3 class="stepper__title">STEP 3</h3>
-      <p class="stepper__desc">Push Notification</p>
-    </div>
-  </li>
-</ol>; */
-}
+
+

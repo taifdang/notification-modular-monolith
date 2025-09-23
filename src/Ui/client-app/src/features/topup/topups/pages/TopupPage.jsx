@@ -1,5 +1,6 @@
 import { useState } from "react";
-import QrCode from "#assets/images/qrcode.jpg";
+import QrCodeImg from "#assets/images/qrcode.jpg";
+import { QrCode } from "../components/Qrcode";
 
 export default function TopupPage() {
   const [activeTab, setActiveTab] = useState(1);
@@ -30,7 +31,7 @@ export default function TopupPage() {
         </div>
       </div>
       {/* tab_detail*/}
-      <div className="border rounded mt-2 p-2 d-flex gap-2 align-items-center">
+      {/* <div className="border rounded mt-2 p-2 d-flex gap-2 align-items-center">
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +53,7 @@ export default function TopupPage() {
             </g>
           </svg>
         </div>
-        <div className="d-flex flex-column gap-1 " style={{ fontSize: "14px" }}>
+        <div className="d-flex flex-column gap-1" style={{ fontSize: "14px" }}>
           <div className="d-flex gap-1 ">
             This QR code / transaction only supports banking transactions in{" "}
             <strong>Việt Nam</strong>
@@ -72,178 +73,18 @@ export default function TopupPage() {
             please wait for the next update.
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Tabs content */}
       <div className="tab-content pt-3">
         {activeTab === 1 && (
           <div id="panel1" role="tabpanel">
             <div className="d-flex justify-content-center align-items-center mt-2">
-              <div
-                className="card text-center p-3 shadow-sm border-0"
-                style={{ width: "18rem", backgroundColor: "#f8f9fa" }}
-              >
-                <div
-                  className="position-relative rounded p-2 mx-auto"
-                  style={{ display: "inline-block" }}
-                >
-                  <div
-                    className="bg-light d-flex align-items-center justify-content-center"
-                    style={{ width: "200px", height: "200px" }}
-                  >
-                    {/* QR Placeholder */}
-                    <img
-                      src={QrCode}
-                      alt="QR Code"
-                      style={{ maxWidth: "100%", maxHeight: "100%" }}
-                    />
-                  </div>
-                  <span className="corner top-left"></span>
-                  <span className="corner top-right"></span>
-                  <span className="corner bottom-left"></span>
-                  <span className="corner bottom-right"></span>
-                </div>
-                <div className="mt-3">
-                  <p className="mb-1 ">
-                    Beneficiary bank:
-                    <span className="fw-semibold"> MBBank</span>
-                  </p>
-                  <p className="fw-bold mb-1 ">NAPCOIN1200</p>
-                  <div className="d-flex text-center justify-content-center align-items-center gap-2">
-                    <div>99ZP24334000725953</div>
-                    <a href="#">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                      >
-                        <g fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M6 11c0-2.828 0-4.243.879-5.121C7.757 5 9.172 5 12 5h3c2.828 0 4.243 0 5.121.879C21 6.757 21 8.172 21 11v5c0 2.828 0 4.243-.879 5.121C19.243 22 17.828 22 15 22h-3c-2.828 0-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z" />
-                          <path d="M6 19a3 3 0 0 1-3-3v-6c0-3.771 0-5.657 1.172-6.828S7.229 2 11 2h4a3 3 0 0 1 3 3" />
-                        </g>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
+               <QrCode/>
             </div>
-            {/* testing____________ */}
-            {/* <div>
-              <div className="d-flex gap-1 align-items-center mb-1 mt-3">
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M8.267 1.618a.75.75 0 0 1 1.027-.264l.832.492l9.247 5.307a.75.75 0 1 1-.747 1.301l-.843-.484l-1.505 2.598l-.002-.002l-2.558-1.471a.75.75 0 1 0-.748 1.3l2.556 1.47l-.961 1.66l-.002-.001l-4.203-2.418a.75.75 0 1 0-.748 1.3l4.2 2.417l-.885 1.529l-.002-.002l-2.613-1.503a.75.75 0 0 0-.748 1.3l2.611 1.502l-1.12 1.932a4.86 4.86 0 0 1-6.628 1.77a4.827 4.827 0 0 1-1.776-6.605L9.373 3.143l-.006-.003l-.836-.494a.75.75 0 0 1-.264-1.028M20 17c1.105 0 2-.933 2-2.083c0-.72-.783-1.681-1.37-2.3a.86.86 0 0 0-1.26 0c-.587.619-1.37 1.58-1.37 2.3c0 1.15.895 2.083 2 2.083"
-                    />
-                  </svg>{" "}
-                </div>
-                <span style={{ fontSize: "16px", fontWeight: 600 }}>
-                  Test enviroment
-                </span>
-              </div>
-              <textarea
-                name="textarea-payload_topup"
-                id="payload_topup"
-                value={
-                  '{\n  "amount": 1200,\n  "currency": "VND",\n  "description": "Topup 1200 VND to Napcoin account",\n  "external_id": "NAPCOIN1200",\n  "bank_code": "MBBank",\n  "account_number": "99ZP24334000725953"\n}'
-                }
-                className="form-control focus-ring focus-ring-light"
-                style={{
-                  width: "100%",
-                  borderRadius: "8px",
-                  minHeight: "200px",
-                  maxHeight: "300px",
-                  fontSize: "14px",
-                }}
-              ></textarea>
-              <div className="d-flex justify-content-end gap-2">
-                <button className="btn border btn-sm mt-2 d-flex align-items-center gap-1 card_effect">
-                  Copy
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                    >
-                      <g fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M6 11c0-2.828 0-4.243.879-5.121C7.757 5 9.172 5 12 5h3c2.828 0 4.243 0 5.121.879C21 6.757 21 8.172 21 11v5c0 2.828 0 4.243-.879 5.121C19.243 22 17.828 22 15 22h-3c-2.828 0-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z" />
-                        <path d="M6 19a3 3 0 0 1-3-3v-6c0-3.771 0-5.657 1.172-6.828S7.229 2 11 2h4a3 3 0 0 1 3 3" />
-                      </g>
-                    </svg>
-                  </div>
-                </button>
-                <button className="btn btn-primary btn-sm mt-2">
-                  Send Request
-                </button>
-              </div>
-            </div> */}
           </div>
         )}
         {activeTab === 2 && (
           <div id="panel2" role="tabpanel">
-            {/* <div>
-              <div className="d-flex gap-1 align-items-center mb-1">
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M8.267 1.618a.75.75 0 0 1 1.027-.264l.832.492l9.247 5.307a.75.75 0 1 1-.747 1.301l-.843-.484l-1.505 2.598l-.002-.002l-2.558-1.471a.75.75 0 1 0-.748 1.3l2.556 1.47l-.961 1.66l-.002-.001l-4.203-2.418a.75.75 0 1 0-.748 1.3l4.2 2.417l-.885 1.529l-.002-.002l-2.613-1.503a.75.75 0 0 0-.748 1.3l2.611 1.502l-1.12 1.932a4.86 4.86 0 0 1-6.628 1.77a4.827 4.827 0 0 1-1.776-6.605L9.373 3.143l-.006-.003l-.836-.494a.75.75 0 0 1-.264-1.028M20 17c1.105 0 2-.933 2-2.083c0-.72-.783-1.681-1.37-2.3a.86.86 0 0 0-1.26 0c-.587.619-1.37 1.58-1.37 2.3c0 1.15.895 2.083 2 2.083"
-                    />
-                  </svg>{" "}
-                </div>
-                <span style={{ fontSize: "16px", fontWeight: 600 }}>
-                  Test enviroment
-                </span>
-              </div>
-              <textarea
-                name="textarea-payload_topup"
-                id="payload_topup"
-                value={
-                  '{\n  "amount": 1200,\n  "currency": "VND",\n  "description": "Topup 1200 VND to Napcoin account",\n  "external_id": "NAPCOIN1200",\n  "bank_code": "MBBank",\n  "account_number": "99ZP24334000725953"\n}'
-                }
-                className="form-control focus-ring focus-ring-light"
-                style={{
-                  width: "100%",
-                  borderRadius: "8px",
-                  minHeight: "200px",
-                  maxHeight: "300px",
-                  fontSize: "14px",
-                }}
-              ></textarea>
-              <div className="d-flex justify-content-end gap-2">
-                <button className="btn border btn-sm mt-2 d-flex align-items-center gap-1 card_effect">
-                  Copy
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                    >
-                      <g fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M6 11c0-2.828 0-4.243.879-5.121C7.757 5 9.172 5 12 5h3c2.828 0 4.243 0 5.121.879C21 6.757 21 8.172 21 11v5c0 2.828 0 4.243-.879 5.121C19.243 22 17.828 22 15 22h-3c-2.828 0-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z" />
-                        <path d="M6 19a3 3 0 0 1-3-3v-6c0-3.771 0-5.657 1.172-6.828S7.229 2 11 2h4a3 3 0 0 1 3 3" />
-                      </g>
-                    </svg>
-                  </div>
-                </button>
-                <button className="btn btn-primary btn-sm mt-2">
-                  Send Request
-                </button>
-              </div>
-            </div> */}
             <div className="table-responsive mt-3 ">
               <table
                 className="table text-nowrap border"
@@ -261,13 +102,6 @@ export default function TopupPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    {/* <td 
-                  className="text-center"
-                  colSpan={10}>
-                    <div className="d-flex align-items-center gap-2 justify-content-center">                
-                     <span style={{fontSize:'13.125px',fontFamily:"Inter",fontWeight:'600',color:'#42576c', lineHeight: '13.125px'}}>No Data Found</span>
-                    </div>
-                  </td> */}
                   </tr>
                   <tr>
                     <td>1</td>
@@ -388,4 +222,65 @@ export default function TopupPage() {
       </div>
     </div>
   );
+}
+{
+  /* testing____________ */
+}
+{
+  /* <div>
+              <div className="d-flex gap-1 align-items-center mb-1 mt-3">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M8.267 1.618a.75.75 0 0 1 1.027-.264l.832.492l9.247 5.307a.75.75 0 1 1-.747 1.301l-.843-.484l-1.505 2.598l-.002-.002l-2.558-1.471a.75.75 0 1 0-.748 1.3l2.556 1.47l-.961 1.66l-.002-.001l-4.203-2.418a.75.75 0 1 0-.748 1.3l4.2 2.417l-.885 1.529l-.002-.002l-2.613-1.503a.75.75 0 0 0-.748 1.3l2.611 1.502l-1.12 1.932a4.86 4.86 0 0 1-6.628 1.77a4.827 4.827 0 0 1-1.776-6.605L9.373 3.143l-.006-.003l-.836-.494a.75.75 0 0 1-.264-1.028M20 17c1.105 0 2-.933 2-2.083c0-.72-.783-1.681-1.37-2.3a.86.86 0 0 0-1.26 0c-.587.619-1.37 1.58-1.37 2.3c0 1.15.895 2.083 2 2.083"
+                    />
+                  </svg>{" "}
+                </div>
+                <span style={{ fontSize: "16px", fontWeight: 600 }}>
+                  Test enviroment
+                </span>
+              </div>
+              <textarea
+                name="textarea-payload_topup"
+                id="payload_topup"
+                value={
+                  '{\n  "amount": 1200,\n  "currency": "VND",\n  "description": "Topup 1200 VND to Napcoin account",\n  "external_id": "NAPCOIN1200",\n  "bank_code": "MBBank",\n  "account_number": "99ZP24334000725953"\n}'
+                }
+                className="form-control focus-ring focus-ring-light"
+                style={{
+                  width: "100%",
+                  borderRadius: "8px",
+                  minHeight: "200px",
+                  maxHeight: "300px",
+                  fontSize: "14px",
+                }}
+              ></textarea>
+              <div className="d-flex justify-content-end gap-2">
+                <button className="btn border btn-sm mt-2 d-flex align-items-center gap-1 card_effect">
+                  Copy
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <g fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M6 11c0-2.828 0-4.243.879-5.121C7.757 5 9.172 5 12 5h3c2.828 0 4.243 0 5.121.879C21 6.757 21 8.172 21 11v5c0 2.828 0 4.243-.879 5.121C19.243 22 17.828 22 15 22h-3c-2.828 0-4.243 0-5.121-.879C6 20.243 6 18.828 6 16z" />
+                        <path d="M6 19a3 3 0 0 1-3-3v-6c0-3.771 0-5.657 1.172-6.828S7.229 2 11 2h4a3 3 0 0 1 3 3" />
+                      </g>
+                    </svg>
+                  </div>
+                </button>
+                <button className="btn btn-primary btn-sm mt-2">
+                  Send Request
+                </button>
+              </div>
+            </div> */
 }
