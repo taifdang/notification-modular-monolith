@@ -15,7 +15,7 @@ using Topup.Data;
 using Topup.Topups.Exceptions;
 using Topup.Topups.ValueObjects;
 
-namespace Topup.Topups.Features.CreateTopup;
+namespace Topup.Topups.Features.CreatingTopup;
 
 public record CreateTopup(string Gateway,string TransactionDate,string AccountNumber,string? SubAccount,string? Code,
     string Content,string TransferType,string Description,decimal TransferAmount,int Accumulated,int Id)

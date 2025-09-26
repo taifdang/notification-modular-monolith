@@ -29,8 +29,10 @@ public record UserProfile : Aggregate<UserProfileId>
 
         return userProfile;
     }
+   
+    // User non-permission change balance
     public void CompleteRegistrationUserProfile(UserProfileId userProfileId,UserId userId,UserName userName,Name name,
-        Email email,GenderType genderType,Age age,Balance balance,bool isDeleted = false)
+        Email email,GenderType genderType,Age age,bool isDeleted = false)
     {
         this.Id = userProfileId;
         this.UserId = userId;
@@ -38,14 +40,14 @@ public record UserProfile : Aggregate<UserProfileId>
         this.Name = name;
         this.GenderType = genderType;
         this.Age = age;
-        this.Balance = balance;
         this.IsDeleted = isDeleted;
 
         var @event = new UserProfileRegistrationCompletedDomainEvent(this.Id, this.UserId,this.UserName, this.Name,
-            this.Email,this.GenderType, this.Age, this.Balance, this.IsDeleted);
+            this.Email,this.GenderType, this.Age, this.IsDeleted);
 
         this.AddDomainEvent(@event);
-    }
+    } 
+    // Balance only change by topup / admin
     public void Update(UserProfileId userProfileId, UserId userId, UserName userName, Name name,
         Email email,GenderType genderType, Age age, Balance balance, bool isDeleted = false)
     {

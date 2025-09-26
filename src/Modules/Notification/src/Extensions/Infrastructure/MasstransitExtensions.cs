@@ -34,4 +34,10 @@ namespace Notification.Extensions.Infrastructure;
 //    {
 //    }
 //}
+//public class InappChannelConsumerDefinition : ChannelConsumerDefinition<InAppChannelProcessor>
+//{
+//    public InappChannelConsumerDefinition() : base("inapp-queue", "inapp")
+//    {
+//    }
+//}
 

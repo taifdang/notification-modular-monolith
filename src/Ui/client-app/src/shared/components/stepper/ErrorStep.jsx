@@ -28,7 +28,7 @@ export function ErrorStep({ errorSteps }) {
             <button
               className="m-auto border px-3"
               style={{
-                fontSize: "13.125px",
+                fontSize: "11.125px",
                 fontFamily: '"Inter',
                 fontWeight: 500,
                 borderRadius: "4px",

@@ -7,12 +7,12 @@ using System.Text.Json;
 
 namespace Notification.ChannelProcessors.Consumers;
 
-public class InappChannelProcessor : IConsumer<NotificationMessage>
+public class InAppChannelProcessor : IConsumer<NotificationMessage>
 {
     private readonly ISignalrHub _signalrHub;
-    private readonly ILogger<InappChannelProcessor> _logger;
+    private readonly ILogger<InAppChannelProcessor> _logger;
 
-    public InappChannelProcessor(ISignalrHub signalrHub, ILogger<InappChannelProcessor> logger)
+    public InAppChannelProcessor(ISignalrHub signalrHub, ILogger<InAppChannelProcessor> logger)
     {
         _signalrHub = signalrHub;
         _logger = logger;

@@ -1,6 +1,6 @@
-﻿namespace BuildingBlocks.Jwt
+﻿
+namespace BuildingBlocks.Jwt;
+
+public class ApiScope
 {
-    public class ApiScope
-    {
-    }
 }

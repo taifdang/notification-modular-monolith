@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\src\Identity.csproj" />
     <ProjectReference Include="..\..\Modules\Notification\src\Notification.csproj" />
     <ProjectReference Include="..\..\Modules\Topup\src\Topup.csproj" />

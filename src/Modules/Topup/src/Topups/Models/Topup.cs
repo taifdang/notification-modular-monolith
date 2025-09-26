@@ -26,9 +26,6 @@ public record Topup : Aggregate<TopupId>
             IsDeleted = false,
         };
 
-        //var @event = new TopupCreatedDomainEvent(topup.TransactionId, topup.CreateByName, topup.TransferAmount);
-
-        //topup.AddDomainEvent(@event);
 
         return topup;
     }
