@@ -13,10 +13,10 @@ public static class InfrasructureExtensions
         builder.Services.AddScoped<NotificationEventMapper>();
 
         builder.Services.AddMediatRCustom();
-        builder.Services.AddMapsterCustom(typeof(NotificationRoot).Assembly);
+        builder.Services.AddCustomMapster(typeof(NotificationRoot).Assembly);
         builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssembly(typeof(NotificationRoot).Assembly));
 
-        builder.Services.AddMssql<NotificationDbContext>();
+        builder.Services.AddCustomDbContext<NotificationDbContext>();
 
         builder.Services.AddGrpcClientCustom();
 

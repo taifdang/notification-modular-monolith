@@ -3,5 +3,5 @@ using BuildingBlocks.Core.Event;
 
 namespace BuildingBlocks.Contracts;
 
-public record UserCreated(Guid Id,string UserName,string Name,string Email) : IIntegrationEvent;
+public record UserCreated(Guid Id, string UserName, string Name, string Email) : IIntegrationEvent;
 

@@ -10,7 +10,7 @@ namespace BuildingBlocks.EFCore;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMssql<T> (this IServiceCollection services)
+    public static IServiceCollection AddCustomDbContext<T> (this IServiceCollection services)
         where T : DbContext, IDbContext
     {
         var options = services.GetOptions<MssqlOptions>("mssql");

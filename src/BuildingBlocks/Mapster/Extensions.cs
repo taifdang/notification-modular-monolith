@@ -8,7 +8,7 @@ namespace BuildingBlocks.Mapster;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMapsterCustom(
+    public static IServiceCollection AddCustomMapster(
         this IServiceCollection services,
         params Assembly[] assemblies)
     {

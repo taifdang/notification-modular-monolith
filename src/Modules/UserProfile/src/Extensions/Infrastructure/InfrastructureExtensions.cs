@@ -14,11 +14,11 @@ public static class InfrastructureExtensions
     {
         builder.Services.AddScoped<UserProfileEventMapper>();
 
-        builder.Services.AddMapsterCustom(typeof(UserProfileRoot).Assembly);
+        builder.Services.AddCustomMapster(typeof(UserProfileRoot).Assembly);
         builder.Services.AddValidatorsFromAssembly(typeof(UserProfileRoot).Assembly);
         builder.Services.AddMediatRCustom();
 
-        builder.Services.AddMssql<UserProfileDbContext>();
+        builder.Services.AddCustomDbContext<UserProfileDbContext>();
 
         builder.Services.AddGrpc();
 

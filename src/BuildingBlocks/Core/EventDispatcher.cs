@@ -36,9 +36,7 @@ public sealed class EventDispatcher(
                 foreach(var integrationEvent in integrationEvents)
                 {
                     await persistMessageProcessor.PublishMessageAsync(
-                        new MessageEnvelope(
-                            integrationEvent,
-                            SetHeaders()),
+                        new MessageEnvelope(integrationEvent, SetHeaders()),
                         cancellationToken);
                 }
             }

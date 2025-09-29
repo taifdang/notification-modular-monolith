@@ -94,11 +94,11 @@ public class CreateTopupHandler : ICommandHandler<CreateTopup, CreateTopupResult
         //internal
         var username = nameof(Enums.TopupStatus.Unknown);
         Enums.TopupStatus status = Enums.TopupStatus.Unknown;
-        var user = request.Description.StartsWith("NAPTIEN");
+        var user = request.Description.StartsWith("NAPCOIN");
 
         if (user)
         {
-            username = request.Description.Split("NAPTIEN ")[1].ToLower();
+            username = request.Description.Split("NAPCOIN ")[1].ToLower();
             status = Enums.TopupStatus.InProcess;
         }
  
@@ -106,7 +106,8 @@ public class CreateTopupHandler : ICommandHandler<CreateTopup, CreateTopupResult
         var topupEntity = Models.Topup.Create(TopupId.Of(request.TopupId),TransactionId.Of(request.Id),
             TransferAmount.Of(request.TransferAmount),CreateByName.Of(username),status);
 
-        await _dispatcher.SendAsync(new TopupCreated(topupEntity.TransactionId,topupEntity.CreateByName,topupEntity.TransferAmount),
+        await _dispatcher.SendAsync(
+            new TopupCreated(NewId.NextGuid(), topupEntity.TransactionId, topupEntity.CreateByName, topupEntity.TransferAmount),
             cancellationToken: cancellationToken);
 
         await _topupDbContext.AddAsync(topupEntity, cancellationToken);

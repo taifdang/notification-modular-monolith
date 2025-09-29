@@ -18,14 +18,14 @@ public static class InfrastructureExtensions
 
         builder.Services.AddScoped<IdentityEventMapper>();
 
-        builder.Services.AddMapsterCustom(typeof(IdentityRoot).Assembly);
+        builder.Services.AddCustomMapster(typeof(IdentityRoot).Assembly);
         builder.Services.AddValidatorsFromAssembly(typeof(IdentityRoot).Assembly);
         builder.Services.AddMediatRCustom();
 
         builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
 
         //same 1 database
-        //builder.Services.AddMssql<IdentityContext>();
+        //builder.Services.AddCustomDbContext<IdentityContext>();
         builder.Services.AddIdentityContextCustom();
   
         builder.AddIdentityServerCustom();

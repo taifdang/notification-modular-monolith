@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Automatonymous;
+using MassTransit;
 
 namespace Topup.Saga;
 
@@ -16,3 +17,4 @@ public class TopupState : SagaStateMachineInstance
     //public string? ErrorMessage { get; set; }
     //public long Version {  get; set; }
 }
+

@@ -66,7 +66,7 @@ public class UpdateUserBalanceHandler : ICommandHandler<UpdateUserBalance>
             ),
             NotificationPriority.High);
 
-        await _eventDispatcher.SendAsync(@event);
+        await _eventDispatcher.SendAsync(@event, cancellationToken: cancellationToken);
 
         return Unit.Value;          
     }

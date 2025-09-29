@@ -31,14 +31,10 @@ public static class SharedInfrastructureExtensions
 
         //validation
         builder.Services.AddFluentValidation();
-
         builder.Services.AddHttpContextAccessor();
-
         builder.Services.AddSwaggerCustom();
-
         builder.Services.AddSingleton<ISignalrHub, SignalrHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
-
         builder.Services.AddHangfireStorageMssql();
 
         builder.Services.AddCustomMasstransit(
@@ -73,7 +69,7 @@ public static class SharedInfrastructureExtensions
             app.UseSwaggerUI();
         }
 
-        //app.UseCorrelationId();
+        app.UseCorrelationId();
 
         app.MapControllers();
         return app;

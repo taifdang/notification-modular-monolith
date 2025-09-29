@@ -11,11 +11,11 @@ public static class InfrastructureExtensions
 {
     public static WebApplicationBuilder AddTopupModules(this WebApplicationBuilder builder)
     {
-        builder.Services.AddMapsterCustom(typeof(TopupRoot).Assembly);
+        builder.Services.AddCustomMapster(typeof(TopupRoot).Assembly);
         builder.Services.AddValidatorsFromAssembly(typeof(TopupRoot).Assembly);
         builder.Services.AddMediatRCustom();
 
-        builder.Services.AddMssql<TopupDbContext>();
+        builder.Services.AddCustomDbContext<TopupDbContext>();
         builder.Services.AddScoped<IDataSeeder, TopupDataSeeder>();
         return builder;
     }
