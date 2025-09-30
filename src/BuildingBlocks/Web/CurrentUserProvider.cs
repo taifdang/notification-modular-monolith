@@ -11,8 +11,8 @@ public interface ICurrentUserProvider
 }
 public class CurrentUserProvider : ICurrentUserProvider
 {
-    private readonly HttpContextAccessor _httpContextAccessor;
-    public CurrentUserProvider(HttpContextAccessor httpContextAccessor)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public CurrentUserProvider(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }

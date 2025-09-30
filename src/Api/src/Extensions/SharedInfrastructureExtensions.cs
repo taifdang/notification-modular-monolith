@@ -11,6 +11,7 @@ using Hangfire;
 using Identity;
 using Notification;
 using UserProfile;
+using Wallet;
 
 namespace Api.Extensions;
 
@@ -26,12 +27,11 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddPersistMessageProcessor();
 
         builder.Services.AddControllers();
-
-        //builder.Services.AddAuthentication("Identity.Application").AddCookie();
-
+       
         //validation
         builder.Services.AddFluentValidation();
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
         builder.Services.AddSwaggerCustom();
         builder.Services.AddSingleton<ISignalrHub, SignalrHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
@@ -48,6 +48,7 @@ public static class SharedInfrastructureExtensions
             var mappers = new IEventMapper[]
             {
                 sp.GetRequiredService<IdentityEventMapper>(),
+                sp.GetRequiredService<WalletEventMapper>(),
                 sp.GetRequiredService<UserProfileEventMapper>(),
                 sp.GetRequiredService<NotificationEventMapper>()
             };

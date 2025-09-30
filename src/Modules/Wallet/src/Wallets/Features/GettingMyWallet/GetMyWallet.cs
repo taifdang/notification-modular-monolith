@@ -22,17 +22,15 @@ public record GetMyWalletResponseDto(WalletDto WalletDto);
 public class GetMyWalletEndpoint : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
-
-    public GetMyWalletEndpoint(IMediator mediator, IMapper mapper)
+    public GetMyWalletEndpoint(IMediator mediator)
     {
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpGet("my-wallet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<Result<GetMyWalletResponseDto>> Get(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetMyWallet(), cancellationToken);
@@ -48,17 +46,17 @@ internal class GetMyWalletQueryHandler : IQueryHandler<GetMyWallet, GetMyWalletR
     private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IMapper _mapper;
 
-    public GetMyWalletQueryHandler(WalletDbContext walletDbContext, ICurrentUserProvider currentUserProvider, IMapper mapper)
+    public GetMyWalletQueryHandler(WalletDbContext walletDbContext, IMapper mapper, ICurrentUserProvider currentUserProvider)
     {
         _walletDbContext = walletDbContext;
-        _currentUserProvider = currentUserProvider;
         _mapper = mapper;
+        _currentUserProvider = currentUserProvider;
     }
 
     public async Task<GetMyWalletResult> Handle(GetMyWallet query, CancellationToken cancellationToken)
     {
         var userId = _currentUserProvider.GetCurrentUserId();
-        Guard.Against.Null(userId, nameof(userId));
+        Guard.Against.Null(query, nameof(query));
 
         var wallet = await _walletDbContext.Wallets
             .AsNoTracking()

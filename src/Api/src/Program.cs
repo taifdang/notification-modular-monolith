@@ -1,15 +1,15 @@
 using Api.Extensions;
 using Identity.Extensions.Infrastructure;
 using Notification.Extensions.Infrastructure;
-using Topup.Extensions;
 using UserProfile.Extensions.Infrastructure;
+using Wallet.Extensions.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSharedInfrastructure();
 
 builder.AddIdentityModules();
-builder.AddTopupModules();
+builder.AddWalletModules();
 builder.AddUserProfileModules();
 builder.AddNotificationModules();
 
@@ -21,7 +21,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseIdentityModules();
-app.UseTopupModules();
+app.UseWalletModules();
 app.UseUserProfileModules();
 app.UseNotificationModules();
 
