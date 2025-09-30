@@ -63,15 +63,10 @@ internal class GetAvailableTransactionsHandler : IQueryHandler<GetAvailableTrans
         }
         //LINQ query syntax / method syntax
         var transactions = await _walletDbContext.Transactions
-        .Join( _walletDbContext.Wallets,
-            t => t.WalletId,
-            w => w.Id,
-            (t, w) => new { Transaction = t, Wallet = w }
-        )
-        .Where(x => x.Wallet.UserId == userId)
-        .OrderByDescending(x => x.Transaction.CreatedAt)
-        .Select(x => x.Transaction)
-        .ToListAsync(cancellationToken);
+          .Where(t => _walletDbContext.Wallets
+            .Any(w => w.Id == t.WalletId && w.UserId == userId))
+          .OrderByDescending(t => t.CreatedAt)
+          .ToListAsync();
 
         if (!transactions.Any())
         {
