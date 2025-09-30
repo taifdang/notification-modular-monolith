@@ -7,7 +7,7 @@ namespace BuildingBlocks.Web;
 
 public interface ICurrentUserProvider
 {
-    long? GetCurrentUserId();
+    Guid? GetCurrentUserId();
 }
 public class CurrentUserProvider : ICurrentUserProvider
 {
@@ -17,11 +17,11 @@ public class CurrentUserProvider : ICurrentUserProvider
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public long? GetCurrentUserId()
+    public Guid? GetCurrentUserId()
     {
         var nameIdentifier = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        long.TryParse(nameIdentifier, out var userId);
+        Guid.TryParse(nameIdentifier, out var userId);
 
         return userId;
     }

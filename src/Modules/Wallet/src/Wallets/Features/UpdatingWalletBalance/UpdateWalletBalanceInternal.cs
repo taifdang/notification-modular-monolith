@@ -29,7 +29,7 @@ internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWallet
         try 
         { 
             var wallet = await _walletDbContext.Wallets.SingleOrDefaultAsync(x => x.Id == request.WalletId, cancellationToken) 
-                ?? throw new WalletIdNotExistException(request.WalletId); 
+                ?? throw new WalletNotFoundException(); 
             
             wallet.Topup(Balance.Of(request.Amount)); 
             

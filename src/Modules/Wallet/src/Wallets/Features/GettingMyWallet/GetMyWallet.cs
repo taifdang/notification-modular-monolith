@@ -1,6 +1,74 @@
-﻿namespace Wallet.Wallets.Features.GettingMyWallet;
+﻿using Ardalis.GuardClauses;
+using BuildingBlocks.Core.CQRS;
+using BuildingBlocks.Utils;
+using BuildingBlocks.Web;
+using Mapster;
+using MapsterMapper;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Wallet.Data;
+using Wallet.Wallets.Dtos;
+using Wallet.Wallets.Exceptions;
 
-public class GetMyWallet
+namespace Wallet.Wallets.Features.GettingMyWallet;
+
+public record GetMyWallet : IQuery<GetMyWalletResult>;
+public record GetMyWalletResult(WalletDto WalletDto);
+public record GetMyWalletResponseDto(WalletDto WalletDto);
+
+[ApiController]
+public class GetMyWalletEndpoint : ControllerBase
 {
+    private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
+    public GetMyWalletEndpoint(IMediator mediator, IMapper mapper)
+    {
+        _mediator = mediator;
+        _mapper = mapper;
+    }
+
+    [HttpGet("my-wallet")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<Result<GetMyWalletResponseDto>> Get(CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetMyWallet(), cancellationToken);
+        return result is null
+            ? Result<GetMyWalletResponseDto>.Failure("Wallet not found")
+            : Result<GetMyWalletResponseDto>.Success(result.Adapt<GetMyWalletResponseDto>());
+    }
+}
+
+internal class GetMyWalletQueryHandler : IQueryHandler<GetMyWallet, GetMyWalletResult>
+{
+    private readonly WalletDbContext _walletDbContext;
+    private readonly ICurrentUserProvider _currentUserProvider;
+    private readonly IMapper _mapper;
+
+    public GetMyWalletQueryHandler(WalletDbContext walletDbContext, ICurrentUserProvider currentUserProvider, IMapper mapper)
+    {
+        _walletDbContext = walletDbContext;
+        _currentUserProvider = currentUserProvider;
+        _mapper = mapper;
+    }
+
+    public async Task<GetMyWalletResult> Handle(GetMyWallet query, CancellationToken cancellationToken)
+    {
+        var userId = _currentUserProvider.GetCurrentUserId();
+        Guard.Against.Null(userId, nameof(userId));
+
+        var wallet = await _walletDbContext.Wallets
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
+
+        if (wallet is null)
+            throw new WalletNotFoundException();
+
+        var walletDto = _mapper.Map<WalletDto>(wallet);
+
+        return new GetMyWalletResult(walletDto);
+    }
 }

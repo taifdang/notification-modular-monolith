@@ -8,8 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Transactions\Features\GettingTransaction\" />
-    <Folder Include="Wallets\Dtos\" />
   </ItemGroup>
 
   <ItemGroup>
