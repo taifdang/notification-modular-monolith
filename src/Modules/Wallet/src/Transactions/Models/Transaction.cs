@@ -6,15 +6,15 @@ namespace Wallet.Transactions.Models;
 
 public record Transaction : Aggregate<TransactionId>
 {
-    public Guid? WalletId { get; private set; } = default!;
+    public Guid WalletId { get; private set; } = default!;
     public decimal Amount { get; private set; } = default!;
     public string? AccountNumber { get; private set; }
-    public int? ReferenceCode { get; private set; } = default!;
+    public int? ReferenceCode { get; private set; }
     public TransactionType TransactionType { get; private set; }
     public TransactionStatus TransactionStatus { get; private set; }
 
     public static Transaction Create(TransactionId id, Guid walletId, decimal amount, string accountNumber,
-        int referenceCode, TransactionType transactionType,TransactionStatus transactionStatus, bool isDeleted = false)
+        int referenceCode, TransactionType transactionType, TransactionStatus transactionStatus, bool isDeleted = false)
     {
         var transaction = new Transaction
         {

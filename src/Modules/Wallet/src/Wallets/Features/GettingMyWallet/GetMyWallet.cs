@@ -12,6 +12,7 @@ using Wallet.Data;
 using Wallet.Wallets.Dtos;
 using Wallet.Wallets.Exceptions;
 
+
 namespace Wallet.Wallets.Features.GettingMyWallet;
 
 public record GetMyWallet : IQuery<GetMyWalletResult>;
@@ -40,23 +41,28 @@ public class GetMyWalletEndpoint : ControllerBase
     }
 }
 
-internal class GetMyWalletQueryHandler : IQueryHandler<GetMyWallet, GetMyWalletResult>
+internal class GetMyWalletHandler : IQueryHandler<GetMyWallet, GetMyWalletResult>
 {
     private readonly WalletDbContext _walletDbContext;
     private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IMapper _mapper;
 
-    public GetMyWalletQueryHandler(WalletDbContext walletDbContext, IMapper mapper, ICurrentUserProvider currentUserProvider)
+    public GetMyWalletHandler(WalletDbContext walletDbContext, IMapper mapper, ICurrentUserProvider currentUserProvider)
     {
         _walletDbContext = walletDbContext;
         _mapper = mapper;
         _currentUserProvider = currentUserProvider;
     }
 
-    public async Task<GetMyWalletResult> Handle(GetMyWallet query, CancellationToken cancellationToken)
+    public async Task<GetMyWalletResult> Handle(GetMyWallet request, CancellationToken cancellationToken)
     {
+        Guard.Against.Null(request, nameof(request));
+
         var userId = _currentUserProvider.GetCurrentUserId();
-        Guard.Against.Null(query, nameof(query));
+        if (userId == null || userId == Guid.Empty)
+        {
+            throw new UnauthorizedAccessException("User is not authenticated.");
+        }
 
         var wallet = await _walletDbContext.Wallets
             .AsNoTracking()
