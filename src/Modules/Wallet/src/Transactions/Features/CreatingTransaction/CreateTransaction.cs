@@ -15,6 +15,7 @@ using Wallet.Data;
 using Wallet.Extensions.Infrastructure;
 using Wallet.Transactions.Exceptions;
 using Wallet.Transactions.ValueObjects;
+using Wallet.Wallets.ValueObjects;
 
 namespace Wallet.Transactions.Features.CreatingTransaction;
 
@@ -93,13 +94,23 @@ internal class CreateTransactionCommandHandler : ICommandHandler<CreateTransacti
             throw new TransactionAlreadyExistException();
         }
         var paymentCode = WalletExtensions.GetPaymentCode(command.Description);
-        var wallet = _walletDbContext.Wallets.FirstOrDefault(x => x.PaymentCode == paymentCode);
+        var wallet = await _walletDbContext.Wallets.FirstOrDefaultAsync(x => x.PaymentCode == paymentCode, cancellationToken);
 
-        var status = wallet is null 
-            ? Enums.TransactionStatus.Unknown 
-            : Enums.TransactionStatus.Pending;
+        Enums.TransactionStatus status;
+        WalletId walletId;
 
-        var transactionEntity = Models.Transaction.Create(TransactionId.Of(command.Id), wallet.Id.Value, command.Amount,
+        if (wallet is null)
+        {
+            status = Enums.TransactionStatus.Unknown;
+            walletId = WalletId.Of(Guid.Parse("cba4d432-337c-4824-863c-5af0e7558980"));
+        }
+        else
+        {
+            status = Enums.TransactionStatus.Pending;
+            walletId = WalletId.Of(wallet.Id.Value);
+        }
+
+        var transactionEntity = Models.Transaction.Create(TransactionId.Of(command.Id), walletId, command.Amount,
                 command.AccountNumber, command.ReferenceCode, Enums.TransactionType.Topup, status);
 
         await _walletDbContext.Transactions.AddAsync(transactionEntity, cancellationToken);
