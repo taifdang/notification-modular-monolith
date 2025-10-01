@@ -27,9 +27,10 @@ public record CompleteUserPreferenceResponseDto(UserPreferenceDto NotificationSe
 public record CompleteUserPreferenceResquestDto(Guid UserId, List<Dtos.PreferenceDto> Preferences);
 
 [ApiController]
+[Route("api/preference")]
 public class CompleteUserPreferenceEndpoint(IMapper mapper, IMediator mediator) : ControllerBase 
 {
-    [HttpPost("register-notification-setting")]
+    [HttpPost("update")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<CompletedUserPreferenceResult> RegisterNotificationSetting(CompleteUserPreferenceResquestDto request,

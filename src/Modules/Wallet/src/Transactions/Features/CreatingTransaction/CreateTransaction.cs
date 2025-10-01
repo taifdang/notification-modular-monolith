@@ -33,6 +33,7 @@ public record CreateTransactionRequestDto(string Gateway, string TransactionDate
 public record CreateTransactionResponseDto(Guid Id, int ReferenceCode);
 
 [ApiController]
+[Route("api/transaction")]
 public class CreateTransactionEndpoint : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -42,7 +43,7 @@ public class CreateTransactionEndpoint : ControllerBase
         _mediator = mediator;
         this.mapper = mapper;
     }
-    [HttpPost("create-transaction")]
+    [HttpPost("create")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<Result<CreateTransactionResponseDto>> CreateTransactionRequest(

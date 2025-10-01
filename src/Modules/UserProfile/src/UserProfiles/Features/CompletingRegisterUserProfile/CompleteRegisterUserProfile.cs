@@ -25,9 +25,10 @@ public record CompleteRegisterUserProfileRequestDto(Guid UserId, GenderType Gend
 public record CompleteRegisterUserProfileResponseDto(UserProfileDto UserProfileDto);
 
 [ApiController]
+[Route("api/profile")]
 public class CompleteRegisterUserProfileEndpoint(IMediator mediator, IMapper mapper) : ControllerBase
 {
-    [HttpPost("register-userprofile")]
+    [HttpPost("update")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<CompleteRegisterUserProfileResponseDto> RegisterUserProfile(CompleteRegisterUserProfileRequestDto request,

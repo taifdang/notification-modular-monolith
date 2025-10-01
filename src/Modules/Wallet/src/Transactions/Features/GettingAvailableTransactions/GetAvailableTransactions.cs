@@ -19,6 +19,7 @@ public record GetAvailableTransactionsResult(IEnumerable<TransactionDto> Transac
 public record GetAvailableTransactionstResponseDto(IEnumerable<TransactionDto> TransactionDto);
 
 [ApiController]
+[Route("api/transaction")]
 public class GetAvailableTransactionsEndpoint : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -27,7 +28,7 @@ public class GetAvailableTransactionsEndpoint : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("get-transactions")]
+    [HttpGet("me")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<Result<GetAvailableTransactionstResponseDto>> Get(CancellationToken cancellationToken)

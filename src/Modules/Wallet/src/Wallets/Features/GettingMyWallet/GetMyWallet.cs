@@ -28,7 +28,7 @@ public class GetMyWalletEndpoint : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("my-wallet")]
+    [HttpGet("wallet/me")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
