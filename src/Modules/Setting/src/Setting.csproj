@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="Data\Configurations\" />
     <Folder Include="Data\Migrations\" />
-    <Folder Include="NotificationPreferences\Features\" />
   </ItemGroup>
 
 </Project>
