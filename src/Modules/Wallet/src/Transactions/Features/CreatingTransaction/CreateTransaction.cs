@@ -44,7 +44,7 @@ public class CreateTransactionEndpoint : ControllerBase
         _mediator = mediator;
         this.mapper = mapper;
     }
-    [HttpPost("create")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<Result<CreateTransactionResponseDto>> CreateTransactionRequest(

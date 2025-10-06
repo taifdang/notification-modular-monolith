@@ -13,48 +13,49 @@ using Wallet.Wallets.Dtos;
 using Wallet.Wallets.Exceptions;
 
 
-namespace Wallet.Wallets.Features.GettingMyWallet;
+namespace Wallet.Wallets.Features.GettingWallet;
 
-public record GetMyWallet : IQuery<GetMyWalletResult>;
-public record GetMyWalletResult(WalletDto WalletDto);
-public record GetMyWalletResponseDto(WalletDto WalletDto);
+public record GetWallet : IQuery<GetWalletResult>;
+public record GetWalletResult(WalletDto WalletDto);
+public record GetWalletResponseDto(WalletDto WalletDto);
 
 [ApiController]
-public class GetMyWalletEndpoint : ControllerBase
+[Route("api/wallet")]
+public class GetWalletEndpoint : ControllerBase
 {
     private readonly IMediator _mediator;
-    public GetMyWalletEndpoint(IMediator mediator)
+    public GetWalletEndpoint(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpGet("wallet/me")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<Result<GetMyWalletResponseDto>> Get(CancellationToken cancellationToken)
+    public async Task<Result<GetWalletResponseDto>> Get(CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetMyWallet(), cancellationToken);
+        var result = await _mediator.Send(new GetWallet(), cancellationToken);
         return result is null
-            ? Result<GetMyWalletResponseDto>.Failure("Wallet not found")
-            : Result<GetMyWalletResponseDto>.Success(result.Adapt<GetMyWalletResponseDto>());
+            ? Result<GetWalletResponseDto>.Failure("Wallet not found")
+            : Result<GetWalletResponseDto>.Success(result.Adapt<GetWalletResponseDto>());
     }
 }
 
-internal class GetMyWalletHandler : IQueryHandler<GetMyWallet, GetMyWalletResult>
+internal class GetWalletHandler : IQueryHandler<GetWallet, GetWalletResult>
 {
     private readonly WalletDbContext _walletDbContext;
     private readonly ICurrentUserProvider _currentUserProvider;
     private readonly IMapper _mapper;
 
-    public GetMyWalletHandler(WalletDbContext walletDbContext, IMapper mapper, ICurrentUserProvider currentUserProvider)
+    public GetWalletHandler(WalletDbContext walletDbContext, IMapper mapper, ICurrentUserProvider currentUserProvider)
     {
         _walletDbContext = walletDbContext;
         _mapper = mapper;
         _currentUserProvider = currentUserProvider;
     }
 
-    public async Task<GetMyWalletResult> Handle(GetMyWallet request, CancellationToken cancellationToken)
+    public async Task<GetWalletResult> Handle(GetWallet request, CancellationToken cancellationToken)
     {
         Guard.Against.Null(request, nameof(request));
 
@@ -73,6 +74,6 @@ internal class GetMyWalletHandler : IQueryHandler<GetMyWallet, GetMyWalletResult
 
         var walletDto = _mapper.Map<WalletDto>(wallet);
 
-        return new GetMyWalletResult(walletDto);
+        return new GetWalletResult(walletDto);
     }
 }
