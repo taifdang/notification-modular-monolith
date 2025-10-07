@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\Modules\Notification\src\Notification.csproj" />
     <ProjectReference Include="..\..\Modules\Setting\src\Setting.csproj" />
     <ProjectReference Include="..\..\Modules\UserProfile\src\Profile.csproj" />
+    <ProjectReference Include="..\..\Modules\User\src\User.csproj" />
     <ProjectReference Include="..\..\Modules\Wallet\src\Wallet.csproj" />
   </ItemGroup>
 
