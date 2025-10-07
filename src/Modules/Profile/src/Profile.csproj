@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Profiles\" />
+    <Folder Include="Profiles\Features\" />
   </ItemGroup>
 
 </Project>
