@@ -1,7 +1,6 @@
 ﻿using User.Profiles.Exceptions;
 
 namespace User.Profiles.ValueObjects;
-
 public record Email
 {
     public string Value { get; }
@@ -13,7 +12,7 @@ public record Email
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new InvalidEmailExeption();
+            throw new InvalidEmailException();
         }
         return new Email(value);
     }

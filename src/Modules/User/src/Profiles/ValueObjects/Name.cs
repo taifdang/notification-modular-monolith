@@ -1,7 +1,6 @@
 ﻿using User.Profiles.Exceptions;
 
 namespace User.Profiles.ValueObjects;
-
 public record Name
 {
     public string Value { get; }

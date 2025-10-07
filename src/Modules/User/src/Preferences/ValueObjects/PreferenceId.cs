@@ -2,7 +2,6 @@
 using User.Preferences.Exceptions;
 
 namespace User.Preferences.ValueObjects;
-
 public record PreferenceId
 {
     public Guid Value { get; }

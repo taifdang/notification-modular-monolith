@@ -1,7 +1,6 @@
 ﻿using User.Profiles.Exceptions;
 
 namespace User.Profiles.ValueObjects;
-
 public record Age
 {
     public int Value { get; }

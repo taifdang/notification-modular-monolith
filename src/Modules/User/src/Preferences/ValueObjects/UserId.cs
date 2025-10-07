@@ -1,7 +1,6 @@
 ﻿using User.Preferences.Exceptions;
 
 namespace User.Preferences.ValueObjects;
-
 public record UserId
 {
     public Guid Value { get; }
@@ -22,4 +21,4 @@ public record UserId
         return userId.Value;
     }
 }
-}
+

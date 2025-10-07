@@ -1,7 +1,7 @@
-﻿using BuildingBlocks.Contracts;
-using MassTransit;
+﻿namespace User.Data.Seeder;
 
-namespace User.Data.Seeder;
+using BuildingBlocks.Contracts;
+using MassTransit;
 
 public static class PreferenceSeeder
 {

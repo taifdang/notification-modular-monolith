@@ -1,10 +1,10 @@
-﻿using BuildingBlocks.Contracts;
+﻿namespace User.Data.Configurations;
+
+using BuildingBlocks.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using User.Preferences.Model;
 using User.Preferences.ValueObjects;
-
-namespace User.Data.Configurations;
 public class PreferenceConfiguration : IEntityTypeConfiguration<Preference>
 {
     public void Configure(EntityTypeBuilder<Preference> builder)

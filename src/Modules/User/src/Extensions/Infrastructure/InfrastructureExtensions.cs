@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using FluentValidation;
 
 namespace User.Extensions.Infrastructure;
-
 public static class InfrastructureExtensions
 {
     public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder)

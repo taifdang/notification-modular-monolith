@@ -7,7 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GrpcServer\Protos\user.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Google.Protobuf" Version="3.29.1" />
+	<PackageReference Include="Grpc.AspNetCore" Version="2.67.0" />
+	<PackageReference Include="Grpc.AspNetCore.Server" Version="2.67.0" />
+	<PackageReference Include="Grpc.Net.ClientFactory" Version="2.67.0" />
+	<PackageReference Include="Grpc.Tools" Version="2.67.0">
+	<PrivateAssets>all</PrivateAssets>
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="GrpcServer\Protos\user.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>

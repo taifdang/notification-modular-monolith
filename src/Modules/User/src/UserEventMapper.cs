@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Core.Event;
 
 namespace User;
-
 public sealed class UserEventMapper
 {
     public IIntegrationEvent? MapToIntegrationEvent(IDomainEvent @event)

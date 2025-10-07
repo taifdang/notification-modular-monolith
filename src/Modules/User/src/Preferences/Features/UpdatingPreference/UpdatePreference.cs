@@ -1,8 +1,9 @@
-﻿using Ardalis.GuardClauses;
+﻿namespace User.Preferences.Features.UpdatingPreference;
+
+using Ardalis.GuardClauses;
 using BuildingBlocks.Contracts;
 using BuildingBlocks.Core;
 using BuildingBlocks.Core.CQRS;
-using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
 using FluentValidation;
 using Mapster;
@@ -15,15 +16,11 @@ using Microsoft.EntityFrameworkCore;
 using User.Data;
 using User.Preferences.ValueObjects;
 
-namespace User.Preferences.Features.UpdatingPreference;
 public record UpdatePreference(Guid UserId, ChannelType Channel, bool IsOptOut) : ICommand<UpdatePreferenceResult>
 {
     public Guid Id { get; init; } = NewId.NextGuid();
 }
-
 public record UpdatePreferenceResult(Guid Id);
-
-//public record NotificationPreferenceUpdatedDomainEvent(Guid Id, Guid UserId, ChannelType Channel, bool IsOptOut) : IDomainEvent;
 
 public record UpdatePreferenceDto(ChannelType Channel, bool IsOptOut);
 public record UpdatePreferenceResponseDto(Guid Id);
@@ -35,13 +32,12 @@ public class UpdatePreferenceEndpoint(IMediator mediator, IMapper mapper) : Cont
     [HttpPut("preference")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<Result<UpdatePreferenceResponseDto>> Update(
+    public async Task<UpdatePreferenceResponseDto> Update(
         UpdatePreferenceDto request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(mapper.Map<UpdatePreference>(request), cancellationToken);
-        return result is null
-            ? Result<UpdatePreferenceResponseDto>.Failure("Update failed")
-            : Result<UpdatePreferenceResponseDto>.Success(result.Adapt<UpdatePreferenceResponseDto>());
+        var response = result.Adapt<UpdatePreferenceResponseDto>();
+        return response;
     }
 }
 public class UpdateNotificationPreferenceValidator : AbstractValidator<UpdatePreference>
@@ -92,10 +88,6 @@ internal class UpdatePreferenceCommandHandler : ICommandHandler<UpdatePreference
         }
 
         await _userDbContext.SaveChangesAsync(cancellationToken);
-
-        //await _eventDispatcher.SendAsync(
-        //    new NotificationPreferenceUpdatedDomainEvent(preference.Id.Value, userId.Value, request.Channel, request.IsOptOut),
-        //    typeof(IInternalCommand));
 
         return new UpdatePreferenceResult(preference.Id.Value);
     }

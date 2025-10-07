@@ -1,8 +1,8 @@
-﻿using BuildingBlocks.Contracts;
+﻿namespace User.Preferences.Model;
+
+using BuildingBlocks.Contracts;
 using BuildingBlocks.Core.Model;
 using User.Preferences.ValueObjects;
-
-namespace User.Preferences.Model;
 
 public record Preference : Aggregate<PreferenceId>
 {

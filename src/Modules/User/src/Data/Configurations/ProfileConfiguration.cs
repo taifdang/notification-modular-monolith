@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using User.Profiles.ValueObjects;
 
 namespace User.Data.Configurations;
-
 public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 {
     public void Configure(EntityTypeBuilder<Profile> builder)
@@ -22,41 +21,42 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
             a =>
             {
                 a.Property(x => x.Value)
-                    .HasColumnName(nameof(Profile.UserId))
-                    .IsRequired();
+                 .HasColumnName(nameof(Profile.UserId))
+                 .IsRequired();
 
                 a.HasIndex(x => x.Value).IsUnique();
             }
         );
-        builder.OwnsOne(
-          x => x.UserName,
-          a =>
-          {
-              a.Property(x => x.Value)
-                  .HasColumnName(nameof(Profile.UserName))
-                  .IsRequired();
-          }
-      );
 
         builder.OwnsOne(
-           x => x.Name,
-           a =>
-           {
-               a.Property(x => x.Value)
-                   .HasColumnName(nameof(Profile.Name))
-                   .IsRequired();
-           }
-       );
+            x => x.UserName,
+            a =>
+            {
+                a.Property(x => x.Value)
+                 .HasColumnName(nameof(Profile.UserName))
+                 .IsRequired();
+            }
+        );
 
         builder.OwnsOne(
-          x => x.Email,
-          a =>
-          {
-              a.Property(x => x.Value)
-                  .HasColumnName(nameof(Profile.Email))
-                  .IsRequired();
-          }
-      );
+            x => x.Name,
+            a =>
+            {
+                a.Property(x => x.Value)
+                 .HasColumnName(nameof(Profile.Name))
+                 .IsRequired();
+            }
+        );
+
+        builder.OwnsOne(
+            x => x.Email,
+            a =>
+            {
+                a.Property(x => x.Value)
+                 .HasColumnName(nameof(Profile.Email))
+                 .IsRequired();
+            }
+        );
 
         builder.Property(x => x.GenderType)
             .HasDefaultValue(Profiles.Enums.GenderType.Unknown)
@@ -65,13 +65,13 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
                 x => (Profiles.Enums.GenderType)Enum.Parse(typeof(Profiles.Enums.GenderType), x));
 
         builder.OwnsOne(
-           x => x.Age,
-           a =>
-           {
+            x => x.Age,
+            a =>
+            {
                a.Property(x => x.Value)
                    .HasColumnName(nameof(Profile.Age))
                    .IsRequired();
-           }
+            }
        );
     }
 }

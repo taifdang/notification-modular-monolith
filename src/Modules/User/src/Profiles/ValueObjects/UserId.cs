@@ -1,7 +1,6 @@
 ﻿using User.Profiles.Exceptions;
 
 namespace User.Profiles.ValueObjects;
-
 public record UserId
 {
     public Guid Value { get; }
