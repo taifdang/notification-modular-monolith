@@ -1,7 +1,6 @@
 using Api.Extensions;
 using Identity.Extensions.Infrastructure;
 using Notification.Extensions.Infrastructure;
-using Setting.Extensions.Infrastructure;
 using UserProfile.Extensions.Infrastructure;
 using Wallet.Extensions.Infrastructure;
 
@@ -13,7 +12,7 @@ builder.AddIdentityModules();
 builder.AddWalletModules();
 builder.AddUserProfileModules();
 builder.AddNotificationModules();
-builder.AddSettingModules();
+builder.AddUserProfileModules();
 
 var app = builder.Build();
 
@@ -26,7 +25,8 @@ app.UseIdentityModules();
 app.UseWalletModules();
 app.UseUserProfileModules();
 app.UseNotificationModules();
-app.UseSettingModules();
+app.UseUserProfileModules();
+
 
 app.UseSharedInfrastructure();
 
