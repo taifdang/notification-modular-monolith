@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GrpcClient\Protos\user.proto" />
     <None Remove="GrpcClient\Protos\userPreference.proto" />
   </ItemGroup>
 
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="PersistNotificationProcessor\Ingestion\Broadcast\" />
     <Folder Include="Recipents\Exceptions\" />
     <Folder Include="Recipents\Enums\" />
     <Folder Include="Templates\Features\CreatingTemplate\" />
@@ -36,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="GrpcClient\Protos\user.proto" GrpcServices="Both" />
     <Protobuf Include="GrpcClient\Protos\userPreference.proto" GrpcServices="Both" />
   </ItemGroup>
 

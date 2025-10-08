@@ -20,7 +20,7 @@ public sealed class NotificationEventMapper : IEventMapper
     {
         return @event switch
         {
-            //PersonalNotificationCreatedDomainEvent e => new CreatePersonalNotification(e.Id,e.UserId),
+            //PersonalNotificationCreatedDomainEvent e => new NotificationReceived(e.Id,e.UserId,e.email),
             _ => null
         };
     }

@@ -11,7 +11,6 @@ public record Notification
     public string? DataSchema { get; set; }
     public NotificationPriority Priority { get; set; }
     public DateTime CreatedAt { get; set; }
-    //public NotificationStatus Status { get; set; }
 
     public static Notification Create(Guid Id, Guid RequestId, NotificationType NotificationType,string MessageContent,
         string DataSchema,NotificationPriority Priority)
@@ -25,7 +24,6 @@ public record Notification
             DataSchema = DataSchema,
             Priority = Priority,
             CreatedAt = DateTime.UtcNow,
-            //Status = NotificationStatus.InProgress,
         };
 
         return notification;

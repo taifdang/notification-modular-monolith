@@ -2,24 +2,24 @@
 using MassTransit;
 using Notification.Data;
 
-namespace Notification.PersistNotificationProcessor.Consumers.DispatchingNotification;
+namespace Notification.PersistNotificationProcessor.Dispatching.DispatchingNotification;
 
-public class DispatchNotification : IConsumer<NotificationRendered>
+public class DispatchNotificationHanlder : IConsumer<Contracts.NotificationRendered>
 {
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly NotificationDbContext _notificationDbContext;
 
-    public DispatchNotification(IPublishEndpoint publishEndpoint, NotificationDbContext notificationDbContext)
+    public DispatchNotificationHanlder(IPublishEndpoint publishEndpoint, NotificationDbContext notificationDbContext)
     {
         _publishEndpoint = publishEndpoint;
         _notificationDbContext = notificationDbContext;
     }
 
-    public async Task Consume(ConsumeContext<NotificationRendered> context)
+    public async Task Consume(ConsumeContext<Contracts.NotificationRendered> context)
     {
         var @event = context.Message.NotificationMessage;
 
-        if(@event is null)
+        if (@event is null)
             return;
 
         //save log to db if required

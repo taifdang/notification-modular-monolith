@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Masstransit;
-using Notification.ChannelProcessors.Consumers;
 
 namespace Notification.Extensions.Infrastructure;
 //ref: https://bartwullems.blogspot.com/2024/07/automating-masstransit-consumer.html

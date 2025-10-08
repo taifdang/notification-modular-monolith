@@ -1,24 +1,22 @@
-﻿
-using BuildingBlocks.Contracts;
+﻿using BuildingBlocks.Contracts;
 using BuildingBlocks.Signalr;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
-namespace Notification.ChannelProcessors.Consumers;
+namespace Notification.PersistNotificationProcessor.Sending.SendingInApp;
 
-public class InAppChannelProcessor : IConsumer<NotificationMessage>
+public class SendInApp : IConsumer<Contracts.NotificationMessage>
 {
     private readonly ISignalrHub _signalrHub;
-    private readonly ILogger<InAppChannelProcessor> _logger;
+    private readonly ILogger<SendInApp> _logger;
 
-    public InAppChannelProcessor(ISignalrHub signalrHub, ILogger<InAppChannelProcessor> logger)
+    public SendInApp(ISignalrHub signalrHub, ILogger<SendInApp> logger)
     {
         _signalrHub = signalrHub;
         _logger = logger;
     }
 
-    public async Task Consume(ConsumeContext<NotificationMessage> context)
+    public async Task Consume(ConsumeContext<Contracts.NotificationMessage> context)
     {
         try
         {
@@ -27,7 +25,7 @@ public class InAppChannelProcessor : IConsumer<NotificationMessage>
             if (@event.Channel != ChannelType.InApp)
                 return;
 
-            
+
             await _signalrHub.ProcessAsync(@event.Recipient.UserId.ToString(), @event.MessageContent.ToString());
 
             _logger.LogInformation($"Message is processed");

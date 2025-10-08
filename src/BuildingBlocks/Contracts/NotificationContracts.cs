@@ -21,27 +21,26 @@ public record Recipient(Guid UserId, string? Email);
 
 public record NotificationCreated(Guid Id, Guid UserId, string Email) : IIntegrationEvent;
 public record NotificationReadyToRender(Guid Id, Guid UserId, Guid RequestId, NotificationType Type, NotificationPriority Priority, string DataSchema,List<ChannelType> channel);
-public record NotificationRendered(Guid Id,NotificationMessage NotificationMessage);
-
-public enum NotificationType
-{
-    UnKnown = 0,
-    Promotion,
-    Topup,
-    Order,
-    Transactional,
-    ChangePassword
-}
-[Flags]
-public enum ChannelType
-{
-    InApp = 0,
-    Email,
-    Push,
-}
-public enum NotificationPriority
-{
-    Low = 0,
-    Medium = 1,
-    High = 2
-}
+public record NotificationRenderedContracts(Guid Id,NotificationMessage NotificationMessage);
+    public enum NotificationType
+    {
+        UnKnown = 0,
+        Promotion,
+        Topup,
+        Order,
+        Transactional,
+        ChangePassword
+    }
+    [Flags]
+    public enum ChannelType
+    {
+        InApp = 0,
+        Email,
+        Push,
+    }
+    public enum NotificationPriority
+    {
+        Low = 0,
+        Medium = 1,
+        High = 2
+    }
