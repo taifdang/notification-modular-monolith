@@ -1,10 +1,9 @@
-﻿using BuildingBlocks.Contracts;
-using HandlebarsDotNet;
+﻿using HandlebarsDotNet;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Notification.Data;
+using Notification.Extensions;
 using Notification.PersistNotificationProcessor.Contracts;
-using System.Text.Json;
 
 namespace Notification.PersistNotificationProcessor.Rendering.RenderingNotification;
 
@@ -20,53 +19,47 @@ public class RenderNotificationHandler : IConsumer<NotificationValidated>
 
     public async Task Consume(ConsumeContext<NotificationValidated> context)
     {
-        var recipient = await _notificationDbContext.Recipients
+        //NOTE: n event type + 1 or n channel = n template
+        var recipients = await _notificationDbContext.Recipients
             .Where(x => x.NotificationId == context.Message.Id && x.UserId == context.Message.UserId)
             .ToListAsync();
 
-        if (!recipient.Any())
+        if (!recipients.Any())
         {
             return;
         }
 
-        //NOTE: more event type, one channel -> more template -> need to select template base on event type and channel
-        //currently: one event type = notification type, one channel -> one template
+        var channels = recipients.Select(r => r.Channel).Distinct().ToList();
 
-        var channels = recipient.Select(x => x.Channel);
+        var templates = await _notificationDbContext.Templates
+            .Where(x => x.NotificationType == context.Message.Type && channels.Contains(x.Channel))
+            .ToListAsync();
 
-        if (!channels.OrderBy(x => x).SequenceEqual(context.Message.channel.OrderBy(x => x)))
+        foreach (var recipient in recipients)
         {
-            return;
-        }
-
-        foreach (var item in recipient)
-        {
-            var template = await _notificationDbContext.Templates
-              .SingleOrDefaultAsync(x => x.NotificationType == context.Message.Type && x.Channel == item.Channel);
+            var template = templates.FirstOrDefault(t => t.Channel == recipient.Channel);
 
             if (template is null)
             {
                 continue;
             }
+           
+            var messageContent = TemplateExtensions.RenderMessage(template, context.Message.DataSchema);
 
-            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(context.Message.DataSchema);
-            var compiledTemplate = Handlebars.Compile(template.Content);
-            var messageContent = compiledTemplate(data);
-
-            var notificationMessage = new Contracts.NotificationMessage(
-               MessageId: Guid.NewGuid(),
-               NotificationType: context.Message.Type,
-               Channel: item.Channel,
-               Recipient: new Recipient(context.Message.UserId, item.Target),
-               MessageContent: messageContent,
-               MetaData: new Dictionary<string, object?>
-               {
-                    { "Priority", context.Message.Priority.ToString() },
-                    { "Template", template.Name },
-                    { "RequestId", context.Message.RequestId.ToString() }
-               });
+            var notificationMessage = new NotificationMessage(Guid.NewGuid(), context.Message.Type, recipient.Channel,
+              new BuildingBlocks.Contracts.Recipient(context.Message.UserId, recipient.Target), messageContent,
+              SetMetaData(context.Message.Priority.ToString(), template.Name, context.Message.RequestId.ToString()));
 
             await _publishEndpoint.Publish(new NotificationRendered(context.Message.Id, notificationMessage));
         }
+    }
+    private IDictionary<string, object> SetMetaData(string Priority, string Template, string RequestId)
+    {
+        var metadata = new Dictionary<string, object>();
+        metadata.Add(nameof(Priority), Priority);
+        metadata.Add(nameof(Template), Template);
+        metadata.Add(nameof(RequestId), RequestId);
+
+        return metadata;
     }
 }

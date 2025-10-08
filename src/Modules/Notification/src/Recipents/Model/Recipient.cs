@@ -12,14 +12,7 @@ public record Recipient
 
     public static Recipient Create(Guid id, Guid notificationId, ChannelType channel, Guid userId, string? target)
     {
-        var recipient = new Recipient
-        {
-            Id = id,
-            NotificationId = notificationId,
-            Channel = channel,
-            UserId = userId,
-            Target = target
-        };
+        var recipient = new Recipient { Id = id, NotificationId = notificationId, Channel = channel, UserId = userId, Target = target};
 
         return recipient;
     }

@@ -33,9 +33,7 @@ public class ValidateNotification : IConsumer<NotificationReceived>
             return;
         }
 
-        var userId = context.Message.UserId.ToString();
-
-        var preferenceEntity = _grpcClient.GetPreferenceById(new GetPreferenceByIdRequest { Id = userId });
+        var preferenceEntity = _grpcClient.GetPreferenceById(new GetPreferenceByIdRequest { Id = context.Message.UserId.ToString() });
 
         if (preferenceEntity is null)
         {
@@ -63,6 +61,6 @@ public class ValidateNotification : IConsumer<NotificationReceived>
         await _notificationDbContext.SaveChangesAsync();
 
         await _publishEndpoint.Publish(new NotificationValidated(context.Message.Id, Guid.Parse(preferenceEntity.PreferenceDto.UserId),
-            notification.RequestId, notification.NotificationType, notification.Priority, notification.DataSchema, channels));
+            notification.RequestId, notification.NotificationType, notification.Priority, notification.DataSchema));
     }
 }

@@ -7,7 +7,6 @@ public class NotificationRule
     //Rule-based engine to get channel base on notification type and user preference
     public static List<ChannelType> GetChannels(Notification notification, List<PreferenceDto> preferences)
     {
-        //default channel and list channel base on rule
         return notification.NotificationType switch
         {
             NotificationType.Topup => new List<ChannelType> { ChannelType.InApp },

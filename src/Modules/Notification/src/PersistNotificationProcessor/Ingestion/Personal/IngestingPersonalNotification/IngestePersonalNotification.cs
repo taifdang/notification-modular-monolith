@@ -27,7 +27,7 @@ public class IngestePersonalNotificationHandler : IConsumer<PersonalNotification
 
         _logger.LogInformation($"consumer for {nameof(PersonalNotificationRequested)} is started");
 
-        var notification = await _notificationDbContext.Notifications.FirstOrDefaultAsync(x => x.RequestId == context.Message.RequestId);
+        var notification = await _notificationDbContext.Notifications.SingleOrDefaultAsync(x => x.RequestId == context.Message.RequestId);
 
         if (notification is null)
         {

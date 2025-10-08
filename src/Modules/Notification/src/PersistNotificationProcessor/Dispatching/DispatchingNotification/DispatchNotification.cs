@@ -1,9 +1,11 @@
-﻿using MassTransit;
+﻿using Ardalis.GuardClauses;
+using MassTransit;
 using Notification.Data;
+using Notification.PersistNotificationProcessor.Contracts;
 
 namespace Notification.PersistNotificationProcessor.Dispatching.DispatchingNotification;
 
-public class DispatchNotificationHanlder : IConsumer<Contracts.NotificationRendered>
+public class DispatchNotificationHanlder : IConsumer<NotificationRendered>
 {
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly NotificationDbContext _notificationDbContext;
@@ -14,12 +16,11 @@ public class DispatchNotificationHanlder : IConsumer<Contracts.NotificationRende
         _notificationDbContext = notificationDbContext;
     }
 
-    public async Task Consume(ConsumeContext<Contracts.NotificationRendered> context)
+    public async Task Consume(ConsumeContext<NotificationRendered> context)
     {
-        var @event = context.Message.NotificationMessage;
+        Guard.Against.Null(context.Message, nameof(NotificationRendered));
 
-        if (@event is null)
-            return;
+        var @event = context.Message.NotificationMessage;
 
         //save log to db if required
         var notificationLog = NotificationLogs.Model.NotificationLog.Create(
@@ -29,11 +30,10 @@ public class DispatchNotificationHanlder : IConsumer<Contracts.NotificationRende
 
         await _notificationDbContext.SaveChangesAsync();
 
-        //only for rabbitmq, with inmemory is skip -> filter in consumer
+        //transport: inmemory = skip, filter at consumer
         await _publishEndpoint.Publish(@event, ctx =>
         {
             ctx.SetRoutingKey(@event.Channel.ToString());
         });
-
     }
 }
