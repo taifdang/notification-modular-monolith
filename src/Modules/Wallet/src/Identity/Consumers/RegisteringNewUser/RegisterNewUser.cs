@@ -7,13 +7,13 @@ using Wallet.Extensions.Infrastructure;
 using Wallet.Wallets.Exceptions;
 using Wallet.Wallets.ValueObjects;
 
-namespace Wallet.Identity.Consumers;
+namespace Wallet.Identity.Consumers.RegisteringNewUser;
 
-public class CreateWallet : IConsumer<UserCreated>
+public class RegisterNewUserHandler : IConsumer<UserCreated>
 {
     private readonly WalletDbContext _walletDbContext;
 
-    public CreateWallet(WalletDbContext walletDbContext)
+    public RegisterNewUserHandler(WalletDbContext walletDbContext)
     {
         _walletDbContext = walletDbContext;
     }
