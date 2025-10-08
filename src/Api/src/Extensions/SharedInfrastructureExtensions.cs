@@ -10,7 +10,7 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using Identity;
 using Notification;
-using UserProfile;
+using User;
 using Wallet;
 
 namespace Api.Extensions;
@@ -49,7 +49,7 @@ public static class SharedInfrastructureExtensions
             {
                 sp.GetRequiredService<IdentityEventMapper>(),
                 sp.GetRequiredService<WalletEventMapper>(),
-                sp.GetRequiredService<UserProfileEventMapper>(),
+                sp.GetRequiredService<UserEventMapper>(),
                 sp.GetRequiredService<NotificationEventMapper>()
             };
             return new CompositEventMapper(mappers);

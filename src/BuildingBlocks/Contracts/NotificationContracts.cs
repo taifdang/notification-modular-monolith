@@ -20,8 +20,7 @@ public record NotificationMessage(Guid MessageId, NotificationType NotificationT
 public record Recipient(Guid UserId, string? Email);
 
 public record NotificationCreated(Guid Id, Guid UserId, string Email) : IIntegrationEvent;
-public record NotificationReadyToRender(Guid Id, Guid UserId, Guid RequestId, NotificationType Type, NotificationPriority Priority, string DataSchema,List<ChannelType> channel);
-public record NotificationRenderedContracts(Guid Id,NotificationMessage NotificationMessage);
+
     public enum NotificationType
     {
         UnKnown = 0,

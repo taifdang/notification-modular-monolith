@@ -1,7 +1,8 @@
-﻿using BuildingBlocks.Core.Event;
+﻿using BuildingBlocks.Core;
+using BuildingBlocks.Core.Event;
 
 namespace User;
-public sealed class UserEventMapper
+public sealed class UserEventMapper : IEventMapper
 {
     public IIntegrationEvent? MapToIntegrationEvent(IDomainEvent @event)
     {

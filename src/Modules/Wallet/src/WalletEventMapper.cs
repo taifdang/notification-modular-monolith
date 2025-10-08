@@ -5,7 +5,7 @@ using Wallet.Wallets.Features.UpdatingWalletBalance;
 
 namespace Wallet;
 
-public class WalletEventMapper : IEventMapper
+public sealed class WalletEventMapper : IEventMapper
 {
     public IIntegrationEvent? MapToIntegrationEvent(IDomainEvent @event)
     {
