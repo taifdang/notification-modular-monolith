@@ -19,11 +19,7 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="PersistNotificationProcessor\Ingestion\Broadcast\" />
     <Folder Include="Recipents\Exceptions\" />
-    <Folder Include="Recipents\Enums\" />
-    <Folder Include="Templates\Features\CreatingTemplate\" />
-    <Folder Include="Templates\Features\GettingTemplateByType\" />
-    <Folder Include="Templates\Features\DeletingTemplate\" />
-    <Folder Include="Templates\Features\UpdatingTemplate\" />
+    <Folder Include="Recipents\ValueObjects\" />
   </ItemGroup>
 
   <ItemGroup>

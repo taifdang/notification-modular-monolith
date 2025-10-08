@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Contracts;
-using MassTransit;
+﻿using MassTransit;
 using Notification.Data;
 
 namespace Notification.PersistNotificationProcessor.Dispatching.DispatchingNotification;

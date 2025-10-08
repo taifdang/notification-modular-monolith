@@ -46,7 +46,7 @@ public class RenderNotificationHandler : IConsumer<NotificationValidated>
 
             if (template is null)
             {
-                throw new Exception($"Not found template for notification type {context.Message.Type} and channel {item.Channel}");
+                continue;
             }
 
             var data = JsonSerializer.Deserialize<Dictionary<string, object>>(context.Message.DataSchema);
