@@ -9,13 +9,13 @@ using User.Profiles.ValueObjects;
 
 namespace User.Identity.Consumers.RegisteringNewUser;
 
-public class RegisterNewUser : IConsumer<UserCreated>
+public class RegisterNewUserHandler : IConsumer<UserCreated>
 {
     private readonly UserDbContext _userDbContext;
     private readonly IEventDispatcher _eventDispatcher;
-    private readonly ILogger<RegisterNewUser> _logger;
+    private readonly ILogger<RegisterNewUserHandler> _logger;
 
-    public RegisterNewUser(UserDbContext userDbContext, IEventDispatcher eventDispatcher, ILogger<RegisterNewUser> logger)
+    public RegisterNewUserHandler(UserDbContext userDbContext, IEventDispatcher eventDispatcher, ILogger<RegisterNewUserHandler> logger)
     {
         _userDbContext = userDbContext;
         _eventDispatcher = eventDispatcher;
