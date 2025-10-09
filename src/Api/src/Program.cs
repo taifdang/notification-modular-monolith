@@ -13,7 +13,6 @@ builder.AddWalletModules();
 builder.AddNotificationModules();
 builder.AddUserModules();
 
-
 var app = builder.Build();
 
 //app.UseCors();

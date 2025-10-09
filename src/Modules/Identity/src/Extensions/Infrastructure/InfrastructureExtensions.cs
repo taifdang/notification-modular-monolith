@@ -2,7 +2,6 @@
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Mapster;
 using FluentValidation;
-using Identity.Configurations;
 using Identity.Data;
 using Identity.Data.Seeds;
 using Microsoft.AspNetCore.Builder;
@@ -17,18 +16,14 @@ public static class InfrastructureExtensions
     {
 
         builder.Services.AddScoped<IdentityEventMapper>();
+        builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
 
         builder.Services.AddCustomMapster(typeof(IdentityRoot).Assembly);
         builder.Services.AddValidatorsFromAssembly(typeof(IdentityRoot).Assembly);
         builder.Services.AddMediatRCustom();
-
-        builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
-
-        //same 1 database
-        //builder.Services.AddCustomDbContext<IdentityContext>();
-        builder.Services.AddIdentityContextCustom();
-  
-        builder.AddIdentityServerCustom();
+        
+        builder.Services.AddCustomIdentityContext();
+        builder.AddCustomIdentityServer();
 
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {

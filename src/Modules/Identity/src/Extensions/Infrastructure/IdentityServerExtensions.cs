@@ -17,7 +17,7 @@ namespace Identity.Extensions.Infrastructure;
 //ref: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-9.0#the-identity-model
 public static class IdentityServerExtensions
 {
-    public static WebApplicationBuilder AddIdentityServerCustom(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddCustomIdentityServer(this WebApplicationBuilder builder)
     {
         builder.Services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<IdentityContext>()

@@ -9,7 +9,7 @@ namespace Identity.Extensions.Infrastructure;
 
 public static class DbContextExtensions
 {
-    public static IServiceCollection AddIdentityContextCustom(this IServiceCollection services)
+    public static IServiceCollection AddCustomIdentityContext(this IServiceCollection services)
     {
         var mssqlOptions = services.GetOptions<MssqlOptions>("mssql").ConnectionString;
 
