@@ -26,7 +26,7 @@ public record CreateTransaction(int ReferenceCode, string AccountNumber, string 
 
 public record CreateTransactionResult(Guid Id, int ReferenceCode);
 
-public record TransactionCreatedDomainEvent(Guid Id, Guid WalletId, int ReferenceCode, decimal Amount) : IDomainEvent;
+public record TransactionCreatedDomainEvent(Guid Id, Guid WalletId, int ReferenceCode, decimal Amount, Enums.TransactionType TransactionType) : IDomainEvent;
 
 public record CreateTransactionRequestDto(string Gateway, string TransactionDate, string AccountNumber,
     string? SubAccount, string? Code, string Content, string TransferType, string Description,
@@ -120,7 +120,7 @@ internal class CreateTransactionCommandHandler : ICommandHandler<CreateTransacti
         if (status == Enums.TransactionStatus.Pending)
         {
             await _eventDispatcher.SendAsync(
-               new TransactionCreatedDomainEvent(command.Id, wallet.Id, command.ReferenceCode, command.Amount),
+               new TransactionCreatedDomainEvent(command.Id, wallet.Id, command.ReferenceCode, command.Amount, transactionEntity.TransactionType),
                typeof(IInternalCommand));
         }
 

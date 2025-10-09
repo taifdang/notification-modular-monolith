@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Notifications\Features\GettingAvailableNotification\" />
     <Folder Include="PersistNotificationProcessor\Ingestion\Broadcast\" />
     <Folder Include="Recipents\Exceptions\" />
     <Folder Include="Recipents\ValueObjects\" />

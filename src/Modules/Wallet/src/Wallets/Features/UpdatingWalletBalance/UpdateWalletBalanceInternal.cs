@@ -1,7 +1,10 @@
 ﻿
 using Ardalis.GuardClauses;
+using BuildingBlocks.Contracts;
+using BuildingBlocks.Core;
 using BuildingBlocks.Core.CQRS;
 using BuildingBlocks.Core.Event;
+using BuildingBlocks.Utils;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Wallet.Data;
@@ -14,10 +17,12 @@ public record UpdateWalletBalanceInternalCommand(Guid Id, Guid WalletId, decimal
 internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWalletBalanceInternalCommand>
 {
     private readonly WalletDbContext _walletDbContext;
+    private readonly IEventDispatcher _eventDispatcher;
 
-    public UpdateWalletBalanceInternalHandler(WalletDbContext walletDbContext)
+    public UpdateWalletBalanceInternalHandler(WalletDbContext walletDbContext, IEventDispatcher eventDispatcher)
     {
         _walletDbContext = walletDbContext;
+        _eventDispatcher = eventDispatcher;
     }
 
     public async Task<Unit> Handle(UpdateWalletBalanceInternalCommand request, CancellationToken cancellationToken)
@@ -40,6 +45,14 @@ internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWallet
             
             await _walletDbContext.SaveChangesAsync(cancellationToken); 
             await transaction.CommitAsync(cancellationToken); 
+
+            if(transactionEntity.TransactionType == Transactions.Enums.TransactionType.Topup)
+            {
+                await _eventDispatcher.SendAsync(new PersonalNotificationRequested(NotificationType.Topup,new Recipient(wallet.UserId,""),
+                    DictionaryExtensions.SetPayloads(("topupId", transactionEntity.ReferenceCode),("userId", wallet.UserId)), 
+                    NotificationPriority.High));
+            }
+
             return Unit.Value; 
         } 
         catch 

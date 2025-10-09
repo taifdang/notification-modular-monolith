@@ -1,6 +1,5 @@
 ﻿
 using BuildingBlocks.Configuration;
-using BuildingBlocks.Contracts;
 using BuildingBlocks.Exception;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,27 +54,23 @@ public static class Extensions
                             o.Username(rabbitMqOptions?.UserName);
                             o.Password(rabbitMqOptions?.Password);
                         });
-
-                    cfg.Message<NotificationMessage>(x =>
-                    {
-                        x.SetEntityName("notification-exchange");
-                    });
+                    
+                    cfg.ApplyModuleTopology(context);
 
                     cfg.ConfigureEndpoints(context);
-
                     cfg.UseMessageRetry(AddRetryConfiguration);
                 });
-
                 break;
+
             case TransportType.InMemory:
                 configure.UsingInMemory(
                     (context, cfg) =>
                     {
-                        cfg.ConfigureEndpoints(context);
+                        cfg.ApplyModuleTopology(context);
 
+                        cfg.ConfigureEndpoints(context);
                         cfg.UseMessageRetry(AddRetryConfiguration);
                     });
-
                 break;
 
             default:

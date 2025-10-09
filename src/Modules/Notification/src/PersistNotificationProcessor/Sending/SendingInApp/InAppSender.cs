@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using BuildingBlocks.Contracts;
+using BuildingBlocks.Masstransit;
 using BuildingBlocks.Signalr;
 using MassTransit;
 using Microsoft.Extensions.Logging;

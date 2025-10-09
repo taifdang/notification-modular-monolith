@@ -3,23 +3,21 @@ using MassTransit;
 
 namespace BuildingBlocks.Contracts;
 
-public record PersonalNotificationRequested(NotificationType NotificationType,Recipient Recipient, Dictionary<string, object?> Payload, 
+public record PersonalNotificationRequested(NotificationType NotificationType, Recipient Recipient, IDictionary<string, object?> Payload, 
     NotificationPriority Priority) : IIntegrationEvent
 {
     public Guid RequestId { get; init; } = NewId.NextGuid();
 }
-public record BroadcastNotificationRequested(NotificationType NotificationType,Dictionary<string, object?> Payload, NotificationPriority Priority)
+public record BroadcastNotificationRequested(NotificationType NotificationType, IDictionary<string, object?> Payload, NotificationPriority Priority)
     : IIntegrationEvent
 {
     public Guid RequestId { get; init; } = NewId.NextGuid();
 }
 
-public record NotificationMessage(Guid MessageId, NotificationType NotificationType, ChannelType Channel, Recipient Recipient,
-    object? MessageContent, Dictionary<string,object?> MetaData = null!);
+//public record NotificationMessage(Guid MessageId, NotificationType NotificationType, ChannelType Channel, Recipient Recipient,
+//    object? MessageContent, Dictionary<string,object?> MetaData = null!);
 
 public record Recipient(Guid UserId, string? Email);
-
-public record NotificationCreated(Guid Id, Guid UserId, string Email) : IIntegrationEvent;
 
     public enum NotificationType
     {
