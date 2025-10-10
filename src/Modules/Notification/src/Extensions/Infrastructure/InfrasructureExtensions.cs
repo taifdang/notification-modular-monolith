@@ -12,7 +12,7 @@ public static class InfrasructureExtensions
     public static WebApplicationBuilder AddNotificationModules(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<NotificationEventMapper>();
-        builder.Services.AddScoped<IMasstransitModule, MasstransitExtensions>();
+        builder.Services.AddSingleton<IMasstransitModule, MasstransitExtensions>();
 
         builder.Services.AddCustomDbContext<NotificationDbContext>();
         builder.Services.AddCustomMapster(typeof(NotificationRoot).Assembly);
