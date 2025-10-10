@@ -30,7 +30,7 @@ public class RegisterNewUserHandler : IConsumer<UserCreated>
         //retry 3 times then throw exception
         var paymentCode = WalletExtensions.GeneratePaymentCode();
 
-        var walletEnitty = Wallets.Models.Wallet.Create(WalletId.Of(NewId.NextGuid()), paymentCode, Balance.Of(0));
+        var walletEnitty = Wallets.Models.Wallet.Create(WalletId.Of(NewId.NextGuid()), context.Message.Id, paymentCode, Balance.Of(0));
 
         await _walletDbContext.Wallets.AddAsync(walletEnitty);
 

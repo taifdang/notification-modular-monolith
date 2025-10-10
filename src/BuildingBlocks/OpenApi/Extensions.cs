@@ -6,7 +6,7 @@ namespace BuildingBlocks.OpenApi;
 
 public static class Extensions
 {
-    public static IServiceCollection AddSwaggerCustom (this IServiceCollection services)
+    public static IServiceCollection AddCustomSwagger (this IServiceCollection services)
     {
         services.AddSwaggerGen(
             options => {

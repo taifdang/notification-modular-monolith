@@ -151,7 +151,7 @@ public class AppDbContextBase : DbContext, IDbContext
             foreach(var entry in ChangeTracker.Entries<IAggregate>())
             {
                 var isAudit = entry.Entity.GetType().IsAssignableTo(typeof(IAggregate));
-                var userId = _currentUserProvider?.GetCurrentUserId() ?? Guid.Empty;
+                var userId = _currentUserProvider?.GetCurrentUserId();
 
                 if (isAudit)
                 {

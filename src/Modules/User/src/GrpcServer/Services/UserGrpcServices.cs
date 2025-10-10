@@ -25,7 +25,6 @@ public class UserGrpcServices : UserGrpcService.UserGrpcServiceBase
 
         result.PreferenceDto = new PreferenceResponse
         {
-            Id = preference.PreferenceDto.Id.ToString(),
             UserId = preference.PreferenceDto.UserId.ToString()
         };
 

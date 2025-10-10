@@ -2,6 +2,7 @@
 using BuildingBlocks.Contracts;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Notification.Configurations.Rules;
 using Notification.Data;
 using Notification.PersistNotificationProcessor.Contracts;
@@ -13,18 +14,22 @@ public class ValidateNotification : IConsumer<NotificationReceived>
     private readonly NotificationDbContext _notificationDbContext;
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly UserGrpcService.UserGrpcServiceClient _grpcClient;
+    private readonly ILogger<ValidateNotification> _logger;
 
     public ValidateNotification(UserGrpcService.UserGrpcServiceClient grpcClient,
-        NotificationDbContext notificationDbContext, IPublishEndpoint publishEndpoint)
+        NotificationDbContext notificationDbContext, IPublishEndpoint publishEndpoint, ILogger<ValidateNotification> logger)
     {
         _grpcClient = grpcClient;
         _notificationDbContext = notificationDbContext;
         _publishEndpoint = publishEndpoint;
+        _logger = logger;
     }
 
     public async Task Consume(ConsumeContext<NotificationReceived> context)
     {
         Guard.Against.Null(context.Message, nameof(NotificationReceived));
+
+        _logger.LogInformation($"consumer for {nameof(NotificationReceived)} is started");
 
         var notification = await _notificationDbContext.Notifications.SingleOrDefaultAsync(x => x.Id == context.Message.Id);
 

@@ -2,6 +2,7 @@
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Mapster;
 using FluentValidation;
+using Identity.Configurations;
 using Identity.Data;
 using Identity.Data.Seeds;
 using Microsoft.AspNetCore.Builder;

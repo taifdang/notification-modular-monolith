@@ -29,7 +29,7 @@ public class GetPreferenceByIdEndpoint : ControllerBase
     {
         var result = await mediator.Send(new GetPreferenceById(id), cancellationToken);
         var response = result.Adapt<GetPreferenceByIdResponse>();
-        return Ok(response);
+        return Ok(result);
     }
 }
 public class GetPreferenceByIdValidator : AbstractValidator<GetPreferenceById>
@@ -53,17 +53,26 @@ public class GetPreferenceByIdHandler : IRequestHandler<GetPreferenceById, GetPr
     {
         Guard.Against.Null(query, nameof(query));
 
-        var preference = await _userDbContext.Preferences
-            .Where(x => x.UserId == query.Id && x.IsDeleted == false)
-            .ToListAsync(cancellationToken);
+        //var preference = await _userDbContext.Preferences
+        //    .Where(x => x.UserId.Value == query.Id && !x.IsDeleted)
+        //    .ToListAsync();
 
-        if (!preference.Any())
+        var preference = await _userDbContext.Preferences
+            .Where(x => x.UserId.Value == query.Id && !x.IsDeleted)
+            .GroupBy(x => x.UserId.Value)
+            .Select(g => new PreferenceDto(
+                g.Key,
+                g.Select(p => new ChannelPreference(p.Channel, p.IsOptOut)).ToList()
+            ))
+            .FirstOrDefaultAsync();
+
+        if (preference is null)
         {
             throw new PreferenceNotFoundException();
         }
 
-        var preferenceDto = _mapper.Map<PreferenceDto>(preference);
+        //var preferenceDto = _mapper.Map<PreferenceDto>(preference);
 
-        return new GetPreferenceByIdResult(preferenceDto);
+        return new GetPreferenceByIdResult(preference);
     }
 }

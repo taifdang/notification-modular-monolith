@@ -12,9 +12,8 @@ message GetPreferenceByIdResult{
 	PreferenceResponse PreferenceDto = 1;
 }
 message PreferenceResponse{
-	string Id = 1;
-	string UserId = 2;
-	repeated ChannelPreference Preference = 3;
+	string UserId = 1;
+	repeated ChannelPreference Preference = 2;
 }
 message ChannelPreference{
 	ChannelType channel = 1;

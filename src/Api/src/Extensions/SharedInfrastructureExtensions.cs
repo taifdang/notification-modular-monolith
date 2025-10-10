@@ -32,7 +32,7 @@ public static class SharedInfrastructureExtensions
         builder.Services.AddFluentValidation();
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
-        builder.Services.AddSwaggerCustom();
+        builder.Services.AddCustomSwagger();
         builder.Services.AddSingleton<ISignalrHub, SignalrHub>();
         builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
         builder.Services.AddHangfireStorageMssql();

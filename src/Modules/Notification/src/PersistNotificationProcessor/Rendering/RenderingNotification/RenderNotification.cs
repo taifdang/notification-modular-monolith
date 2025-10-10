@@ -1,6 +1,8 @@
-﻿using HandlebarsDotNet;
+﻿using Ardalis.GuardClauses;
+using HandlebarsDotNet;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Notification.Data;
 using Notification.Extensions;
 using Notification.PersistNotificationProcessor.Contracts;
@@ -11,14 +13,21 @@ public class RenderNotificationHandler : IConsumer<NotificationValidated>
 {
     private readonly NotificationDbContext _notificationDbContext;
     private readonly IPublishEndpoint _publishEndpoint;
-    public RenderNotificationHandler(NotificationDbContext notificationDbContext, IPublishEndpoint publishEndpoint)
+    private readonly ILogger<RenderNotificationHandler> _logger;
+
+    public RenderNotificationHandler(NotificationDbContext notificationDbContext, IPublishEndpoint publishEndpoint, ILogger<RenderNotificationHandler> logger)
     {
         _notificationDbContext = notificationDbContext;
         _publishEndpoint = publishEndpoint;
+        _logger = logger;
     }
 
     public async Task Consume(ConsumeContext<NotificationValidated> context)
     {
+        Guard.Against.Null(context.Message, nameof(NotificationValidated));
+
+        _logger.LogInformation($"consumer for {nameof(NotificationValidated)} is started");
+
         //NOTE: n event type + 1 or n channel = n template
         var recipients = await _notificationDbContext.Recipients
             .Where(x => x.NotificationId == context.Message.Id && x.UserId == context.Message.UserId)
@@ -41,6 +50,7 @@ public class RenderNotificationHandler : IConsumer<NotificationValidated>
 
             if (template is null)
             {
+                _logger.LogWarning("No template found for NotificationType {NotificationType} and Channel {Channel}", context.Message.Type, recipient.Channel);
                 continue;
             }
            

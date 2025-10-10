@@ -29,21 +29,19 @@ public class IngestePersonalNotificationHandler : IConsumer<PersonalNotification
 
         var notification = await _notificationDbContext.Notifications.SingleOrDefaultAsync(x => x.RequestId == context.Message.RequestId);
 
-        if (notification is null)
+        if (notification is  null)
         {
-            return;
-        }
-
-        var notificationEntity = Notifications.Model.Notification.Create(
-            NewId.NextGuid(), context.Message.RequestId, context.Message.NotificationType, 
+            var notificationEntity = Notifications.Model.Notification.Create(
+            NewId.NextGuid(), context.Message.RequestId, context.Message.NotificationType,
             JsonSerializer.Serialize(context.Message), JsonSerializer.Serialize(context.Message.Payload),
             context.Message.Priority);
 
-        await _notificationDbContext.Notifications.AddAsync(notificationEntity);
+            await _notificationDbContext.Notifications.AddAsync(notificationEntity);
 
-        await _notificationDbContext.SaveChangesAsync();
+            await _notificationDbContext.SaveChangesAsync();
+        }
 
         await _publishEndpoint.Publish(
-            new NotificationReceived(notificationEntity.Id, context.Message.Recipient.UserId, context.Message.Recipient.Email));
+            new NotificationReceived(notification.Id, context.Message.Recipient.UserId, context.Message.Recipient.Email));
     }
 }

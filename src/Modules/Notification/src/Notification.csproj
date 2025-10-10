@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <None Remove="GrpcClient\Protos\user.proto" />
-    <None Remove="GrpcClient\Protos\userPreference.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,7 +35,6 @@
 
   <ItemGroup>
     <Protobuf Include="GrpcClient\Protos\user.proto" GrpcServices="Both" />
-    <Protobuf Include="GrpcClient\Protos\userPreference.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>

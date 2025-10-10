@@ -1,14 +1,14 @@
 ﻿using Ardalis.GuardClauses;
 using BuildingBlocks.Contracts;
-using BuildingBlocks.Masstransit;
 using BuildingBlocks.Signalr;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Notification.Data;
+using Notification.PersistNotificationProcessor.Contracts;
 
 namespace Notification.PersistNotificationProcessor.Sending.SendingInApp;
 
-public class InAppSender : IConsumer<Contracts.NotificationMessage>
+public class InAppSender : IConsumer<NotificationMessage>
 {
     private readonly ISignalrHub _signalrHub;
     private readonly ILogger<InAppSender> _logger;
@@ -21,9 +21,11 @@ public class InAppSender : IConsumer<Contracts.NotificationMessage>
         _notificationDbContext = notificationDbContext;
     }
 
-    public async Task Consume(ConsumeContext<Contracts.NotificationMessage> context)
+    public async Task Consume(ConsumeContext<NotificationMessage> context)
     {
-        Guard.Against.Null(context.Message, nameof(Contracts.NotificationMessage));
+        Guard.Against.Null(context.Message, nameof(NotificationMessage));
+
+        _logger.LogInformation($"consumer for {nameof(NotificationMessage)} is started");
 
         var @event = context.Message;
 
@@ -37,6 +39,7 @@ public class InAppSender : IConsumer<Contracts.NotificationMessage>
 
         if (notificationLog == null)
         {
+            _logger.LogWarning($"consumer for {nameof(NotificationMessage)} not found logId {context.Message.MessageId}");
             return;
         }
 
