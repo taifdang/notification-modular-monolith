@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Masstransit;
 
-public static class CompositMasstransitModule
+public static class CompositMasstransit
 {
     public static void ApplyModuleTopology(this IBusFactoryConfigurator cfg, IRegistrationContext context)
     {
