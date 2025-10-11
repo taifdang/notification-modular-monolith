@@ -15,6 +15,7 @@ using Wallet;
 
 namespace Api.Extensions;
 
+//ref: https://learn.microsoft.com/en-us/aspnet/core/signalr/configuration?view=aspnetcore-9.0&tabs=dotnet
 public static class SharedInfrastructureExtensions
 {
     public static WebApplicationBuilder AddSharedInfrastructure(this WebApplicationBuilder builder)
@@ -25,6 +26,8 @@ public static class SharedInfrastructureExtensions
 
         //persistMessage
         builder.Services.AddPersistMessageProcessor();
+        //signalr connection
+        builder.Services.AddSignalRConnection();
 
         builder.Services.AddControllers();
        

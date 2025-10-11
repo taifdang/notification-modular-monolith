@@ -10,6 +10,8 @@ namespace BuildingBlocks.Signalr;
 //ref:https://learn.microsoft.com/en-us/aspnet/core/signalr/authn-and-authz?view=aspnetcore-9.0
 //ref:https://learn.microsoft.com/en-us/aspnet/core/signalr/hubcontext?view=aspnetcore-9.0
 //ref:https://learn.microsoft.com/en-us/answers/questions/859091/how-to-get-the-userid-of-a-user-in-signalr-hub
+//ref:https://learn.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/mapping-users-to-connections 
+//ref:https://learn.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-api-guide-server
 [Authorize(Policy = nameof(SignalrSchema))]
 public class SignalrHub(
     ILogger<SignalrHub> logger,
@@ -56,6 +58,10 @@ public class SignalrHub(
         {
             var userId = Context.UserIdentifier ?? string.Empty;
 
+            //add group by userId: send transactionId
+
+            //Groups.AddToGroupAsync(Context.ConnectionId, userId);
+
             logger.LogWarning(
                 "User with id: {UserId} connected at {DateTime}",
                 userId,
@@ -73,5 +79,22 @@ public class SignalrHub(
             DateTime.Now.ToString());
 
         return base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task JoinGroup(string groupName)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+        await Clients.Caller.SendAsync("GroupJoined", groupName);
+    }
+
+    public async Task AddToGroupAsync(string connectionId, string groupName)
+    {
+        await Groups.AddToGroupAsync(connectionId, groupName);
+    }
+
+    public async Task LeaveGroup(string groupName)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+        await Clients.Caller.SendAsync("GroupLeft", groupName);
     }
 }

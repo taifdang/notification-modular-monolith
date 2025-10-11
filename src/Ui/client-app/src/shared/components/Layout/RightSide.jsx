@@ -9,21 +9,21 @@ export default function RightSide() {
       title: "Topup Confirm",
       status: true,
       error: "Couldn't connect database.",
-      isActive: null,
+      isActive: false,
     },
     {
       id: 2,
       title: "Update Balance",
-      status: true,
+      status: false,
       error: "Couldn't connect database.",
-      isActive: null,
+      isActive: false,
     },
     {
       id: 3,
       title: "Push Notification",
-      status: false,
+      status: null,
       error: "Couldn't connect database.",
-      isActive: null,
+      isActive: false,
     },
   ]);
 

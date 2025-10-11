@@ -12,5 +12,6 @@ public class MasstransitExtensions : IMasstransitModule
         {          
             e.ConfigureConsumer<RegisterNewUserHandler>(context);
         });
+
     }
 }

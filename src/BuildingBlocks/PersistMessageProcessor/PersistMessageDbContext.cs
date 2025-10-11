@@ -56,7 +56,7 @@ namespace BuildingBlocks.PersistMessageProcessor
                     var databaseValues = await entry.GetDatabaseValuesAsync(cancellationToken);
 
                     if (databaseValues is null)
-                        _logger.LogWarning("");
+                        _logger.LogWarning("The record no longer exists in the database, The record has been deleted by another user.");
 
                     // Refresh original values to bypass next concurrency check
                     entry.CurrentValues.SetValues(databaseValues);  

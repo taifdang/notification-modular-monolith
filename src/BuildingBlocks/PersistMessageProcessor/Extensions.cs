@@ -1,6 +1,4 @@
-﻿
-
-using BuildingBlocks.Configuration;
+﻿using BuildingBlocks.Configuration;
 using BuildingBlocks.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

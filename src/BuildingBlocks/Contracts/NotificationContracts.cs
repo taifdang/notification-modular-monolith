@@ -13,9 +13,8 @@ public record BroadcastNotificationRequested(NotificationType NotificationType, 
 {
     public Guid RequestId { get; init; } = NewId.NextGuid();
 }
-
-//public record NotificationMessage(Guid MessageId, NotificationType NotificationType, ChannelType Channel, Recipient Recipient,
-//    object? MessageContent, Dictionary<string,object?> MetaData = null!);
+//state machine
+public record NotificationSent(Guid TransactionId) : IIntegrationEvent;
 
 public record Recipient(Guid UserId, string? Email);
 

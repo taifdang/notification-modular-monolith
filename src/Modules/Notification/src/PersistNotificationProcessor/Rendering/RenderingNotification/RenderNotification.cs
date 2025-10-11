@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Notification.Data;
 using Notification.Extensions;
 using Notification.PersistNotificationProcessor.Contracts;
+using Notification.Recipents.Model;
 
 namespace Notification.PersistNotificationProcessor.Rendering.RenderingNotification;
 
@@ -47,14 +48,19 @@ public class RenderNotificationHandler : IConsumer<NotificationValidated>
         foreach (var recipient in recipients)
         {
             var template = templates.FirstOrDefault(t => t.Channel == recipient.Channel);
+            string messageContent;
 
             if (template is null)
             {
-                _logger.LogWarning("No template found for NotificationType {NotificationType} and Channel {Channel}", context.Message.Type, recipient.Channel);
-                continue;
+                //fallback to raw data schema if no template found
+                _logger.LogWarning("No template found for NotificationType {NotificationType} and Channel {Channel}",
+                    context.Message.Type, recipient.Channel);
+                messageContent = context.Message.DataSchema;
             }
-           
-            var messageContent = TemplateExtensions.RenderMessage(template, context.Message.DataSchema);
+            else
+            {
+                messageContent = TemplateExtensions.RenderMessage(template, context.Message.DataSchema);
+            }
 
             var notificationMessage = new NotificationMessage(Guid.NewGuid(), context.Message.Type, recipient.Channel,
               new BuildingBlocks.Contracts.Recipient(context.Message.UserId, recipient.Target), messageContent,
