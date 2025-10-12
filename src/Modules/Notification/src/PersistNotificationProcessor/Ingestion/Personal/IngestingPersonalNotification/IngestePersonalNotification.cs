@@ -29,7 +29,7 @@ public class IngestePersonalNotificationHandler : IConsumer<PersonalNotification
 
         var notification = await _notificationDbContext.Notifications.SingleOrDefaultAsync(x => x.RequestId == context.Message.RequestId);
 
-        if (notification is  null)
+        if (notification is null)
         {
             var notificationEntity = Notifications.Model.Notification.Create(
             NewId.NextGuid(), context.Message.RequestId, context.Message.NotificationType,

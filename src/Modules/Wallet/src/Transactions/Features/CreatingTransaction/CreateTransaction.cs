@@ -1,7 +1,9 @@
 ﻿using Ardalis.GuardClauses;
+using BuildingBlocks.Contracts;
 using BuildingBlocks.Core;
 using BuildingBlocks.Core.CQRS;
 using BuildingBlocks.Core.Event;
+using BuildingBlocks.Signalr.Repository;
 using BuildingBlocks.Utils;
 using FluentValidation;
 using Mapster;
@@ -73,11 +75,15 @@ internal class CreateTransactionCommandHandler : ICommandHandler<CreateTransacti
 {
     private readonly WalletDbContext _walletDbContext;
     private readonly IEventDispatcher _eventDispatcher;
+    private readonly IConnectionProcessor _connectionProcessor;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CreateTransactionCommandHandler(WalletDbContext walletDbContext, IEventDispatcher eventDispatcher)
+    public CreateTransactionCommandHandler(WalletDbContext walletDbContext, IEventDispatcher eventDispatcher, IConnectionProcessor connectionProcessor, IPublishEndpoint publishEndpoint)
     {
         _walletDbContext = walletDbContext;
         _eventDispatcher = eventDispatcher;
+        _connectionProcessor = connectionProcessor;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<CreateTransactionResult> Handle(CreateTransaction command, CancellationToken cancellationToken)
@@ -102,7 +108,7 @@ internal class CreateTransactionCommandHandler : ICommandHandler<CreateTransacti
         if (wallet is null)
         {
             status = Enums.TransactionStatus.Unknown;
-            walletId = WalletId.Of(Guid.Parse("cba4d432-337c-4824-863c-5af0e7558980"));
+            walletId = null;
         }
         else
         {
@@ -119,14 +125,22 @@ internal class CreateTransactionCommandHandler : ICommandHandler<CreateTransacti
 
         if (status == Enums.TransactionStatus.Pending)
         {
-            await _eventDispatcher.SendAsync(
-               new TransactionCreatedDomainEvent(command.Id, wallet.Id, command.ReferenceCode, command.Amount, transactionEntity.TransactionType),
-               typeof(IInternalCommand));
+            try
+            {
+                await _connectionProcessor.AddConnectionInGroupAsync(wallet.UserId, transactionEntity.Id.ToString());
+
+                await _eventDispatcher.SendAsync(
+                   new TransactionCreatedDomainEvent(command.Id, wallet.Id, command.ReferenceCode, command.Amount, transactionEntity.TransactionType),
+                   typeof(IInternalCommand));
+
+                await _publishEndpoint.Publish(new TopupConfirmed(transactionEntity.Id, transactionEntity.Amount));
+            }
+            catch
+            {
+                await _publishEndpoint.Publish(new TopupFailed(transactionEntity.Id, "Internal error"));
+            }
         }
 
         return new CreateTransactionResult(command.Id, command.ReferenceCode);   
     }
 }
-
-
-

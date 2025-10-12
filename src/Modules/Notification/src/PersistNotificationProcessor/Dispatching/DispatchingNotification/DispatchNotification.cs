@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using Notification.Data;
 using Notification.PersistNotificationProcessor.Contracts;
+using System.Text.Json;
 
 namespace Notification.PersistNotificationProcessor.Dispatching.DispatchingNotification;
 
@@ -36,10 +37,18 @@ public class DispatchNotificationHanlder : IConsumer<NotificationRendered>
 
         await _notificationDbContext.SaveChangesAsync();
 
-        //transport: inmemory = skip, filter at consumer
+        //options
+        var metadata = JsonSerializer.Deserialize<Dictionary<string, object>>(context.Message.dataSchema);
+
         await _publishEndpoint.Publish(@event, ctx =>
         {
+            //transport: inmemory = skip, filter at consumer
             ctx.SetRoutingKey(@event.Channel.ToString());
+
+            foreach (var header in metadata)
+            {
+                ctx.Headers.Set(header.Key, header.Value);
+            }
         });
     }
 }

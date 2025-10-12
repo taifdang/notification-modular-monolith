@@ -11,4 +11,5 @@ public class TopupState : SagaStateMachineInstance
     public decimal Amount { get; set; }
     public Guid? UserId { get; set; }
     public DateTime? UpdateAt { get; set; }
+    public string? ErrorMessage { get; set; }
 }

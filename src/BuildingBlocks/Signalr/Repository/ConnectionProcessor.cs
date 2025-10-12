@@ -1,14 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Signalr.Repository;
 
 public class ConnectionProcessor : IConnectionProcessor
 {
     private readonly IConnectionDbContext _connectionDbContext;
+    private readonly IHubContext<SignalrHub> _hubContext;
 
-    public ConnectionProcessor(IConnectionDbContext connectionDbContext)
+    public ConnectionProcessor(IConnectionDbContext connectionDbContext, IHubContext<SignalrHub> hubContext)
     {
         _connectionDbContext = connectionDbContext;
+        _hubContext = hubContext;
     }
 
     public async Task AddConnectionAsync(Guid userId, string connectionId, long? tokenExpiry = null, CancellationToken cancellationToken = default)
@@ -19,7 +22,7 @@ public class ConnectionProcessor : IConnectionProcessor
                     x.ConnectionId == connectionId,
                 cancellationToken);
 
-        if (connection is null)
+        if (connection is not null)
             return;
         
         var connectionEntity = Connection.Create(userId, connectionId, tokenExpiry);
@@ -45,11 +48,17 @@ public class ConnectionProcessor : IConnectionProcessor
         await _connectionDbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<string>> GetConnectionAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task AddConnectionInGroupAsync(Guid userId, string groupName, CancellationToken cancellationToken = default)
     {
-        return await _connectionDbContext.Connection
-            .Where(x => x.UserId == userId)
-            .Select(x => x.ConnectionId)
-            .ToListAsync(cancellationToken);
+        var listConnection = await _connectionDbContext.Connection
+             .Where(x => x.UserId == userId && x.IsConnected)
+             .Select(x => x.ConnectionId)
+             .ToListAsync(cancellationToken);
+
+        foreach (var connectionId in listConnection)
+        {
+           await _hubContext.Groups.AddToGroupAsync(connectionId, groupName, cancellationToken);
+        }
+
     }
 }

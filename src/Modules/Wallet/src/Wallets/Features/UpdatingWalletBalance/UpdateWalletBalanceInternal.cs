@@ -5,6 +5,7 @@ using BuildingBlocks.Core;
 using BuildingBlocks.Core.CQRS;
 using BuildingBlocks.Core.Event;
 using BuildingBlocks.Utils;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Wallet.Data;
@@ -18,11 +19,13 @@ internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWallet
 {
     private readonly WalletDbContext _walletDbContext;
     private readonly IEventDispatcher _eventDispatcher;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public UpdateWalletBalanceInternalHandler(WalletDbContext walletDbContext, IEventDispatcher eventDispatcher)
+    public UpdateWalletBalanceInternalHandler(WalletDbContext walletDbContext, IEventDispatcher eventDispatcher, IPublishEndpoint publishEndpoint)
     {
         _walletDbContext = walletDbContext;
         _eventDispatcher = eventDispatcher;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Unit> Handle(UpdateWalletBalanceInternalCommand request, CancellationToken cancellationToken)
@@ -31,16 +34,16 @@ internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWallet
 
         using var transaction = await _walletDbContext.Database.BeginTransactionAsync(cancellationToken);
 
+        var wallet = await _walletDbContext.Wallets.SingleOrDefaultAsync(x => x.Id == request.WalletId, cancellationToken)
+              ?? throw new WalletNotFoundException();
+
+        wallet.Topup(Balance.Of(request.Amount));
+
+        var transactionEntity = await _walletDbContext.Transactions.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
+            ?? throw new TransactionNotExistException(request.Id);
+
         try 
-        { 
-            var wallet = await _walletDbContext.Wallets.SingleOrDefaultAsync(x => x.Id == request.WalletId, cancellationToken) 
-                ?? throw new WalletNotFoundException(); 
-            
-            wallet.Topup(Balance.Of(request.Amount)); 
-            
-            var transactionEntity = await _walletDbContext.Transactions.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken) 
-                ?? throw new TransactionNotExistException(request.Id);
-            
+        {    
             transactionEntity.ChangeState(Transactions.Enums.TransactionStatus.Successed); 
             
             await _walletDbContext.SaveChangesAsync(cancellationToken); 
@@ -49,15 +52,20 @@ internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWallet
             if(transactionEntity.TransactionType == Transactions.Enums.TransactionType.Topup)
             {
                 await _eventDispatcher.SendAsync(new PersonalNotificationRequested(NotificationType.Topup,new Recipient(wallet.UserId,""),
-                    DictionaryExtensions.SetPayloads(("topupId", transactionEntity.ReferenceCode),("userId", wallet.UserId)), 
+                    DictionaryExtensions.SetPayloads(
+                        ("topupId", transactionEntity.ReferenceCode),
+                        ("userId", wallet.UserId),
+                        ("transactionId", transactionEntity.Id.ToString())), 
                     NotificationPriority.High));
+                await _publishEndpoint.Publish(new BalanceUpdated(transactionEntity.Id, wallet.UserId));
             }
 
             return Unit.Value; 
         } 
         catch 
         { 
-            await transaction.RollbackAsync(cancellationToken); 
+            await transaction.RollbackAsync(cancellationToken);
+            await _publishEndpoint.Publish(new TopupFailed(transactionEntity.Id, "Internal error"));
             throw; 
         }
     }

@@ -40,7 +40,15 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
                    await UpdateState(context.Saga, "TopupConfirm", "Successed");
                    await UpdateState(context.Saga, "BalanceUpdate", "Pending");
                })
-               .TransitionTo(UpdatingBalance)
+               .TransitionTo(UpdatingBalance),
+               When(TopupFailed)
+               .ThenAsync(async context =>
+               {
+                   context.Saga.ErrorMessage = context.Message.Reason;
+                   await UpdateState(context.Saga, "TopupConfirm", "Failed", context.Saga.ErrorMessage);
+               })
+               .TransitionTo(Failed)
+               .Finalize()
         );
 
         During(UpdatingBalance,
@@ -57,7 +65,8 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
            When(TopupFailed)
                .ThenAsync(async context =>
                {
-                   await UpdateState(context.Saga, "BalanceUpdate", "Failed");
+                   context.Saga.ErrorMessage = context.Message.Reason;
+                   await UpdateState(context.Saga, "BalanceUpdate", "Failed", context.Saga.ErrorMessage);
                })
                .TransitionTo(Failed)
                .Finalize()
@@ -74,9 +83,10 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
            When(TopupFailed)
                .ThenAsync(async context =>
                {
-                   await UpdateState(context.Saga, "NotificationSend", "Failed");
+                   context.Saga.ErrorMessage = context.Message.Reason;
+                   await UpdateState(context.Saga, "NotificationSend", "Failed", context.Saga.ErrorMessage);
                })
-               .TransitionTo(Failed)
+               .TransitionTo(Failed)               
                .Finalize()
         );
     }

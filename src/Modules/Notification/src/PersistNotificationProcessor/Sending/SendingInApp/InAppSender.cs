@@ -2,6 +2,7 @@
 using BuildingBlocks.Contracts;
 using BuildingBlocks.Signalr;
 using MassTransit;
+using MassTransit.Transports;
 using Microsoft.Extensions.Logging;
 using Notification.Data;
 using Notification.PersistNotificationProcessor.Contracts;
@@ -13,12 +14,14 @@ public class InAppSender : IConsumer<NotificationMessage>
     private readonly ISignalrHub _signalrHub;
     private readonly ILogger<InAppSender> _logger;
     private readonly NotificationDbContext _notificationDbContext;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public InAppSender(ISignalrHub signalrHub, ILogger<InAppSender> logger, NotificationDbContext notificationDbContext)
+    public InAppSender(ISignalrHub signalrHub, ILogger<InAppSender> logger, NotificationDbContext notificationDbContext, IPublishEndpoint publishEndpoint)
     {
         _signalrHub = signalrHub;
         _logger = logger;
         _notificationDbContext = notificationDbContext;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task Consume(ConsumeContext<NotificationMessage> context)
@@ -28,6 +31,9 @@ public class InAppSender : IConsumer<NotificationMessage>
         _logger.LogInformation($"consumer for {nameof(NotificationMessage)} is started");
 
         var @event = context.Message;
+
+        // topup flow
+        context.Headers.TryGetHeader("transactionId", out var transactionId);
 
         //transport: inmemory = skip, filter at consumer
         if (@event.Channel != ChannelType.InApp)
@@ -44,12 +50,17 @@ public class InAppSender : IConsumer<NotificationMessage>
         }
 
         try
-        {        
+        {  
+           
+
             await _signalrHub.ProcessAsync(@event.Recipient.UserId.ToString(), @event.Message.ToString());
 
             notificationLog.UpdateStatus(NotificationLogs.Enums.Status.Sent);
 
             await _notificationDbContext.SaveChangesAsync();
+
+            await _publishEndpoint.Publish(
+                new BuildingBlocks.Contracts.NotificationSent(Guid.Parse(transactionId!.ToString()!)));
         }
         catch(Exception error)
         {
@@ -58,6 +69,9 @@ public class InAppSender : IConsumer<NotificationMessage>
             notificationLog.UpdateStatus(NotificationLogs.Enums.Status.Failed, error.ToString());
 
             await _notificationDbContext.SaveChangesAsync();
+
+            await _publishEndpoint.Publish(
+               new TopupFailed(Guid.Parse(transactionId!.ToString()!),"Internal error"));
         }
     }
 }

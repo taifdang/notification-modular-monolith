@@ -1,8 +1,11 @@
 ﻿
+using BuildingBlocks.Signalr.Repository;
 using BuildingBlocks.Web;
+using Grpc.Core.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Signalr;
@@ -16,7 +19,8 @@ namespace BuildingBlocks.Signalr;
 public class SignalrHub(
     ILogger<SignalrHub> logger,
     IHubContext<SignalrHub> hubContext,
-    IHttpContextAccessor httpContextAccessor)
+    IHttpContextAccessor httpContextAccessor,
+    IServiceScopeFactory serviceScopeFactory)
     : Hub, ISignalrHub
 {
     public async Task BoardCastAsync(string message, CancellationToken cancellationToken = default)
@@ -52,33 +56,47 @@ public class SignalrHub(
     }
 
     //client -> server = context used (valid)
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
         if (Context?.User?.Identity?.IsAuthenticated == true)
         {
             var userId = Context.UserIdentifier ?? string.Empty;
 
+            var scopeService = serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IConnectionProcessor>();
             //add group by userId: send transactionId
-
-            //Groups.AddToGroupAsync(Context.ConnectionId, userId);
-
+            await scopeService.AddConnectionAsync(Guid.Parse(userId), Context.ConnectionId);
+         
             logger.LogWarning(
                 "User with id: {UserId} connected at {DateTime}",
                 userId,
                 DateTime.Now.ToString());
 
-            return base.OnConnectedAsync();
+            await base.OnConnectedAsync();
         }
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
-    public override Task OnDisconnectedAsync(System.Exception? exception)
+    public override async Task OnDisconnectedAsync(System.Exception? exception)
     {
-        logger.LogInformation(
-            "A anoymous user disconnected at {DateTime}",
-            DateTime.Now.ToString());
+        var userId = Context.UserIdentifier;
+        var connectionId = Context.ConnectionId;
 
-        return base.OnDisconnectedAsync(exception);
+        if (!string.IsNullOrEmpty(userId))
+        {
+            var scopeService = serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IConnectionProcessor>();
+
+            await scopeService.RemoveConnectionAsync(Guid.Parse(userId), connectionId);
+         
+            //await Groups.RemoveFromGroupAsync(connectionId, transactionId); 
+
+            logger.LogInformation($"User {userId} disconnected connectionId {connectionId} at {DateTime.Now.ToString()}");
+        }
+        else
+        {
+            logger.LogInformation($"An unauthenticated user disconnected connectionId {connectionId} at {DateTime.Now.ToString()}");
+        }
+
+        await base.OnDisconnectedAsync(exception);
     }
 
     public async Task JoinGroup(string groupName)
@@ -96,5 +114,9 @@ public class SignalrHub(
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         await Clients.Caller.SendAsync("GroupLeft", groupName);
+    }
+    public Task SendInGroupAsync(string groupName, string message)
+    {
+        return Clients.Group(groupName).SendAsync("GroupMessage", message);
     }
 }
