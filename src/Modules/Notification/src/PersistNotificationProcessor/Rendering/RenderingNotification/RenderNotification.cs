@@ -62,11 +62,12 @@ public class RenderNotificationHandler : IConsumer<NotificationValidated>
                 messageContent = TemplateExtensions.RenderMessage(template, context.Message.DataSchema);
             }
 
-            var notificationMessage = new NotificationMessage(Guid.NewGuid(), context.Message.Type, recipient.Channel,
-              new BuildingBlocks.Contracts.Recipient(context.Message.UserId, recipient.Target), messageContent,
+            var notificationMessage = new NotificationDispatched(Guid.NewGuid(), context.Message.RequestId, context.Message.Type, 
+                recipient.Channel, new BuildingBlocks.Contracts.Recipient(context.Message.UserId, recipient.Target), messageContent,
               SetMetaData(context.Message.Priority.ToString(), template.Name, context.Message.RequestId.ToString()));
 
-            await _publishEndpoint.Publish(new NotificationRendered(context.Message.Id, notificationMessage, context.Message.DataSchema));
+            await _publishEndpoint.Publish(new NotificationRendered(
+                context.Message.Id,context.Message.RequestId ,notificationMessage, context.Message.DataSchema));
         }
     }
     private IDictionary<string, object> SetMetaData(string Priority, string Template, string RequestId)

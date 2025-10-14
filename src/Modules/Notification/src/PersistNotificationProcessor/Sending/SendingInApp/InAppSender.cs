@@ -9,7 +9,7 @@ using Notification.PersistNotificationProcessor.Contracts;
 
 namespace Notification.PersistNotificationProcessor.Sending.SendingInApp;
 
-public class InAppSender : IConsumer<NotificationMessage>
+public class InAppSender : IConsumer<NotificationDispatched>
 {
     private readonly ISignalrHub _signalrHub;
     private readonly ILogger<InAppSender> _logger;
@@ -24,16 +24,16 @@ public class InAppSender : IConsumer<NotificationMessage>
         _publishEndpoint = publishEndpoint;
     }
 
-    public async Task Consume(ConsumeContext<NotificationMessage> context)
+    public async Task Consume(ConsumeContext<NotificationDispatched> context)
     {
-        Guard.Against.Null(context.Message, nameof(NotificationMessage));
+        Guard.Against.Null(context.Message, nameof(NotificationDispatched));
 
-        _logger.LogInformation($"consumer for {nameof(NotificationMessage)} is started");
+        _logger.LogInformation($"consumer for {nameof(NotificationDispatched)} is started");
 
         var @event = context.Message;
 
         // topup flow
-        context.Headers.TryGetHeader("transactionId", out var transactionId);
+        context.Headers.TryGetHeader("correlationId", out var correlationId);
 
         //transport: inmemory = skip, filter at consumer
         if (@event.Channel != ChannelType.InApp)
@@ -41,18 +41,16 @@ public class InAppSender : IConsumer<NotificationMessage>
             return;
         }
 
-        var notificationLog = await _notificationDbContext.NotificationLogs.FindAsync(context.Message.MessageId);
+        var notificationLog = await _notificationDbContext.NotificationLogs.FindAsync(context.Message.RequestId);
 
         if (notificationLog == null)
         {
-            _logger.LogWarning($"consumer for {nameof(NotificationMessage)} not found logId {context.Message.MessageId}");
+            _logger.LogWarning($"consumer for {nameof(NotificationDispatched)} not found logId {context.Message.RequestId}");
             return;
         }
 
         try
         {  
-           
-
             await _signalrHub.ProcessAsync(@event.Recipient.UserId.ToString(), @event.Message.ToString());
 
             notificationLog.UpdateStatus(NotificationLogs.Enums.Status.Sent);
@@ -60,18 +58,18 @@ public class InAppSender : IConsumer<NotificationMessage>
             await _notificationDbContext.SaveChangesAsync();
 
             await _publishEndpoint.Publish(
-                new BuildingBlocks.Contracts.NotificationSent(Guid.Parse(transactionId!.ToString()!)));
+                new NotificationSentEvent(Guid.Parse(correlationId!.ToString()!)));
         }
         catch(Exception error)
         {
-            _logger.LogError(error, "Failed to send InApp notification for MessageId {MessageId}", @event.MessageId);
+            _logger.LogError(error, "Failed to send InApp notification for MessageId {MessageId}", @event.RequestId);
 
             notificationLog.UpdateStatus(NotificationLogs.Enums.Status.Failed, error.ToString());
 
             await _notificationDbContext.SaveChangesAsync();
 
             await _publishEndpoint.Publish(
-               new TopupFailed(Guid.Parse(transactionId!.ToString()!),"Internal error"));
+               new TopupFailedEvent(Guid.Parse(correlationId!.ToString()!),"Internal error"));
         }
     }
 }

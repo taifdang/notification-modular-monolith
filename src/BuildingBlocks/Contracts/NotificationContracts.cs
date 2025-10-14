@@ -1,20 +1,14 @@
 ﻿using BuildingBlocks.Core.Event;
-using MassTransit;
 
 namespace BuildingBlocks.Contracts;
 
-public record PersonalNotificationRequested(NotificationType NotificationType, Recipient Recipient, IDictionary<string, object?> Payload, 
-    NotificationPriority Priority) : IIntegrationEvent
-{
-    public Guid RequestId { get; init; } = NewId.NextGuid();
-}
-public record BroadcastNotificationRequested(NotificationType NotificationType, IDictionary<string, object?> Payload, NotificationPriority Priority)
-    : IIntegrationEvent
-{
-    public Guid RequestId { get; init; } = NewId.NextGuid();
-}
-//state machine
-public record NotificationSent(Guid TransactionId) : IIntegrationEvent;
+public record PersonalNotificationRequested(Guid RequestId, NotificationType NotificationType, Recipient Recipient,
+    IDictionary<string, object?> Payload, NotificationPriority Priority) : IIntegrationEvent;
+
+public record BroadcastNotificationRequested(NotificationType NotificationType, IDictionary<string, object?> Payload,
+    NotificationPriority Priority) : IIntegrationEvent;
+
+public record NotificationSentEvent(Guid TransactionId) : IIntegrationEvent;
 
 public record Recipient(Guid UserId, string? Email);
 

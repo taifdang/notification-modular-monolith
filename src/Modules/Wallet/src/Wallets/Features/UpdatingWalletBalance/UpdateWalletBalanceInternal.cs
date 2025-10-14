@@ -51,13 +51,15 @@ internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWallet
 
             if(transactionEntity.TransactionType == Transactions.Enums.TransactionType.Topup)
             {
-                await _eventDispatcher.SendAsync(new PersonalNotificationRequested(NotificationType.Topup,new Recipient(wallet.UserId,""),
+                await _eventDispatcher.SendAsync(new PersonalNotificationRequested(
+                    transactionEntity.Id, 
+                    NotificationType.Topup,
+                    new Recipient(wallet.UserId,""),
                     DictionaryExtensions.SetPayloads(
                         ("topupId", transactionEntity.ReferenceCode),
-                        ("userId", wallet.UserId),
-                        ("transactionId", transactionEntity.Id.ToString())), 
+                        ("userId", wallet.UserId)), 
                     NotificationPriority.High));
-                await _publishEndpoint.Publish(new BalanceUpdated(transactionEntity.Id, wallet.UserId));
+                await _publishEndpoint.Publish(new BalanceUpdatedEvent(transactionEntity.Id, wallet.UserId));
             }
 
             return Unit.Value; 
@@ -65,7 +67,7 @@ internal class UpdateWalletBalanceInternalHandler : ICommandHandler<UpdateWallet
         catch 
         { 
             await transaction.RollbackAsync(cancellationToken);
-            await _publishEndpoint.Publish(new TopupFailed(transactionEntity.Id, "Internal error"));
+            await _publishEndpoint.Publish(new TopupFailedEvent(transactionEntity.Id, "Internal error"));
             throw; 
         }
     }

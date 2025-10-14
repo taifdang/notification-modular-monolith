@@ -1,4 +1,2 @@
-﻿using BuildingBlocks.Contracts;
-
-namespace Notification.PersistNotificationProcessor.Contracts;
-public record NotificationRendered(Guid Id, NotificationMessage NotificationMessage, string dataSchema);
+﻿namespace Notification.PersistNotificationProcessor.Contracts;
+public record NotificationRendered(Guid Id, Guid RequestId, NotificationDispatched NotificationMessage, string dataSchema);

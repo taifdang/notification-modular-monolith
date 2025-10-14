@@ -1,4 +1,4 @@
 ﻿namespace Notification.PersistNotificationProcessor.Sending.SendingEmail;
-public class SendEmail
+public class EmailSender
 {
 }

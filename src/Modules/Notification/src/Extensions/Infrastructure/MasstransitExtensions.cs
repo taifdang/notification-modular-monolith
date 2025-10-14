@@ -10,7 +10,7 @@ public class MasstransitExtensions : IMasstransitModule
 {
     public void ConfigureTopology(IBusFactoryConfigurator cfg, IRegistrationContext context)
     {
-        cfg.Message<NotificationMessage>(x =>
+        cfg.Message<NotificationDispatched>(x =>
         {
             x.SetEntityName("notification-exchange");
         });

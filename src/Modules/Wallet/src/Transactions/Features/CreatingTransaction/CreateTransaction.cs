@@ -133,11 +133,11 @@ internal class CreateTransactionCommandHandler : ICommandHandler<CreateTransacti
                    new TransactionCreatedDomainEvent(command.Id, wallet.Id, command.ReferenceCode, command.Amount, transactionEntity.TransactionType),
                    typeof(IInternalCommand));
 
-                await _publishEndpoint.Publish(new TopupConfirmed(transactionEntity.Id, transactionEntity.Amount));
+                await _publishEndpoint.Publish(new TopupConfirmedEvent(transactionEntity.Id, transactionEntity.Amount));
             }
             catch
             {
-                await _publishEndpoint.Publish(new TopupFailed(transactionEntity.Id, "Internal error"));
+                await _publishEndpoint.Publish(new TopupFailedEvent(transactionEntity.Id, "Internal error"));
             }
         }
 

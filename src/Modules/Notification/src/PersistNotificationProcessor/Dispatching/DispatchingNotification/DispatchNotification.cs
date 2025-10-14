@@ -29,26 +29,25 @@ public class DispatchNotificationHanlder : IConsumer<NotificationRendered>
 
         var @event = context.Message.NotificationMessage;
 
-        //save log to db if required
+        // create log record
         var notificationLog = NotificationLogs.Model.NotificationLog.Create(
-            context.Message.NotificationMessage.MessageId, context.Message.Id, @event.Channel);
+            context.Message.NotificationMessage.RequestId, context.Message.Id, @event.Channel);
 
         await _notificationDbContext.NotificationLogs.AddAsync(notificationLog);
 
         await _notificationDbContext.SaveChangesAsync();
 
-        //options
         var metadata = JsonSerializer.Deserialize<Dictionary<string, object>>(context.Message.dataSchema);
 
         await _publishEndpoint.Publish(@event, ctx =>
         {
-            //transport: inmemory = skip, filter at consumer
+            // transport: inmemory = skip, filter at consumer
             ctx.SetRoutingKey(@event.Channel.ToString());
 
-            foreach (var header in metadata)
-            {
-                ctx.Headers.Set(header.Key, header.Value);
-            }
+            //foreach (var header in metadata)
+            //{
+            //    ctx.Headers.Set(header.Key, header.Value);
+            //}
         });
     }
 }

@@ -14,10 +14,10 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
     public State Completed { get; private set; }
     public State Failed { get; private set; }
 
-    public Event<TopupConfirmed> TopupConfirmed { get; private set; }
-    public Event<TopupFailed> TopupFailed { get; private set; }
-    public Event<BalanceUpdated> BalanceUpdated { get; private set; }
-    public Event<NotificationSent> NotificationSent { get; private set; }
+    public Event<TopupConfirmedEvent> TopupConfirmed { get; private set; }
+    public Event<TopupFailedEvent> TopupFailed { get; private set; }
+    public Event<BalanceUpdatedEvent> BalanceUpdated { get; private set; }
+    public Event<NotificationSentEvent> NotificationSent { get; private set; }
 
     public TopupStateMachine(IHubContext<SignalrHub> hub)
     {
