@@ -2,7 +2,7 @@
 
 namespace BuildingBlocks.Contracts;
 
-public record PersonalNotificationRequested(Guid RequestId, NotificationType NotificationType, Recipient Recipient,
+public record PersonalNotificationRequested(Guid CorrelationId, NotificationType NotificationType, Recipient Recipient,
     IDictionary<string, object?> Payload, NotificationPriority Priority) : IIntegrationEvent;
 
 public record BroadcastNotificationRequested(NotificationType NotificationType, IDictionary<string, object?> Payload,

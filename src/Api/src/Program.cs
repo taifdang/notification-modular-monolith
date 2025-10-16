@@ -1,6 +1,6 @@
 using Api.Extensions;
 using Identity.Extensions.Infrastructure;
-using Notification.Extensions.Infrastructure;
+using Notification.Infrastructure.Extensions;
 using User.Extensions.Infrastructure;
 using Wallet.Extensions.Infrastructure;
 

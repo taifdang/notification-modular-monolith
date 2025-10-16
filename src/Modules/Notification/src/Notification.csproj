@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GrpcClient\Protos\user.proto" />
+    <None Remove="Infrastructure\Grpc\Protos\user.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,11 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-    <Folder Include="Notifications\Features\GettingAvailableNotification\" />
-    <Folder Include="PersistNotificationProcessor\Ingestion\Broadcast\" />
-    <Folder Include="Recipents\Exceptions\" />
-    <Folder Include="Recipents\ValueObjects\" />
+    <Folder Include="Application\Notifications\Commands\IngrestNotification\Broadcast\" />
+    <Folder Include="Application\Notifications\Commands\SendNotification\Email\" />
+    <Folder Include="Application\Services\" />
+    <Folder Include="Domain\Exceptions\" />
+    <Folder Include="Infrastructure\Data\Migrations\" />
+    <Folder Include="Infrastructure\Data\Seeder\" />
+    <Folder Include="Infrastructure\Messages\Consumers\Ingrestion\Broadcast\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="GrpcClient\Protos\user.proto" GrpcServices="Both" />
+    <Protobuf Include="Infrastructure\Grpc\Protos\user.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,5 @@
-﻿using BuildingBlocks.Contracts;
-using BuildingBlocks.Core;
+﻿using BuildingBlocks.Core;
 using BuildingBlocks.Core.Event;
-using Notification.Notifications.Features.GettingNotificationById;
-
 
 namespace Notification;
 public sealed class NotificationEventMapper : IEventMapper

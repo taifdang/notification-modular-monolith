@@ -62,9 +62,12 @@ public class SignalrHub(
         {
             var userId = Context.UserIdentifier ?? string.Empty;
 
+            //httpContextAccessor.HttpContext?.GetTokenExpiryTime();
+            var tokenExpiry = Context.User?.FindFirst("exp")?.Value;
+
             var scopeService = serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IConnectionProcessor>();
             //add group by userId: send transactionId
-            await scopeService.AddConnectionAsync(Guid.Parse(userId), Context.ConnectionId);
+            await scopeService.AddConnectionAsync(Guid.Parse(userId), Context.ConnectionId, long.Parse(tokenExpiry));
          
             logger.LogWarning(
                 "User with id: {UserId} connected at {DateTime}",

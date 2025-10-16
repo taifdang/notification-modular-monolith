@@ -19,9 +19,10 @@ public static class Extensions
         services.AddScoped<IConnectionDbContext>(provider =>
         {
             var connectionDbContext = provider.GetRequiredService<ConnectionDbContext>();
-            connectionDbContext.Database.EnsureCreated();
-            connectionDbContext.CreateTableIfNotExist();
-
+            if (connectionDbContext.Database.EnsureCreated())
+            {
+                connectionDbContext.CreateTableIfNotExist();
+            }         
             return connectionDbContext;
         });
 
