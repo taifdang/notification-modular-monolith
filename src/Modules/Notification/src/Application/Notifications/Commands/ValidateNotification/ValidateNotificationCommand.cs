@@ -14,7 +14,7 @@ using User;
 
 namespace Notification.Application.Notifications.Commands.ValidateNotification;
 
-public record ValidateNotificationCommand(Guid NotificationId, Guid UserId, string Email) : ICommand;
+public record ValidateNotificationCommand(Guid CorrelationId, Guid NotificationId, Guid UserId, string? Email) : ICommand;
 public class ValidateNotificationCommandHandler : ICommandHandler<ValidateNotificationCommand>
 {
     private readonly INotificationDbContext _notificationDbContext;
@@ -71,12 +71,12 @@ public class ValidateNotificationCommandHandler : ICommandHandler<ValidateNotifi
         await _notificationDbContext.SaveChangesAsync();
 
         await _publishEndpoint.Publish(new NotificationValidated(
-            command.NotificationId,
             notification.CorrelationId,
+            command.NotificationId,
             Guid.Parse(preferenceEntity.PreferenceDto.UserId),
             notification.NotificationType,
             notification.Priority, 
-            notification.Metadata));
+            notification.Payload));
 
         return Unit.Value;
     }

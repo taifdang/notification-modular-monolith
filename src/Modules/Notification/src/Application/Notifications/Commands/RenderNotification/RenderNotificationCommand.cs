@@ -13,8 +13,8 @@ using Notification.Infrastructure.Messages.Models;
 
 namespace Notification.Application.Notifications.Commands.RenderNotification;
 
-public record RenderNotificationCommand(Guid NotificationId, Guid CorrelationId, Guid UserId, NotificationType Type,
-    NotificationPriority Priority, string Metadata) : ICommand;
+public record RenderNotificationCommand(Guid CorrelationId, Guid NotificationId, Guid UserId, NotificationType Type,
+    NotificationPriority Priority, string? Payload) : ICommand;
 
 public class RenderNotificationCommandHandler : ICommandHandler<RenderNotificationCommand>
 {
@@ -35,6 +35,7 @@ public class RenderNotificationCommandHandler : ICommandHandler<RenderNotificati
 
     public async Task<Unit> Handle(RenderNotificationCommand command, CancellationToken cancellationToken)
     {
+        //NON_IMPLEMENT: MEDATA NULL OR EMPTY ???
         Guard.Against.Null(command, nameof(RenderNotificationCommand));
 
         _logger.LogInformation($"consumer for {nameof(RenderNotificationCommand)} is started");
@@ -62,16 +63,16 @@ public class RenderNotificationCommandHandler : ICommandHandler<RenderNotificati
                 //fallback to raw data schema if no template found
                 _logger.LogWarning("No template found for NotificationType {NotificationType} and Channel {Channel}",
                     command.Type, recipient.Channel);
-                messageContent = command.Metadata;
+                messageContent = command.Payload;
             }
             else
             {
-                messageContent = TemplateExtensions.RenderMessage(template, command.Metadata);
+                messageContent = TemplateExtensions.RenderMessage(template, command.Payload);
             }
 
             var notificationMessage = new NotificationMessage(
-                command.NotificationId, 
-                command.CorrelationId, 
+                command.CorrelationId,
+                command.NotificationId,              
                 command.Type,
                 recipient.Channel, 
                 new BuildingBlocks.Contracts.Recipient(
@@ -83,11 +84,7 @@ public class RenderNotificationCommandHandler : ICommandHandler<RenderNotificati
                    template.Name, 
                    command.CorrelationId.ToString()));
 
-            await _publishEndpoint.Publish(new NotificationRendered(
-                command.NotificationId, 
-                command.CorrelationId, 
-                notificationMessage,
-                command.Metadata));
+            await _publishEndpoint.Publish(new NotificationRendered(notificationMessage));
         }
 
         return Unit.Value;

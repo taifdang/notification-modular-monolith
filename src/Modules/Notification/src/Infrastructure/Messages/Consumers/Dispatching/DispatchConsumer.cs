@@ -1,4 +1,6 @@
 ﻿
+using BuildingBlocks.Contracts;
+using BuildingBlocks.Exception;
 using MassTransit;
 using MediatR;
 using Notification.Application.Notifications.Commands.DispathNotification;
@@ -9,19 +11,26 @@ namespace Notification.Infrastructure.Messages.Consumers.Dispatching;
 public class DispatchConsumer : IConsumer<NotificationRendered>
 {
     private readonly IMediator _mediator;
-    public DispatchConsumer(IMediator mediator) => _mediator = mediator;
+    private readonly IPublishEndpoint _publishEndpoint;
+    public DispatchConsumer(IMediator mediator, IPublishEndpoint publishEndpoint)
+    {
+        _mediator = mediator;
+        _publishEndpoint = publishEndpoint;
+    }
 
     public async Task Consume(ConsumeContext<NotificationRendered> context)
     {
         try
         {
-            await _mediator.Send(new DispatchNotificationCommand(
-                context.Message.NotificationId,
-                context.Message.NotificationMessage));
+            await _mediator.Send(new DispatchNotificationCommand(context.Message.NotificationMessage));
         }
-        catch
+        catch (DomainException ex)
         {
-            throw;
+            await _publishEndpoint.Publish(new NotificationFailedEvent(
+                context.Message.NotificationMessage.CorrelationId,
+                context.Message.NotificationMessage.NotificationId,
+                "DISPATCH",
+                ex.Message));
         }
     }
 }

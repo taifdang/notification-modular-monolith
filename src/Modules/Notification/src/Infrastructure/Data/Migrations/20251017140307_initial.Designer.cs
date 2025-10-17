@@ -12,7 +12,7 @@ using Notification.Infrastructure.Data;
 namespace Notification.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(NotificationDbContext))]
-    [Migration("20251016125728_initial")]
+    [Migration("20251017140307_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -40,14 +40,14 @@ namespace Notification.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NotificationType")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("UnKnown");
+
+                    b.Property<string>("Payload")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Priority")
                         .IsRequired()

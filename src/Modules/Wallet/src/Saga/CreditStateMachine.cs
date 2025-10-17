@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Wallet.Saga;
 
-public class TopupStateMachine : MassTransitStateMachine<TopupState>
+public class CreditStateMachine : MassTransitStateMachine<CreditState>
 {
     private readonly IHubContext<SignalrHub> _hub;
 
@@ -19,7 +19,7 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
     public Event<BalanceUpdatedEvent> BalanceUpdated { get; private set; }
     public Event<NotificationSentEvent> NotificationSent { get; private set; }
 
-    public TopupStateMachine(IHubContext<SignalrHub> hub)
+    public CreditStateMachine(IHubContext<SignalrHub> hub)
     {
         _hub = hub;
 
@@ -44,7 +44,7 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
                When(TopupFailed)
                .ThenAsync(async context =>
                {
-                   context.Saga.ErrorMessage = context.Message.Reason;
+                   context.Saga.ErrorMessage = context.Message.ErrorMessage;
                    await UpdateState(context.Saga, "TopupConfirm", "Failed", context.Saga.ErrorMessage);
                })
                .TransitionTo(Failed)
@@ -65,7 +65,7 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
            When(TopupFailed)
                .ThenAsync(async context =>
                {
-                   context.Saga.ErrorMessage = context.Message.Reason;
+                   context.Saga.ErrorMessage = context.Message.ErrorMessage;
                    await UpdateState(context.Saga, "BalanceUpdate", "Failed", context.Saga.ErrorMessage);
                })
                .TransitionTo(Failed)
@@ -83,15 +83,17 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
            When(TopupFailed)
                .ThenAsync(async context =>
                {
-                   context.Saga.ErrorMessage = context.Message.Reason;
+                   context.Saga.ErrorMessage = context.Message.ErrorMessage;
                    await UpdateState(context.Saga, "NotificationSend", "Failed", context.Saga.ErrorMessage);
                })
                .TransitionTo(Failed)               
                .Finalize()
         );
+
+        SetCompletedWhenFinalized();
     }
 
-    private async Task UpdateState(TopupState instance, string currentStep, string status, string error = null)
+    private async Task UpdateState(CreditState instance, string currentStep, string status, string error = null)
     {
         await _hub.Clients.Group(instance.CorrelationId.ToString())
                   .SendAsync("StateUpdated", currentStep, status);

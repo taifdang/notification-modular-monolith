@@ -51,15 +51,12 @@ public class IngresNotificationPersonalCommandHandler : ICommandHandler<IngresNo
 
             await _notificationDbContext.SaveChangesAsync();
 
-            await _publishEndpoint.Publish(new NotificationReceived(notificationEntity.Id, command.Recipient.UserId, command.Recipient.Email));
+            await _publishEndpoint.Publish(new NotificationReceived(command.CorrelationId, notificationEntity.Id, command.Recipient.UserId, command.Recipient.Email));
         }
         else
         {
-            await _publishEndpoint.Publish(new NotificationReceived(notification.Id, command.Recipient.UserId, command.Recipient.Email));
+            await _publishEndpoint.Publish(new NotificationReceived(command.CorrelationId, notification.Id, command.Recipient.UserId, command.Recipient.Email));
         }
-
-        
-
         return Unit.Value;
     }
 }

@@ -19,7 +19,7 @@ namespace Notification.Infrastructure.Data.Migrations
                     CorrelationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NotificationType = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "UnKnown"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Payload = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Priority = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Low"),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

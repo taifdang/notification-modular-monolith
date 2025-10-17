@@ -8,11 +8,11 @@ public record Notification
     public Guid CorrelationId { get; set; }
     public NotificationType NotificationType { get; set; }
     public string Content { get; set; } = default!;
-    public string? Metadata { get; set; }
+    public string? Payload { get; set; }
     public NotificationPriority Priority { get; set; }
     public DateTime CreatedAt { get; set; }
     public static Notification Create(Guid id, Guid correlationId, NotificationType notificationType, string content,
-       string metadata, NotificationPriority priority)
+       string payload, NotificationPriority priority)
     {
         var notification = new Notification
         {
@@ -20,7 +20,7 @@ public record Notification
             CorrelationId = correlationId,
             NotificationType = notificationType,
             Content = content,
-            Metadata = metadata,
+            Payload = payload,
             Priority = priority,
             CreatedAt = DateTime.UtcNow,
         };

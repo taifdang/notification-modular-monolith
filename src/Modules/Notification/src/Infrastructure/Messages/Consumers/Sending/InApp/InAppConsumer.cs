@@ -1,4 +1,6 @@
 ﻿
+using BuildingBlocks.Contracts;
+using BuildingBlocks.Exception;
 using MassTransit;
 using MediatR;
 using Notification.Application.Notifications.Commands.SendNotification.InApp;
@@ -9,7 +11,12 @@ namespace Notification.Infrastructure.Messages.Consumers.Sending.InApp;
 public class InappConsumer : IConsumer<NotificationDispatched>
 {
     private readonly IMediator _mediator;
-    public InappConsumer(IMediator mediator) => _mediator = mediator;
+    private readonly IPublishEndpoint _publishEndpoint;
+    public InappConsumer(IMediator mediator, IPublishEndpoint publishEndpoint)
+    {
+        _mediator = mediator;
+        _publishEndpoint = publishEndpoint;
+    }
 
     public async Task Consume(ConsumeContext<NotificationDispatched> context)
     {
@@ -18,10 +25,16 @@ public class InappConsumer : IConsumer<NotificationDispatched>
             await _mediator.Send(new SendNotificationInAppCommand(
                 context.Message.NotificationLogId,
                 context.Message.NotificationMessage));
+
+            await _publishEndpoint.Publish(new NotificationSentEvent(context.Message.NotificationMessage.CorrelationId));
         }
-        catch
+        catch (DomainException ex)
         {
-            throw;
+            await _publishEndpoint.Publish(new NotificationFailedEvent(
+                context.Message.NotificationMessage.CorrelationId,
+                context.Message.NotificationLogId,
+                "SEND_INAPP",
+                ex.Message));
         }
     }
 }

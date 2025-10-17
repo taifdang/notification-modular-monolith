@@ -10,7 +10,7 @@ using Notification.Infrastructure.Messages.Models;
 
 namespace Notification.Application.Notifications.Commands.DispathNotification;
 
-public record DispatchNotificationCommand(Guid NotificationId, NotificationMessage NotificationMessage) : ICommand;
+public record DispatchNotificationCommand(NotificationMessage NotificationMessage) : ICommand;
 public class DispatchNotificationCommandHandler : ICommandHandler<DispatchNotificationCommand>
 {
     private readonly INotificationDbContext _notificationDbContext;
@@ -35,7 +35,7 @@ public class DispatchNotificationCommandHandler : ICommandHandler<DispatchNotifi
 
         var notificationLog = Domain.Entities.NotificationLog.Create(
             NewId.NextGuid(),
-            command.NotificationId,
+            command.NotificationMessage.NotificationId,
             command.NotificationMessage.Channel);
 
         await _notificationDbContext.NotificationLogs.AddAsync(notificationLog);

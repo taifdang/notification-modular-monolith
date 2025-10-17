@@ -2,7 +2,7 @@
 
 namespace Wallet.Saga;
 
-public class TopupState : SagaStateMachineInstance
+public class CreditState : SagaStateMachineInstance
 {
     public Guid CorrelationId { get; set; }
     public string CurrentState { get; set; } = default!;

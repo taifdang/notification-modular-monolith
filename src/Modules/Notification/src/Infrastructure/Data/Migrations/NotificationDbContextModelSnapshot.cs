@@ -37,14 +37,14 @@ namespace Notification.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NotificationType")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("UnKnown");
+
+                    b.Property<string>("Payload")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Priority")
                         .IsRequired()

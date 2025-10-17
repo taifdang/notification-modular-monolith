@@ -18,18 +18,15 @@ public class SendNotificationInAppCommandHandler : ICommandHandler<SendNotificat
     private readonly ISignalrHub _signalrHub;
     private readonly ILogger<SendNotificationInAppCommandHandler> _logger;
     private readonly INotificationDbContext _notificationDbContext;
-    private readonly IPublishEndpoint _publishEndpoint;
 
     public SendNotificationInAppCommandHandler(
         ISignalrHub signalrHub, 
         ILogger<SendNotificationInAppCommandHandler> logger,
-        INotificationDbContext notificationDbContext,
-        IPublishEndpoint publishEndpoint)
+        INotificationDbContext notificationDbContext)
     {
         _signalrHub = signalrHub;
         _logger = logger;
-        _notificationDbContext = notificationDbContext;
-        _publishEndpoint = publishEndpoint;
+        _notificationDbContext = notificationDbContext;     
     }
     public async Task<Unit> Handle(SendNotificationInAppCommand command, CancellationToken cancellationToken)
     {
