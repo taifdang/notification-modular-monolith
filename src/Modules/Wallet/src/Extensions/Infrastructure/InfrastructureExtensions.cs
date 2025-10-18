@@ -15,6 +15,7 @@ public static class InfrastructureExtensions
     {
         builder.Services.AddScoped<WalletEventMapper>();
         builder.Services.AddSingleton<IMasstransitModule, MasstransitExtensions>();
+        builder.Services.AddSingleton<IStateMachineModule, MasstransitExtensions>();
 
         builder.Services.AddValidatorsFromAssembly(typeof(WalletRoot).Assembly);
         builder.Services.AddCustomMapster(typeof(WalletRoot).Assembly);

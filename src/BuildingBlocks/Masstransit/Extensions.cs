@@ -14,7 +14,7 @@ namespace BuildingBlocks.Masstransit;
 //ref: https://masstransit.io/documentation/concepts/exceptions
 public static class Extensions
 {
-    
+  
     public static IServiceCollection AddCustomMasstransit(
         this IServiceCollection services,
         TransportType transportType,
@@ -37,6 +37,11 @@ public static class Extensions
         configure.SetKebabCaseEndpointNameFormatter();
 
         configure.AddConsumers(assemblies);
+
+        //configure.AddSagaStateMachines(assemblies);
+        configure.ApplyModuleStateMachines(services);
+
+        configure.AddInMemoryInboxOutbox();
 
         switch (transportType) 
         {
@@ -79,6 +84,8 @@ public static class Extensions
                     transportType,
                     message: null);
         }
+
+        configure.AddMassTransitHostedService(true);
 
         return services;
 

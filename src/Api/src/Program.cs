@@ -6,12 +6,12 @@ using Wallet.Extensions.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddSharedInfrastructure();
-
 builder.AddIdentityModules();
 builder.AddWalletModules();
 builder.AddNotificationModules();
 builder.AddUserModules();
+
+builder.AddSharedInfrastructure();
 
 var app = builder.Build();
 

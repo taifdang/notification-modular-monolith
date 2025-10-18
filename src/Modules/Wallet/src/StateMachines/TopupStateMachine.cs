@@ -2,7 +2,7 @@
 using BuildingBlocks.Contracts;
 using MassTransit;
 
-namespace Wallet.States;
+namespace Wallet.StateMachines;
 
 public class TopupStateMachine : MassTransitStateMachine<TopupState>
 {
@@ -21,44 +21,26 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
             When(TopupConfirmed)
               .Then(ctx =>
               {
-                  ctx.Saga.Amount = ctx.Message.Amount;
-              })
-              .TransitionTo(TopupProcessing)
-        );
-
-        During(TopupProcessing,
-            When(BalanceUpdated)
-              .Then(ctx =>
-              {
-                 ctx.Saga.UserId = ctx.Message.UserId;
+                  ctx.Saga.TransactionId = ctx.Message.TransactionId;
               })
               .TransitionTo(BalanceUpdating),
-
-           When(BalanceUpdateFailed)
-              .Then(ctx =>
-              {
-                    
-              })
-              .TransitionTo(Failed)
-              .Finalize(),
-
-           When(TopupFailed)
-              .Then(ctx =>
-              {
-
-              })
+            When(TopupFailed)
               .TransitionTo(Failed)
               .Finalize()
         );
 
         During(BalanceUpdating,
-            When(NotificationSent)
+            When(BalanceUpdated)
               .TransitionTo(NotificationProcessing),
-            When(NotificationFailed)
-              .Then(ctx =>
-              {
+           When(BalanceUpdateFailed)
+              .TransitionTo(Failed)
+              .Finalize()         
+        );
 
-              })
+        During(NotificationProcessing,
+            When(NotificationSent)
+              .TransitionTo(Completed),
+            When(NotificationFailed)           
               .TransitionTo(Failed)
               .Finalize()
         );
@@ -66,7 +48,7 @@ public class TopupStateMachine : MassTransitStateMachine<TopupState>
         SetCompletedWhenFinalized();
     }
 
-    public State TopupProcessing { get; private set; }
+    //public State TopupProcessing { get; private set; }
     public State BalanceUpdating { get; private set; }
     public State NotificationProcessing { get; private set; }
     public State Completed { get; private set; }

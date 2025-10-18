@@ -10,6 +10,7 @@ using FluentValidation.AspNetCore;
 using Hangfire;
 using Identity;
 using Notification;
+using System.Reflection;
 using User;
 using Wallet;
 
@@ -20,6 +21,14 @@ public static class SharedInfrastructureExtensions
 {
     public static WebApplicationBuilder AddSharedInfrastructure(this WebApplicationBuilder builder)
     {
+        Assembly[] assemblies = new Assembly[]
+        {
+            typeof(IdentityRoot).Assembly,
+            typeof(WalletRoot).Assembly,
+            typeof(UserRoot).Assembly,
+            typeof(NotificationRoot).Assembly
+        };
+
         builder.Services.AddSignalR();
         //builder.Services.AddJwt();
         builder.Services.AddJwtAuth();
@@ -42,8 +51,9 @@ public static class SharedInfrastructureExtensions
 
         builder.Services.AddCustomMasstransit(
             TransportType.InMemory,
-            AppDomain.CurrentDomain.GetAssemblies());
+            assemblies);
 
+        //AppDomain.CurrentDomain.GetAssemblies()
         builder.Services.AddMemoryCache();
 
         builder.Services.AddScoped<IEventMapper>(sp =>

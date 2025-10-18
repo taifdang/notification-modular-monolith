@@ -18,6 +18,14 @@ public static class ConfigurationExtensions
         return configuration.GetOptions<T>(section);
 
     }
+    public static T GetOptions<T>(
+        this IServiceProvider serviceProvider,
+        string section)
+        where T : new()
+    {
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        return configuration.GetOptions<T>(section);
+    }
 
     //configuration
     public static T GetOptions<T>(
